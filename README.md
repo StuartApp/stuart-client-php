@@ -23,18 +23,18 @@ $httpClient = new HttpClient($useSandbox, $api_client_id, $api_client_secret);
 
 ```php
 $origin = [
-    'address' => '18 rue sidi brahim, 75012 Paris',
-    'company' => 'WeSellWine Inc.',
-    'first_name' => 'Marcel',
-    'last_name' => 'Poisson',
-    'phone' => '0628739512'
+    'address'       => '18 rue sidi brahim, 75012 Paris',
+    'company'       => 'WeSellWine Inc.',
+    'first_name'    => 'Marcel',
+    'last_name'     => 'Poisson',
+    'phone'         => '0628739512'
 ];
 $destination = [
-    'address' => '5 rue sidi brahim, 75012 Paris',
-    'company' => 'Jean-Marc SAS',
-    'first_name' => 'Jean-Marc',
-    'last_name' => 'Pinchu',
-    'phone' => '0628046934'
+    'address'       => '5 rue sidi brahim, 75012 Paris',
+    'company'       => 'Jean-Marc SAS',
+    'first_name'    => 'Jean-Marc',
+    'last_name'     => 'Pinchu',
+    'phone'         => '0628046934'
 ];
 $package_size = 'small';
 
