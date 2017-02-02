@@ -3,15 +3,18 @@
 namespace Stuart\tests;
 
 use Stuart\Infrastructure\ApiResponse;
+use Stuart\Repository\JobRepository;
 use Stuart\Job;
 
 class JobTest extends \PHPUnit_Framework_TestCase
 {
     private $httpClient;
+    private $jobRepository;
 
     public function setUp()
     {
         $this->httpClient = \Phake::mock(\Stuart\Infrastructure\HttpClient::class);
+        $this->jobRepository = new JobRepository($this->httpClient);
     }
 
     public function test_it_create_job_should_return_successfull_response()
@@ -24,7 +27,7 @@ class JobTest extends \PHPUnit_Framework_TestCase
         $job = $this->sampleJob();
 
         // when
-        $api_response = $job->create();
+        $api_response = $this->jobRepository->create($job);
 
         // then
         self::assertTrue($api_response->success());
@@ -36,7 +39,7 @@ class JobTest extends \PHPUnit_Framework_TestCase
         $job = $this->sampleJob();
 
         // when
-        $api_response = $job->create();
+        $this->jobRepository->create($job);
 
         // then
         $formParams = [
@@ -45,7 +48,6 @@ class JobTest extends \PHPUnit_Framework_TestCase
             'originContactFirstname' => 'Marcel',
             'originContactLastname' => 'Poisson',
             'originContactPhone' => '0628739512',
-
             'destinationAddressStreet' => '5 rue sidi brahim, 75012 Paris',
             'destinationContactCompany' => 'Jean-Marc SAS',
             'destinationContactFirstname' => 'Jean-Marc',
@@ -78,6 +80,6 @@ class JobTest extends \PHPUnit_Framework_TestCase
         ];
         $package_size = 'small';
 
-        return new Job($origin, $destination, $package_size, $this->httpClient);
+        return new Job($origin, $destination, $package_size);
     }
 }

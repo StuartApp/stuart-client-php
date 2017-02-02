@@ -38,6 +38,8 @@ $destination = [
 ];
 $package_size = 'small';
 
-$job = new Job($origin, $destination, $package_size, $httpClient);
-$job.create();
+$job = new Job($origin, $destination, $package_size);
+
+$repository = new JobRepository($httpClient);
+$repository.create($job);
 ```
