@@ -1,0 +1,22 @@
+{
+  "name": "maximilientyc/stuart-php-client",
+  "description": "Stuart PHP client library",
+  "homepage": "https://docs.stuart.com/",
+  "type": "library",
+  "license": "MIT",
+  "require": {
+    "php": ">=5.3",
+    "guzzlehttp/guzzle": "^6.2",
+    "league/oauth2-client": "^2.1"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^4.8 || ^5.0",
+    "phake/phake": "@stable"
+  },
+  "autoload": {
+    "psr-0": {
+      "Stuart": "src/",
+      "Stuart\\Tests": "tests/"
+    }
+  }
+}
