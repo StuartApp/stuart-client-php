@@ -6,7 +6,7 @@ use Stuart\Infrastructure\ApiResponse;
 use Stuart\Repository\JobRepository;
 use Stuart\Job;
 
-class JobTest extends \PHPUnit_Framework_TestCase
+class JobRepositoryTest extends \PHPUnit_Framework_TestCase
 {
     private $httpClient;
     private $jobRepository;
@@ -27,7 +27,7 @@ class JobTest extends \PHPUnit_Framework_TestCase
         $job = $this->sampleJob();
 
         // when
-        $api_response = $this->jobRepository->create($job);
+        $api_response = $this->jobRepository->save($job);
 
         // then
         self::assertTrue($api_response->success());
@@ -39,7 +39,7 @@ class JobTest extends \PHPUnit_Framework_TestCase
         $job = $this->sampleJob();
 
         // when
-        $this->jobRepository->create($job);
+        $this->jobRepository->save($job);
 
         // then
         $formParams = [
@@ -53,13 +53,16 @@ class JobTest extends \PHPUnit_Framework_TestCase
             'destinationContactFirstname' => 'Jean-Marc',
             'destinationContactLastname' => 'Pinchu',
             'destinationContactPhone' => '0628046934',
-
             'packageTypeId' => 1
         ];
         $resource = '/v1/jobs/package';
 
         \Phake::verify($this->httpClient)->performPost($formParams, $resource);
     }
+
+    // TODO: integrate job creation (JobRepository.add($job) returns the Job with more data
+    // TODO: scheduling
+    // TODO: parameter validation
 
     // helpers
     private function sampleJob()
