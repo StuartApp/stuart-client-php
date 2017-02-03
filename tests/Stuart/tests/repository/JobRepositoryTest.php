@@ -17,25 +17,28 @@ class JobRepositoryTest extends \PHPUnit_Framework_TestCase
         $this->jobRepository = new JobRepository($this->httpClient);
     }
 
-    public function test_it_create_job_should_return_successfull_response()
+    public function test_it_create_job_should_return_job_id()
     {
         // given
         \Phake::when($this->httpClient)->performPost(\Phake::anyParameters())->thenReturn(
-            new ApiResponse(200, null)
+            new ApiResponse(200, ['id' => '0001'])
         );
 
         $job = $this->sampleJob();
 
         // when
-        $api_response = $this->jobRepository->save($job);
+        $jobId = $this->jobRepository->save($job);
 
         // then
-        self::assertTrue($api_response->success());
+        self::assertEquals($jobId, 0001);
     }
 
     public function test_it_create_job_should_call_http_client_w_correct_parameters()
     {
         // given
+        \Phake::when($this->httpClient)->performPost(\Phake::anyParameters())->thenReturn(
+            new ApiResponse(200, ['id' => '0001'])
+        );
         $job = $this->sampleJob();
 
         // when
@@ -60,7 +63,7 @@ class JobRepositoryTest extends \PHPUnit_Framework_TestCase
         \Phake::verify($this->httpClient)->performPost($formParams, $resource);
     }
 
-    // TODO: integrate job creation (JobRepository.add($job) returns the Job with more data
+    // TODO: save return the Job with more data
     // TODO: scheduling
     // TODO: parameter validation
 

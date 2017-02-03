@@ -34,7 +34,10 @@ class JobRepository
             'packageTypeId' => $this->computePackageTypeId($job)
         ];
 
-        return $this->httpClient->performPost($formParams, '/v1/jobs/package');
+        $apiResponse = $this->httpClient->performPost($formParams, '/v1/jobs/package');
+        if ($apiResponse->success()) {
+            return $apiResponse->getBody()['id'];
+        }
     }
 
     private function computePackageTypeId($job)
