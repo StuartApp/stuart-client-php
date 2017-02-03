@@ -48,7 +48,7 @@ class JobRepository
             return 2;
         } elseif ($job->getPackageSize() === 'large') {
             return 3;
-        } elseif ($this->getPackageSize() === 'extra_large') {
+        } elseif ($job->getPackageSize() === 'extra_large') {
             return 4;
         }
     }
