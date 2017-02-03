@@ -46,16 +46,16 @@ class JobRepositoryTest extends \PHPUnit_Framework_TestCase
 
         // then
         $formParams = [
-            'originAddressStreet' => '18 rue sidi brahim, 75012 Paris',
-            'originContactCompany' => 'WeSellWine Inc.',
-            'originContactFirstname' => 'Marcel',
-            'originContactLastname' => 'Poisson',
-            'originContactPhone' => '0628739512',
-            'destinationAddressStreet' => '5 rue sidi brahim, 75012 Paris',
-            'destinationContactCompany' => 'Jean-Marc SAS',
-            'destinationContactFirstname' => 'Jean-Marc',
-            'destinationContactLastname' => 'Pinchu',
-            'destinationContactPhone' => '0628046934',
+            'originAddressStreet' => $job->getOrigin()['address'],
+            'originContactCompany' => $job->getOrigin()['company'],
+            'originContactFirstname' => $job->getOrigin()['first_name'],
+            'originContactLastname' => $job->getOrigin()['last_name'],
+            'originContactPhone' => $job->getOrigin()['phone'],
+            'destinationAddressStreet' => $job->getDestination()['address'],
+            'destinationContactCompany' => $job->getDestination()['company'],
+            'destinationContactFirstname' => $job->getDestination()['first_name'],
+            'destinationContactLastname' => $job->getDestination()['last_name'],
+            'destinationContactPhone' => $job->getDestination()['phone'],
             'packageTypeId' => 1
         ];
         $resource = '/v1/jobs/package';
@@ -63,7 +63,6 @@ class JobRepositoryTest extends \PHPUnit_Framework_TestCase
         \Phake::verify($this->httpClient)->performPost($formParams, $resource);
     }
 
-    // TODO: save return the Job with more data
     // TODO: scheduling
     // TODO: parameter validation
 
