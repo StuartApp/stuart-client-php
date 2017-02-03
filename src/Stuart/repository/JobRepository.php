@@ -16,7 +16,7 @@ class JobRepository
         $this->httpClient = $httpClient;
     }
 
-    public function create($job)
+    public function save($job)
     {
         $origin = $job->getOrigin();
         $destination = $job->getDestination();
