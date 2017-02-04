@@ -144,10 +144,6 @@ class JobRepositoryTest extends \PHPUnit_Framework_TestCase
         self::assertNotNull($stuartJob->getTrackingUrl());
     }
 
-    // TODO: cancel a job
-    // TODO: scheduling
-    // TODO: parameter validation
-
     // helpers
     private function sampleJob($size)
     {
