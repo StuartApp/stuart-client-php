@@ -1,5 +1,5 @@
 # Stuart PHP Client
-For more details, visit https://docs.stuart.com.
+For more details, visit [Stuart API documentation](https://docs.stuart.com).
 
 ## Install
 Via Composer
