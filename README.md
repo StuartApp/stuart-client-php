@@ -43,3 +43,15 @@ $job = new \Stuart\Job($origin, $destination, $package_size);
 $repository = new \Stuart\Repository\JobRepository($httpClient);
 $stuartJobId = $repository.save($job);
 ```
+
+### Get a Job
+
+```php
+$stuartJob = repository.get($stuartJobId);
+
+$stuartJob->getId();
+$stuartJob->getOrigin();
+$stuartJob->getDestination();
+$stuartJob->getPackageSize();
+$stuartJob->getTrackingUrl(); // https://track-sandbox.stuart.com/tracking/40353/8be32c5160f7945ce1ec6484f0ee4e50
+```
