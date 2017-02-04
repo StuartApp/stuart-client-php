@@ -84,6 +84,8 @@ class JobRepository
         $packageTypeId = $body['packageType']['id'];
         $packageSize = array_search($packageTypeId, $this->packageTypeIdMapping);
 
-        return new Job($jobId, $origin, $destination, $packageSize);
+        $job = new Job($origin, $destination, $packageSize);
+        $job->setId($jobId);
+        return $job;
     }
 }

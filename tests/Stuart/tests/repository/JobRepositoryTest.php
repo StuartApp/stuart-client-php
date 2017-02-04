@@ -214,7 +214,7 @@ class JobRepositoryTest extends \PHPUnit_Framework_TestCase
         ];
         $package_size = $size;
 
-        return new Job('0001', $origin, $destination, $package_size);
+        return new Job($origin, $destination, $package_size);
     }
 
     private function sampleStuartJobResponse()

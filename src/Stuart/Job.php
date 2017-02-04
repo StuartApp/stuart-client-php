@@ -16,9 +16,8 @@ class Job
      * @param $destination
      * @param $packageSize
      */
-    public function __construct($id, $origin, $destination, $packageSize)
+    public function __construct($origin, $destination, $packageSize)
     {
-        $this->id = $id;
         $this->origin = $origin;
         $this->destination = $destination;
         $this->packageSize = $packageSize;
@@ -30,6 +29,14 @@ class Job
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @param mixed $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
     }
 
     /**
