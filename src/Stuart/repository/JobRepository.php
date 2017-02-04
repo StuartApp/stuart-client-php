@@ -3,6 +3,8 @@
 namespace Stuart\Repository;
 
 
+use Stuart\Job;
+
 class JobRepository
 {
     private $httpClient;
@@ -38,6 +40,11 @@ class JobRepository
         if ($apiResponse->success()) {
             return $apiResponse->getBody()['id'];
         }
+    }
+
+    public function get($jobId)
+    {
+        $apiResponse = $this->httpClient->performGet('/v1/jobs/' . $jobId);
     }
 
     private function computePackageTypeId($job)

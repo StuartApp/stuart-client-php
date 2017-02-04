@@ -39,6 +39,23 @@ class HttpClient
         return ApiResponseFactory::fromGuzzleHttpResponse($response);
     }
 
+    public function performGet($resource)
+    {
+        $client = $this->provider->getHttpClient();
+
+        try {
+            $response = $client->request('GET', $this->baseUrl . $resource, [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $this->accessToken()
+                ]
+            ]);
+        } catch (Exception $e) {
+            return new ApiResponse(null, null);
+        }
+
+        return ApiResponseFactory::fromGuzzleHttpResponse($response);
+    }
+
     private function accessToken()
     {
         return $this->provider->getAccessToken('client_credentials');
