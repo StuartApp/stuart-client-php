@@ -8,10 +8,10 @@ class Job
     private $origin;
     private $destination;
     private $packageSize;
+    private $trackingUrl;
 
     /**
      * Job constructor.
-     * @param $id
      * @param $origin
      * @param $destination
      * @param $packageSize
@@ -23,20 +23,18 @@ class Job
         $this->packageSize = $packageSize;
     }
 
+    public function enrich($args)
+    {
+        $this->id = $args['id'];
+        $this->trackingUrl = $args['tracking_url'];
+    }
+
     /**
      * @return mixed
      */
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * @param mixed $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
     }
 
     /**
@@ -61,5 +59,13 @@ class Job
     public function getPackageSize()
     {
         return $this->packageSize;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTrackingUrl()
+    {
+        return $this->trackingUrl;
     }
 }

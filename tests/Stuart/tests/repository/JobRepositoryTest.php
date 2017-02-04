@@ -189,6 +189,7 @@ class JobRepositoryTest extends \PHPUnit_Framework_TestCase
 
         // then
         self::assertEquals($stuartJob->getId(), $jobId);
+        self::assertNotNull($stuartJob->getTrackingUrl());
     }
 
     // TODO: cancel a job
@@ -219,6 +220,9 @@ class JobRepositoryTest extends \PHPUnit_Framework_TestCase
 
     private function sampleStuartJobResponse()
     {
-        return ['id' => '0001'];
+        return [
+            id => '0001',
+            trackingUrl => 'http'
+        ];
     }
 }

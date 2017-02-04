@@ -57,35 +57,52 @@ class JobRepository
 
         $body = $apiResponse->getBody();
 
-        $jobId = $body['id'];
-
-        $originPlace = $body['originPlace'];
-        $originAddress = $originPlace['address'];
-        $origin = [
-            'address' => "{$originAddress['street']}, {$originAddress['postCode']}, /
-                          {$originAddress['zone']['name']}",
-            'company' => $originPlace['contactCompany'],
-            'first_name' => $originPlace['contactFirstname'],
-            'last_name' => $originPlace['contactLastname'],
-            'phone' => $originPlace['contactPhone']
-        ];
-
-        $destinationPlace = $body['destinationPlace'];
-        $destinationAddress = $originPlace['address'];
-        $destination = [
-            'address' => "{$destinationAddress['street']}, {$destinationAddress['postCode']}, /
-                          {$destinationAddress['zone']['name']}",
-            'company' => $destinationPlace['contactCompany'],
-            'first_name' => $destinationPlace['contactFirstname'],
-            'last_name' => $destinationPlace['contactLastname'],
-            'phone' => $destinationPlace['contactPhone']
-        ];
-
-        $packageTypeId = $body['packageType']['id'];
-        $packageSize = array_search($packageTypeId, $this->packageTypeIdMapping);
-
+        $origin = $this->getJobOrigin($body);
+        $destination = $this->getJobDestination($body);
+        $packageSize = array_search($body['packageType']['id'], $this->packageTypeIdMapping);
         $job = new Job($origin, $destination, $packageSize);
-        $job->setId($jobId);
+
+        $jobId = $body['id'];
+        $job->enrich(
+            [
+                'id' => $jobId,
+                'tracking_url' => $body['trackingUrl']
+            ]
+        );
+
         return $job;
+    }
+
+    /**
+     * @param $body
+     * @return array
+     */
+    private function getJobOrigin($body)
+    {
+        return $this->getJobAddress($body, 'originPlace');
+    }
+
+    /**
+     * @param $body
+     * @return array
+     */
+    private function getJobDestination($body)
+    {
+        return $this->getJobAddress($body, 'destinationPlace');
+    }
+
+    private function getJobAddress($body, $address_type)
+    {
+        $place = $body[$address_type];
+        $address = $place['address'];
+        $jobAddress = [
+            'address' => "{$address['street']}, {$address['postCode']}, /
+                          {$address['zone']['name']}",
+            'company' => $place['contactCompany'],
+            'first_name' => $place['contactFirstname'],
+            'last_name' => $place['contactLastname'],
+            'phone' => $place['contactPhone']
+        ];
+        return $jobAddress;
     }
 }
