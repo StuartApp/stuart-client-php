@@ -41,5 +41,5 @@ $package_size = 'small';
 $job = new \Stuart\Job($origin, $destination, $package_size);
 
 $repository = new \Stuart\Repository\JobRepository($httpClient);
-$stuartJobId = $repository.create($job);
+$stuartJobId = $repository.save($job);
 ```
