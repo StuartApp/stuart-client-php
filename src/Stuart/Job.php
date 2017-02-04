@@ -11,15 +11,25 @@ class Job
 
     /**
      * Job constructor.
+     * @param $id
      * @param $origin
      * @param $destination
      * @param $packageSize
      */
-    public function __construct($origin, $destination, $packageSize)
+    public function __construct($id, $origin, $destination, $packageSize)
     {
+        $this->id = $id;
         $this->origin = $origin;
         $this->destination = $destination;
         $this->packageSize = $packageSize;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
@@ -44,21 +54,5 @@ class Job
     public function getPackageSize()
     {
         return $this->packageSize;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param mixed $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
     }
 }

@@ -172,6 +172,25 @@ class JobRepositoryTest extends \PHPUnit_Framework_TestCase
         \Phake::verify($this->httpClient)->performGet('/v1/jobs/' . $jobId);
     }
 
+    public function test_it_get_a_job_should_return_new_job()
+    {
+        // given
+        \Phake::when($this->httpClient)->performPost(\Phake::anyParameters())->thenReturn(
+            new ApiResponse(200, $this->sampleStuartJobResponse())
+        );
+        \Phake::when($this->httpClient)->performGet(\Phake::anyParameters())->thenReturn(
+            new ApiResponse(200, $this->sampleStuartJobResponse())
+        );
+        $job = $this->sampleJob('extra_large');
+        $jobId = $this->jobRepository->save($job);
+
+        // when
+        $stuartJob = $this->jobRepository->get($jobId);
+
+        // then
+        self::assertEquals($stuartJob->getId(), $jobId);
+    }
+
     // TODO: cancel a job
     // TODO: scheduling
     // TODO: parameter validation
@@ -195,7 +214,7 @@ class JobRepositoryTest extends \PHPUnit_Framework_TestCase
         ];
         $package_size = $size;
 
-        return new Job($origin, $destination, $package_size);
+        return new Job('0001', $origin, $destination, $package_size);
     }
 
     private function sampleStuartJobResponse()

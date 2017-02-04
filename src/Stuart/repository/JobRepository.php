@@ -2,11 +2,17 @@
 
 namespace Stuart\Repository;
 
-
 use Stuart\Job;
 
 class JobRepository
 {
+    private $packageTypeIdMapping = [
+        'small' => 1,
+        'medium' => 2,
+        'large' => 3,
+        'extra_large' => 4
+    ];
+
     private $httpClient;
 
     /**
@@ -33,7 +39,7 @@ class JobRepository
             'destinationContactFirstname' => $destination['first_name'],
             'destinationContactLastname' => $destination['last_name'],
             'destinationContactPhone' => $destination['phone'],
-            'packageTypeId' => $this->computePackageTypeId($job)
+            'packageTypeId' => $this->packageTypeIdMapping[$job->getPackageSize()]
         ];
 
         $apiResponse = $this->httpClient->performPost($formParams, '/v1/jobs/package');
@@ -45,18 +51,39 @@ class JobRepository
     public function get($jobId)
     {
         $apiResponse = $this->httpClient->performGet('/v1/jobs/' . $jobId);
-    }
-
-    private function computePackageTypeId($job)
-    {
-        if ($job->getPackageSize() === 'small') {
-            return 1;
-        } elseif ($job->getPackageSize() === 'medium') {
-            return 2;
-        } elseif ($job->getPackageSize() === 'large') {
-            return 3;
-        } elseif ($job->getPackageSize() === 'extra_large') {
-            return 4;
+        if (!$apiResponse->success()) {
+            return null;
         }
+
+        $body = $apiResponse->getBody();
+
+        $jobId = $body['id'];
+
+        $originPlace = $body['originPlace'];
+        $originAddress = $originPlace['address'];
+        $origin = [
+            'address' => "{$originAddress['street']}, {$originAddress['postCode']}, /
+                          {$originAddress['zone']['name']}",
+            'company' => $originPlace['contactCompany'],
+            'first_name' => $originPlace['contactFirstname'],
+            'last_name' => $originPlace['contactLastname'],
+            'phone' => $originPlace['contactPhone']
+        ];
+
+        $destinationPlace = $body['destinationPlace'];
+        $destinationAddress = $originPlace['address'];
+        $destination = [
+            'address' => "{$destinationAddress['street']}, {$destinationAddress['postCode']}, /
+                          {$destinationAddress['zone']['name']}",
+            'company' => $destinationPlace['contactCompany'],
+            'first_name' => $destinationPlace['contactFirstname'],
+            'last_name' => $destinationPlace['contactLastname'],
+            'phone' => $destinationPlace['contactPhone']
+        ];
+
+        $packageTypeId = $body['packageType']['id'];
+        $packageSize = array_search($packageTypeId, $this->packageTypeIdMapping);
+
+        return new Job($jobId, $origin, $destination, $packageSize);
     }
 }
