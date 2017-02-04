@@ -1,10 +1,9 @@
 {
   "name": "maximilientyc/stuart-php",
   "description": "Stuart PHP client library",
-  "homepage": "https://docs.stuart.com/",
+  "homepage": "https://github.com/maximilientyc/stuart-php/",
   "type": "library",
   "license": "MIT",
-  "version": "1.0.0-beta",
   "require": {
     "php": "5.6.*",
     "guzzlehttp/guzzle": "^6.2",
