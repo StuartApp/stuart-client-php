@@ -45,19 +45,7 @@ class JobRepositoryTest extends \PHPUnit_Framework_TestCase
         $this->jobRepository->save($job);
 
         // then
-        $formParams = [
-            'originAddressStreet' => $job->getOrigin()['address'],
-            'originContactCompany' => $job->getOrigin()['company'],
-            'originContactFirstname' => $job->getOrigin()['first_name'],
-            'originContactLastname' => $job->getOrigin()['last_name'],
-            'originContactPhone' => $job->getOrigin()['phone'],
-            'destinationAddressStreet' => $job->getDestination()['address'],
-            'destinationContactCompany' => $job->getDestination()['company'],
-            'destinationContactFirstname' => $job->getDestination()['first_name'],
-            'destinationContactLastname' => $job->getDestination()['last_name'],
-            'destinationContactPhone' => $job->getDestination()['phone'],
-            'packageTypeId' => 1
-        ];
+        $formParams = $this->getFormParam($job, 1);
         $resource = '/v1/jobs/package';
 
         \Phake::verify($this->httpClient)->performPost($formParams, $resource);
@@ -75,19 +63,7 @@ class JobRepositoryTest extends \PHPUnit_Framework_TestCase
         $this->jobRepository->save($job);
 
         // then
-        $formParams = [
-            'originAddressStreet' => $job->getOrigin()['address'],
-            'originContactCompany' => $job->getOrigin()['company'],
-            'originContactFirstname' => $job->getOrigin()['first_name'],
-            'originContactLastname' => $job->getOrigin()['last_name'],
-            'originContactPhone' => $job->getOrigin()['phone'],
-            'destinationAddressStreet' => $job->getDestination()['address'],
-            'destinationContactCompany' => $job->getDestination()['company'],
-            'destinationContactFirstname' => $job->getDestination()['first_name'],
-            'destinationContactLastname' => $job->getDestination()['last_name'],
-            'destinationContactPhone' => $job->getDestination()['phone'],
-            'packageTypeId' => 2
-        ];
+        $formParams = $this->getFormParam($job, 2);
         $resource = '/v1/jobs/package';
 
         \Phake::verify($this->httpClient)->performPost($formParams, $resource);
@@ -105,19 +81,7 @@ class JobRepositoryTest extends \PHPUnit_Framework_TestCase
         $this->jobRepository->save($job);
 
         // then
-        $formParams = [
-            'originAddressStreet' => $job->getOrigin()['address'],
-            'originContactCompany' => $job->getOrigin()['company'],
-            'originContactFirstname' => $job->getOrigin()['first_name'],
-            'originContactLastname' => $job->getOrigin()['last_name'],
-            'originContactPhone' => $job->getOrigin()['phone'],
-            'destinationAddressStreet' => $job->getDestination()['address'],
-            'destinationContactCompany' => $job->getDestination()['company'],
-            'destinationContactFirstname' => $job->getDestination()['first_name'],
-            'destinationContactLastname' => $job->getDestination()['last_name'],
-            'destinationContactPhone' => $job->getDestination()['phone'],
-            'packageTypeId' => 3
-        ];
+        $formParams = $this->getFormParam($job, 3);
         $resource = '/v1/jobs/package';
 
         \Phake::verify($this->httpClient)->performPost($formParams, $resource);
@@ -135,19 +99,7 @@ class JobRepositoryTest extends \PHPUnit_Framework_TestCase
         $this->jobRepository->save($job);
 
         // then
-        $formParams = [
-            'originAddressStreet' => $job->getOrigin()['address'],
-            'originContactCompany' => $job->getOrigin()['company'],
-            'originContactFirstname' => $job->getOrigin()['first_name'],
-            'originContactLastname' => $job->getOrigin()['last_name'],
-            'originContactPhone' => $job->getOrigin()['phone'],
-            'destinationAddressStreet' => $job->getDestination()['address'],
-            'destinationContactCompany' => $job->getDestination()['company'],
-            'destinationContactFirstname' => $job->getDestination()['first_name'],
-            'destinationContactLastname' => $job->getDestination()['last_name'],
-            'destinationContactPhone' => $job->getDestination()['phone'],
-            'packageTypeId' => 4
-        ];
+        $formParams = $this->getFormParam($job, 4);
         $resource = '/v1/jobs/package';
 
         \Phake::verify($this->httpClient)->performPost($formParams, $resource);
@@ -224,5 +176,28 @@ class JobRepositoryTest extends \PHPUnit_Framework_TestCase
             id => '0001',
             trackingUrl => 'http'
         ];
+    }
+
+    /**
+     * @param $job
+     * @param $packageTypeId
+     * @return array
+     */
+    private function getFormParam($job, $packageTypeId)
+    {
+        $formParams = [
+            'originAddressStreet' => $job->getOrigin()['address'],
+            'originContactCompany' => $job->getOrigin()['company'],
+            'originContactFirstname' => $job->getOrigin()['first_name'],
+            'originContactLastname' => $job->getOrigin()['last_name'],
+            'originContactPhone' => $job->getOrigin()['phone'],
+            'destinationAddressStreet' => $job->getDestination()['address'],
+            'destinationContactCompany' => $job->getDestination()['company'],
+            'destinationContactFirstname' => $job->getDestination()['first_name'],
+            'destinationContactLastname' => $job->getDestination()['last_name'],
+            'destinationContactPhone' => $job->getDestination()['phone'],
+            'packageTypeId' => $packageTypeId
+        ];
+        return $formParams;
     }
 }
