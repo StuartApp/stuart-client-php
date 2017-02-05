@@ -41,6 +41,9 @@ class JobRepository
             'destinationContactPhone' => $destination['phone'],
             'packageTypeId' => $this->packageTypeIdMapping[$job->getPackageSize()]
         ];
+        if ($job->getPickupAt()) {
+            $formParams['pickupAt'] = $job->getPickupAt()->format(\DateTime::ATOM);
+        }
 
         $apiResponse = $this->httpClient->performPost($formParams, '/v1/jobs/package');
         if ($apiResponse->success()) {
@@ -69,7 +72,7 @@ class JobRepository
                 'tracking_url' => $body['trackingUrl']
             ]
         );
-
+        $job->schedulePickupAt(\DateTime::createFromFormat(\Datetime::ATOM, $body['pickupAt']));
         return $job;
     }
 

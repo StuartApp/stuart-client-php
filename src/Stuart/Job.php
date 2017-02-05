@@ -7,6 +7,7 @@ class Job
     private $id;
     private $origin;
     private $destination;
+    private $pickupAt;
     private $packageSize;
     private $trackingUrl;
 
@@ -27,6 +28,19 @@ class Job
     {
         $this->id = $args['id'];
         $this->trackingUrl = $args['tracking_url'];
+    }
+
+    public function schedulePickupAt($pickupAt)
+    {
+        $this->pickupAt = $pickupAt;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPickupAt()
+    {
+        return $this->pickupAt;
     }
 
     /**
