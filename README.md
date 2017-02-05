@@ -49,9 +49,9 @@ $stuartJobId = $repository.save($job);
 ```php
 $stuartJob = repository.get($stuartJobId);
 
-$stuartJob->getId();
-$stuartJob->getOrigin();
-$stuartJob->getDestination();
-$stuartJob->getPackageSize();
+$stuartJob->getId(); // 650034
+$stuartJob->getOrigin()['address']; // 5 rue sidi brahim, 75012 Paris
+$stuartJob->getDestination()['first_name']; // Jean-Marc
+$stuartJob->getPackageSize(); // small
 $stuartJob->getTrackingUrl(); // https://track-sandbox.stuart.com/tracking/40353/8be32c5160f7945ce1ec6484f0ee4e50
 ```
