@@ -1,3 +1,5 @@
+[![Latest Stable Version](https://poser.pugx.org/maximilientyc/stuart-php/v/stable)](https://packagist.org/packages/maximilientyc/stuart-php)
+
 # Stuart PHP Client
 For more details, visit [Stuart API documentation](https://docs.stuart.com).
 
