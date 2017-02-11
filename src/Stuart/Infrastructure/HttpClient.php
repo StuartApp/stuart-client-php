@@ -2,37 +2,28 @@
 
 namespace Stuart\Infrastructure;
 
+use GuzzleHttp\Client;
+
 class HttpClient
 {
-    private $provider;
+    private $authenticator;
     private $baseUrl;
 
-    public function __construct($useSandbox, $api_client_id, $api_client_secret)
+    public function __construct($useSandbox, $authenticator)
     {
-        $baseUrl = $this->baseUrl($useSandbox);
-        $this->provider = new \League\OAuth2\Client\Provider\GenericProvider([
-            'clientId' => $api_client_id,
-            'clientSecret' => $api_client_secret,
-            'urlAccessToken' => $baseUrl . '/oauth/token',
-            'redirectUri' => $baseUrl,
-            'urlAuthorize' => $baseUrl . '/oauth/authorize',
-            'urlResourceOwnerDetails' => $baseUrl . '/oauth/resource'
-        ]);
-        $this->baseUrl = $baseUrl;
+        $this->baseUrl = $this->baseUrl($useSandbox);
+        $this->client = new Client();
+        $this->authenticator = $authenticator;
     }
 
     public function performPost($formParams, $resource)
     {
-        $client = $this->provider->getHttpClient();
-
         try {
-            $response = $client->request('POST', $this->baseUrl . $resource, [
+            $response = $this->client->request('POST', $this->baseUrl . $resource, [
                 'form_params' => $formParams,
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $this->accessToken()
-                ]
+                'headers' => $this->defaultHeaders()
             ]);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return new ApiResponse(null, null);
         }
 
@@ -41,24 +32,15 @@ class HttpClient
 
     public function performGet($resource)
     {
-        $client = $this->provider->getHttpClient();
-
         try {
-            $response = $client->request('GET', $this->baseUrl . $resource, [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $this->accessToken()
-                ]
+            $response = $this->client->request('GET', $this->baseUrl . $resource, [
+                'headers' => $this->defaultHeaders()
             ]);
         } catch (Exception $e) {
             return new ApiResponse(null, null);
         }
 
         return ApiResponseFactory::fromGuzzleHttpResponse($response);
-    }
-
-    private function accessToken()
-    {
-        return $this->provider->getAccessToken('client_credentials');
     }
 
     private function baseUrl($useSandbox)
@@ -68,5 +50,13 @@ class HttpClient
         } else {
             return 'https://api.stuart.com';
         }
+    }
+
+    private function defaultHeaders()
+    {
+        return [
+            'Authorization' => 'Bearer ' . $this->authenticator->accessToken(),
+            'User-Agent' => 'stuart-php-client/1.1.0'
+        ];
     }
 }

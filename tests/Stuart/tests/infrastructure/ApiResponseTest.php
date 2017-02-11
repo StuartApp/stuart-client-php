@@ -2,11 +2,9 @@
 
 namespace Stuart\Tests;
 
-use PHPUnit\Framework\TestCase;
-
 use Stuart\Infrastructure\ApiResponse;
 
-class ApiResponseTest extends TestCase
+class ApiResponseTest extends \PHPUnit\Framework\TestCase
 {
 
     public function test_it_should_not_be_successful()
