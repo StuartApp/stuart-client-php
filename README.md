@@ -1,11 +1,10 @@
-[![Latest Stable Version](https://poser.pugx.org/maximilientyc/stuart-php/v/stable)](https://packagist.org/packages/maximilientyc/stuart-php)
-
 # Stuart PHP Client
 For more details, visit [Stuart API documentation](https://docs.stuart.com).
 
 ## Install
 Via Composer
 
+To be updated once published to [packagist](https://packagist.org/)
 ``` bash
 $ composer require maximilientyc/stuart-php
 ```
@@ -13,6 +12,7 @@ $ composer require maximilientyc/stuart-php
 ## Usage
 ### Authenticate
 
+To be updated with new `Authenticator` and new static method to return Stuart API URL.
 ```php
 $useSandbox = true; // will use https://sandbox-api.stuart.com
 $api_client_id = '65176d7a1f4e734f6723hd690825f166f8dadf69fb40af52fffdeac4593e4bc'; // can be found here: https://admin-sandbox.stuart.com/client/api
