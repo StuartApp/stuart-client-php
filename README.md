@@ -2,7 +2,7 @@
 For more details, visit [Stuart API documentation](https://docs.stuart.com).
 
 ## Install
-Via Composer
+Via Composer (**Note:** will be available when published to [packagist](https://packagist.org)).
 
 ``` bash
 $ composer require stuartapp/stuart-client-php
