@@ -10,16 +10,21 @@ $ composer require maximilientyc/stuart-php
 ```
 
 ## Usage
-### Authenticate
+### Authenticator
 
 To be updated with new `Authenticator` and new static method to return Stuart API URL.
 ```php
-$useSandbox = true; // will use https://sandbox-api.stuart.com
 $api_client_id = '65176d7a1f4e734f6723hd690825f166f8dadf69fb40af52fffdeac4593e4bc'; // can be found here: https://admin-sandbox.stuart.com/client/api
 $api_client_secret = '681ae68635c7aadef5cd1jdng8ef357a808cd9dc794811296446f19268d48fcd'; // can be found here: https://admin-sandbox.stuart.com/client/api
 
-$httpClient = new \Stuart\Infrastructure\HttpClient($useSandbox, $api_client_id, $api_client_secret);
+$authenticator = new \Stuart\Infrastructure\Authenticator(Environment::SANDBOX, $api_client_id, $api_client_secret);
 ```
+
+### HttpClient
+```php
+$httpClient = new \Stuart\Infrastructure\HttpClient(authenticator);
+```
+
 
 ### Create a Job
 

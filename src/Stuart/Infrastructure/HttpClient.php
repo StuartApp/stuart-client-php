@@ -6,16 +6,35 @@ use GuzzleHttp\Client;
 
 class HttpClient
 {
+    /**
+     * @var \Stuart\Infrastructure\Authenticator
+     */
     private $authenticator;
+    /**
+     * @var \GuzzleHttp\Client
+     */
+    private $client;
+    /**
+     * @var string
+     */
     private $baseUrl;
 
-    public function __construct($useSandbox, $authenticator)
+    /**
+     * HttpClient constructor.
+     * @param $authenticator
+     */
+    public function __construct($authenticator)
     {
-        $this->baseUrl = $this->baseUrl($useSandbox);
         $this->client = new Client();
         $this->authenticator = $authenticator;
+        $this->baseUrl = $authenticator->getEnvironment()['base_url'];
     }
 
+    /**
+     * @param $formParams
+     * @param $resource
+     * @return ApiResponse
+     */
     public function performPost($formParams, $resource)
     {
         try {
@@ -30,6 +49,10 @@ class HttpClient
         return ApiResponseFactory::fromGuzzleHttpResponse($response);
     }
 
+    /**
+     * @param $resource
+     * @return ApiResponse
+     */
     public function performGet($resource)
     {
         try {
@@ -43,19 +66,13 @@ class HttpClient
         return ApiResponseFactory::fromGuzzleHttpResponse($response);
     }
 
-    private function baseUrl($useSandbox)
-    {
-        if ($useSandbox) {
-            return 'https://sandbox-api.stuart.com';
-        } else {
-            return 'https://api.stuart.com';
-        }
-    }
-
+    /**
+     * @return array
+     */
     private function defaultHeaders()
     {
         return [
-            'Authorization' => 'Bearer ' . $this->authenticator->accessToken(),
+            'Authorization' => 'Bearer ' . $this->authenticator->getAccessToken(),
             'User-Agent' => 'stuart-php-client/1.1.0'
         ];
     }

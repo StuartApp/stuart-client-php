@@ -16,8 +16,7 @@ class HttpClientTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->authenticator = \Phake::mock(Authenticator::class);
-        $useSandbox = true;
-        $this->httpClient = new HttpClient($useSandbox, $this->authenticator);
+        $this->httpClient = new HttpClient($this->authenticator);
     }
 
     public function test_it_sends_the_php_header_on_post()
