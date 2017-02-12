@@ -59,7 +59,7 @@ class HttpClient
             $response = $this->client->request('GET', $this->baseUrl . $resource, [
                 'headers' => $this->defaultHeaders()
             ]);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return new ApiResponse(null, null);
         }
 
