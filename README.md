@@ -6,7 +6,7 @@ Via Composer
 
 To be updated once published to [packagist](https://packagist.org/)
 ``` bash
-$ composer require maximilientyc/stuart-php
+$ composer require stuartapp/stuart-client-php
 ```
 
 ## Usage

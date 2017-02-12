@@ -1,7 +1,7 @@
 {
-  "name": "maximilientyc/stuart-php",
+  "name": "stuartapp/stuart-client-php",
   "description": "Stuart PHP client library",
-  "homepage": "https://github.com/maximilientyc/stuart-php/",
+  "homepage": "https://github.com/StuartApp/stuart-client-php/",
   "type": "library",
   "license": "MIT",
   "require": {
