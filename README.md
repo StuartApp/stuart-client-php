@@ -68,8 +68,6 @@ $pickupAt->add(new \DateInterval('PT1H')); // one hour from now
 
 $job = new \Stuart\Job($origin, $destination, $package_size, ['pickup_at' => $pickupAt]);
 
-
-$repository = new \Stuart\Repository\JobRepository($httpClient);
 $stuartJobId = $stuartClient->getJobRepository()->save($job);
 ```
 
