@@ -63,7 +63,9 @@ class JobRepository
         $origin = $this->getJobOrigin($body);
         $destination = $this->getJobDestination($body);
         $packageSize = array_search($body['packageType']['id'], $this->packageTypeIdMapping);
-        $job = new Job($origin, $destination, $packageSize);
+        $options = ['pickup_at' => \DateTime::createFromFormat(\Datetime::ATOM, $body['pickupAt'])];
+
+        $job = new Job($origin, $destination, $packageSize, $options);
 
         $jobId = $body['id'];
         $job->enrich(
@@ -72,7 +74,7 @@ class JobRepository
                 'tracking_url' => $body['trackingUrl']
             ]
         );
-        $job->schedulePickupAt(\DateTime::createFromFormat(\Datetime::ATOM, $body['pickupAt']));
+
         return $job;
     }
 

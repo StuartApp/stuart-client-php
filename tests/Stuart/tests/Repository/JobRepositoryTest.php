@@ -24,7 +24,7 @@ class JobRepositoryTest extends \PHPUnit_Framework_TestCase
             new ApiResponse(200, $this->sampleStuartJobResponse())
         );
 
-        $job = $this->sampleJob('small');
+        $job = $this->sampleJob('small', []);
 
         // when
         $jobId = $this->jobRepository->save($job);
@@ -39,7 +39,7 @@ class JobRepositoryTest extends \PHPUnit_Framework_TestCase
         \Phake::when($this->httpClient)->performPost(\Phake::anyParameters())->thenReturn(
             new ApiResponse(200, $this->sampleStuartJobResponse())
         );
-        $job = $this->sampleJob('small');
+        $job = $this->sampleJob('small', []);
 
         // when
         $this->jobRepository->save($job);
@@ -57,7 +57,7 @@ class JobRepositoryTest extends \PHPUnit_Framework_TestCase
         \Phake::when($this->httpClient)->performPost(\Phake::anyParameters())->thenReturn(
             new ApiResponse(200, $this->sampleStuartJobResponse())
         );
-        $job = $this->sampleJob('medium');
+        $job = $this->sampleJob('medium', []);
 
         // when
         $this->jobRepository->save($job);
@@ -75,7 +75,7 @@ class JobRepositoryTest extends \PHPUnit_Framework_TestCase
         \Phake::when($this->httpClient)->performPost(\Phake::anyParameters())->thenReturn(
             new ApiResponse(200, $this->sampleStuartJobResponse())
         );
-        $job = $this->sampleJob('large');
+        $job = $this->sampleJob('large', []);
 
         // when
         $this->jobRepository->save($job);
@@ -93,7 +93,7 @@ class JobRepositoryTest extends \PHPUnit_Framework_TestCase
         \Phake::when($this->httpClient)->performPost(\Phake::anyParameters())->thenReturn(
             new ApiResponse(200, $this->sampleStuartJobResponse())
         );
-        $job = $this->sampleJob('extra_large');
+        $job = $this->sampleJob('extra_large', []);
 
         // when
         $this->jobRepository->save($job);
@@ -111,9 +111,7 @@ class JobRepositoryTest extends \PHPUnit_Framework_TestCase
         \Phake::when($this->httpClient)->performPost(\Phake::anyParameters())->thenReturn(
             new ApiResponse(200, $this->sampleStuartJobResponse())
         );
-        $job = $this->sampleJob('small');
-        $pickupAt = $this->getPickupAtDatetime();
-        $job->schedulePickupAt($pickupAt);
+        $job = $this->sampleJob('small', ['pickup_at' => $this->getPickupAtDatetime()]);
 
         // when
         $this->jobRepository->save($job);
@@ -134,16 +132,15 @@ class JobRepositoryTest extends \PHPUnit_Framework_TestCase
         \Phake::when($this->httpClient)->performGet(\Phake::anyParameters())->thenReturn(
             new ApiResponse(200, $this->sampleStuartScheduledJobResponse())
         );
-        $job = $this->sampleJob('small');
+        $pickupAtDateTime = $this->getPickupAtDatetime();
+        $job = $this->sampleJob('small', ['pickup_at' => $pickupAtDateTime]);
 
         // when
-        $pickupAt = $this->getPickupAtDatetime();
-        $job->schedulePickupAt($pickupAt);
         $jobId = $this->jobRepository->save($job);
 
         // then
         $stuartJob = $this->jobRepository->get($jobId);
-        self::assertEquals($stuartJob->getPickupAt(), $pickupAt);
+        self::assertEquals($stuartJob->getPickupAt(), $pickupAtDateTime);
     }
 
     public function test_it_get_a_job_should_call_http_client_w_correct_parameters()
@@ -155,7 +152,7 @@ class JobRepositoryTest extends \PHPUnit_Framework_TestCase
         \Phake::when($this->httpClient)->performGet(\Phake::anyParameters())->thenReturn(
             new ApiResponse(200, $this->sampleStuartJobResponse())
         );
-        $job = $this->sampleJob('extra_large');
+        $job = $this->sampleJob('extra_large', []);
         $jobId = $this->jobRepository->save($job);
 
         // when
@@ -174,7 +171,7 @@ class JobRepositoryTest extends \PHPUnit_Framework_TestCase
         \Phake::when($this->httpClient)->performGet(\Phake::anyParameters())->thenReturn(
             new ApiResponse(200, $this->sampleStuartJobResponse())
         );
-        $job = $this->sampleJob('extra_large');
+        $job = $this->sampleJob('extra_large', []);
         $jobId = $this->jobRepository->save($job);
 
         // when
@@ -186,7 +183,7 @@ class JobRepositoryTest extends \PHPUnit_Framework_TestCase
     }
 
     // helpers
-    private function sampleJob($size)
+    private function sampleJob($size, $options)
     {
         $origin = [
             'address' => '18 rue sidi brahim, 75012 Paris',
@@ -204,7 +201,7 @@ class JobRepositoryTest extends \PHPUnit_Framework_TestCase
         ];
         $package_size = $size;
 
-        return new Job($origin, $destination, $package_size);
+        return new Job($origin, $destination, $package_size, $options);
     }
 
     private function sampleStuartJobResponse()

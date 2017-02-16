@@ -7,8 +7,8 @@ class Job
     private $id;
     private $origin;
     private $destination;
-    private $pickupAt;
     private $packageSize;
+    private $pickupAt;
     private $trackingUrl;
 
     /**
@@ -16,12 +16,14 @@ class Job
      * @param $origin
      * @param $destination
      * @param $packageSize
+     * @param $options
      */
-    public function __construct($origin, $destination, $packageSize)
+    public function __construct($origin, $destination, $packageSize, $options)
     {
         $this->origin = $origin;
         $this->destination = $destination;
         $this->packageSize = $packageSize;
+        $this->pickupAt = $options['pickup_at'];
     }
 
     public function enrich($args)
@@ -30,13 +32,8 @@ class Job
         $this->trackingUrl = $args['tracking_url'];
     }
 
-    public function schedulePickupAt($pickupAt)
-    {
-        $this->pickupAt = $pickupAt;
-    }
-
     /**
-     * @return mixed
+     * @return \DateTime
      */
     public function getPickupAt()
     {
