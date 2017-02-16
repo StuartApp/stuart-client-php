@@ -19,11 +19,11 @@ class Client
         $this->jobRepository = new JobRepository($this->httpClient);
     }
 
-    /**
-     * @return JobRepository
-     */
-    public function getJobRepository()
-    {
-        return $this->jobRepository;
+    public function createJob($job) {
+        return $this->jobRepository->save($job);
+    }
+
+    public function getJob($jobId) {
+        return $this->jobRepository->get($jobId);
     }
 }

@@ -18,7 +18,6 @@ $api_client_id = '65176d7a1f4e734f6723hd690825f166f8dadf69fb40af52fffdeac4593e4b
 $api_client_secret = '681ae68635c7aadef5cd1jdng8ef357a808cd9dc794811296446f19268d48fcd'; // can be found here: https://admin-sandbox.stuart.com/client/api
 
 $stuartClient = new \Stuart\Client($environment, $api_client_id, $api_client_secret);
-
 ```
 
 ### Create a Job
@@ -41,7 +40,7 @@ $destination = [
 $package_size = 'small';
 
 $job = new \Stuart\Job($origin, $destination, $package_size);
-$stuartJobId = $stuartClient->getJobRepository()->save($job);
+$stuartJobId = $stuartClient->createJob($job);
 ```
 
 ### Create a Scheduled Job
@@ -68,13 +67,13 @@ $pickupAt->add(new \DateInterval('PT1H')); // one hour from now
 
 $job = new \Stuart\Job($origin, $destination, $package_size, ['pickup_at' => $pickupAt]);
 
-$stuartJobId = $stuartClient->getJobRepository()->save($job);
+$stuartJobId = $stuartClient->createJob($job);
 ```
 
 ### Get a Job
 
 ```php
-$stuartJob = repository.get($stuartJobId);
+$stuartJob = $stuartClient.getJob($stuartJobId);
 
 $stuartJob->getId(); // 650034
 $stuartJob->getOrigin()['address']; // 5 rue sidi brahim, 75012 Paris
