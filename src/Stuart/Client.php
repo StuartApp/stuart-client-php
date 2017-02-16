@@ -8,22 +8,22 @@ use Stuart\Repository\JobRepository;
 
 class Client
 {
-    private $authenticator;
-    private $httpClient;
-
+    private $jobRepository;
 
     public function __construct($environment, $api_client_id, $api_client_secret)
     {
-        $this->authenticator = new Authenticator($environment, $api_client_id, $api_client_secret);
-        $this->httpClient = new HttpClient($this->authenticator);
-        $this->jobRepository = new JobRepository($this->httpClient);
+        $authenticator = new Authenticator($environment, $api_client_id, $api_client_secret);
+        $httpClient = new HttpClient($authenticator);
+        $this->jobRepository = new JobRepository($httpClient);
     }
 
-    public function createJob($job) {
+    public function createJob($job)
+    {
         return $this->jobRepository->save($job);
     }
 
-    public function getJob($jobId) {
+    public function getJob($jobId)
+    {
         return $this->jobRepository->get($jobId);
     }
 }
