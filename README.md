@@ -73,7 +73,7 @@ $stuartJobId = $stuartClient->createJob($job);
 ### Get a Job
 
 ```php
-$stuartJob = $stuartClient.getJob($stuartJobId);
+$stuartJob = $stuartClient->getJob($stuartJobId);
 
 $stuartJob->getId(); // 650034
 $stuartJob->getOrigin()['address']; // 5 rue sidi brahim, 75012 Paris
