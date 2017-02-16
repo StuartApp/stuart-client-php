@@ -18,7 +18,7 @@ class Job
      * @param $packageSize
      * @param $options
      */
-    public function __construct($origin, $destination, $packageSize, $options)
+    public function __construct($origin, $destination, $packageSize, array $options = array())
     {
         $this->origin = $origin;
         $this->destination = $destination;
