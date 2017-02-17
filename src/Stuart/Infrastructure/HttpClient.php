@@ -3,6 +3,9 @@
 namespace Stuart\Infrastructure;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
+use Stuart\ClientError;
+use Stuart\ClientException;
 
 class HttpClient
 {
@@ -30,11 +33,7 @@ class HttpClient
         $this->baseUrl = $authenticator->getEnvironment()['base_url'];
     }
 
-    /**
-     * @param $formParams
-     * @param $resource
-     * @return ApiResponse
-     */
+
     public function performPost($formParams, $resource)
     {
         try {
@@ -42,8 +41,8 @@ class HttpClient
                 'form_params' => $formParams,
                 'headers' => $this->defaultHeaders()
             ]);
-        } catch (\Exception $e) {
-            return new ApiResponse(null, null);
+        } catch (RequestException $e) {
+            $this->handleRequestException($e);
         }
 
         return ApiResponseFactory::fromGuzzleHttpResponse($response);
@@ -59,8 +58,8 @@ class HttpClient
             $response = $this->client->request('GET', $this->baseUrl . $resource, [
                 'headers' => $this->defaultHeaders()
             ]);
-        } catch (\Exception $e) {
-            return new ApiResponse(null, null);
+        } catch (RequestException $e) {
+            $this->handleRequestException($e);
         }
 
         return ApiResponseFactory::fromGuzzleHttpResponse($response);
@@ -75,5 +74,19 @@ class HttpClient
             'Authorization' => 'Bearer ' . $this->authenticator->getAccessToken(),
             'User-Agent' => 'stuart-php-client/1.1.0'
         ];
+    }
+
+    private function handleRequestException(RequestException $e)
+    {
+        if ($e->hasResponse()) {
+            $errorResponse = json_decode($e->getResponse()->getBody()->getContents());
+            $errors = array();
+            foreach ($errorResponse->errors as $error) {
+                $errors[] = $error;
+            }
+            throw new ClientException($errors);
+        } else {
+            throw $e;
+        }
     }
 }

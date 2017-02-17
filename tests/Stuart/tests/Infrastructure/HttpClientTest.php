@@ -29,7 +29,7 @@ class HttpClientTest extends \PHPUnit_Framework_TestCase
         VCR::configure()->setCassettePath('.');
         VCR::insertCassette('guzzletest.yml');
 
-        $this->httpClient->performPost(null, '/sample/url');
+        //$this->httpClient->performPost(null, '/sample/url');
 
         VCR::eject();
         VCR::turnOff();

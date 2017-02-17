@@ -182,6 +182,23 @@ class JobRepositoryTest extends \PHPUnit_Framework_TestCase
         self::assertNotNull($stuartJob->getTrackingUrl());
     }
 
+    public function test_it_throws_exception_when_address_is_not_valid()
+    {
+        // given
+        \Phake::when($this->httpClient)->performPost(\Phake::anyParameters())->thenReturn(
+            new ApiResponse(200, $this->sampleStuartJobResponse())
+        );
+        \Phake::when($this->httpClient)->performGet(\Phake::anyParameters())->thenReturn(
+            new ApiResponse(null, $this->sampleStuartJobResponse())
+        );
+        $job = $this->sampleJobBadAddress('extra_large', []);
+        $job = $this->jobRepository->save($job);
+
+        // when
+        $stuartJob = $this->jobRepository->get($job->getId());
+
+    }
+
     // helpers
     private function sampleJob($size, $options)
     {
@@ -204,19 +221,40 @@ class JobRepositoryTest extends \PHPUnit_Framework_TestCase
         return new Job($origin, $destination, $package_size, $options);
     }
 
+    private function sampleJobBadAddress($size, $options)
+    {
+        $origin = [
+            'address' => '18 rue sidi brahim, 75012 Paris',
+            'company' => 'WeSellWine Inc.',
+            'first_name' => 'Marcel',
+            'last_name' => 'Poisson',
+            'phone' => '0628739512'
+        ];
+        $destination = [
+            'address' => 'Stupid address to make test fail.',
+            'company' => 'Jean-Marc SAS',
+            'first_name' => 'Jean-Marc',
+            'last_name' => 'Pinchu',
+            'phone' => '0628046934'
+        ];
+        $package_size = $size;
+
+        return new Job($origin, $destination, $package_size, $options);
+    }
+
     private function sampleStuartJobResponse()
     {
-        return [
-            'id' => '0001',
-            'trackingUrl' => 'http',
-        ];
+        $response = new \stdClass();
+        $response->id = '0001';
+        $response->trackingUrl = 'http';
+        return $response;
     }
 
     private function sampleStuartScheduledJobResponse()
     {
-        $result = $this->sampleStuartJobResponse();
-        $result['pickupAt'] = $this->getPickupAtDatetime()->format(\DateTime::ATOM);
-        return $result;
+        $response = $this->sampleStuartJobResponse();
+        $response->pickupAt = $this->getPickupAtDatetime()->format(\DateTime::ATOM);
+        return $response;
     }
 
     private function getFormParam($job, $packageTypeId, $pickupAt)
@@ -242,8 +280,8 @@ class JobRepositoryTest extends \PHPUnit_Framework_TestCase
 
     private function getPickupAtDatetime()
     {
-        $pickupAt = new \DateTime('now');
-        $pickupAt->add(new \DateInterval('P1D'));
+        $pickupAt = new \DateTime('now', new \DateTimeZone('Europe/London'));
+        $pickupAt->add(new \DateInterval('PT1H'));
         return $pickupAt;
     }
 }
