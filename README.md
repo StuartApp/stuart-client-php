@@ -62,7 +62,7 @@ $destination = [
 ];
 $package_size = 'small';
 
-$pickupAt = new \DateTime('now');
+$pickupAt = new \DateTime('now', new DateTimeZone('Europe/London'));
 $pickupAt->add(new \DateInterval('PT1H')); // one hour from now
 
 $job = new \Stuart\Job($origin, $destination, $package_size, ['pickup_at' => $pickupAt]);
