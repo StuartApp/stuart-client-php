@@ -47,7 +47,7 @@ class JobRepository
 
         $apiResponse = $this->httpClient->performPost($formParams, '/v1/jobs/package');
         if ($apiResponse->success()) {
-            return $apiResponse->getBody()['id'];
+            return $this->getJobFromBody($apiResponse->getBody());
         }
     }
 
@@ -58,8 +58,15 @@ class JobRepository
             return null;
         }
 
-        $body = $apiResponse->getBody();
+        return $this->getJobFromBody($apiResponse->getBody());
+    }
 
+    /**
+     * @param $body
+     * @return Job
+     */
+    private function getJobFromBody($body)
+    {
         $origin = $this->getJobOrigin($body);
         $destination = $this->getJobDestination($body);
         $packageSize = array_search($body['packageType']['id'], $this->packageTypeIdMapping);

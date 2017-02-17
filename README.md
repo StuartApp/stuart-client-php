@@ -40,7 +40,7 @@ $destination = [
 $package_size = 'small';
 
 $job = new \Stuart\Job($origin, $destination, $package_size);
-$stuartJobId = $stuartClient->createJob($job);
+$stuartJob = $stuartClient->createJob($job);
 ```
 
 ### Create a Scheduled Job
@@ -67,7 +67,7 @@ $pickupAt->add(new \DateInterval('PT1H')); // one hour from now
 
 $job = new \Stuart\Job($origin, $destination, $package_size, ['pickup_at' => $pickupAt]);
 
-$stuartJobId = $stuartClient->createJob($job);
+$stuartJob = $stuartClient->createJob($job);
 ```
 
 ### Get a Job

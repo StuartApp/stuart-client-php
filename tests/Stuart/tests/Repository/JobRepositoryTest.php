@@ -17,7 +17,7 @@ class JobRepositoryTest extends \PHPUnit_Framework_TestCase
         $this->jobRepository = new JobRepository($this->httpClient);
     }
 
-    public function test_it_create_job_should_return_job_id()
+    public function test_it_create_job_should_return_job()
     {
         // given
         \Phake::when($this->httpClient)->performPost(\Phake::anyParameters())->thenReturn(
@@ -27,10 +27,10 @@ class JobRepositoryTest extends \PHPUnit_Framework_TestCase
         $job = $this->sampleJob('small', []);
 
         // when
-        $jobId = $this->jobRepository->save($job);
+        $job = $this->jobRepository->save($job);
 
         // then
-        self::assertEquals($jobId, 0001);
+        self::assertEquals($job->getId(), 0001);
     }
 
     public function test_it_create_small_job_should_call_http_client_w_correct_parameters()
@@ -136,10 +136,10 @@ class JobRepositoryTest extends \PHPUnit_Framework_TestCase
         $job = $this->sampleJob('small', ['pickup_at' => $pickupAtDateTime]);
 
         // when
-        $jobId = $this->jobRepository->save($job);
+        $job = $this->jobRepository->save($job);
 
         // then
-        $stuartJob = $this->jobRepository->get($jobId);
+        $stuartJob = $this->jobRepository->get($job->getId());
         self::assertEquals($stuartJob->getPickupAt(), $pickupAtDateTime);
     }
 
@@ -153,13 +153,13 @@ class JobRepositoryTest extends \PHPUnit_Framework_TestCase
             new ApiResponse(200, $this->sampleStuartJobResponse())
         );
         $job = $this->sampleJob('extra_large', []);
-        $jobId = $this->jobRepository->save($job);
+        $job = $this->jobRepository->save($job);
 
         // when
-        $this->jobRepository->get($jobId);
+        $this->jobRepository->get($job->getId());
 
         // then
-        \Phake::verify($this->httpClient)->performGet('/v1/jobs/' . $jobId);
+        \Phake::verify($this->httpClient)->performGet('/v1/jobs/' . $job->getId());
     }
 
     public function test_it_get_a_job_should_return_new_job()
@@ -172,13 +172,13 @@ class JobRepositoryTest extends \PHPUnit_Framework_TestCase
             new ApiResponse(200, $this->sampleStuartJobResponse())
         );
         $job = $this->sampleJob('extra_large', []);
-        $jobId = $this->jobRepository->save($job);
+        $job = $this->jobRepository->save($job);
 
         // when
-        $stuartJob = $this->jobRepository->get($jobId);
+        $stuartJob = $this->jobRepository->get($job->getId());
 
         // then
-        self::assertEquals($stuartJob->getId(), $jobId);
+        self::assertEquals($stuartJob->getId(), $job->getId());
         self::assertNotNull($stuartJob->getTrackingUrl());
     }
 
