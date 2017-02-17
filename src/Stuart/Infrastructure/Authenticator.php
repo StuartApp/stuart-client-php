@@ -19,6 +19,7 @@ class Authenticator
     public function __construct($environment, $api_client_id, $api_client_secret)
     {
         $base_url = $environment['base_url'];
+        $this->environment = $environment;
         $this->provider = new GenericProvider([
             'clientId' => $api_client_id,
             'clientSecret' => $api_client_secret,

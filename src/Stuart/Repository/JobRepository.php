@@ -69,16 +69,16 @@ class JobRepository
     {
         $origin = $this->getJobOrigin($body);
         $destination = $this->getJobDestination($body);
-        $packageSize = array_search($body['packageType']['id'], $this->packageTypeIdMapping);
-        $options = ['pickup_at' => \DateTime::createFromFormat(\Datetime::ATOM, $body['pickupAt'])];
+        $packageSize = array_search($body->packageType->id, $this->packageTypeIdMapping);
+        $options = ['pickup_at' => \DateTime::createFromFormat(\Datetime::ATOM, $body->pickupAt)];
 
         $job = new Job($origin, $destination, $packageSize, $options);
 
-        $jobId = $body['id'];
+        $jobId = $body->id;
         $job->enrich(
             [
                 'id' => $jobId,
-                'tracking_url' => $body['trackingUrl']
+                'tracking_url' => $body->trackingUrl
             ]
         );
 
@@ -91,7 +91,7 @@ class JobRepository
      */
     private function getJobOrigin($body)
     {
-        return $this->getJobAddress($body, 'originPlace');
+        return $this->getJobAddress($body->originPlace);
     }
 
     /**
@@ -100,20 +100,19 @@ class JobRepository
      */
     private function getJobDestination($body)
     {
-        return $this->getJobAddress($body, 'destinationPlace');
+        return $this->getJobAddress($body->destinationPlace);
     }
 
-    private function getJobAddress($body, $address_type)
+    private function getJobAddress($place)
     {
-        $place = $body[$address_type];
-        $address = $place['address'];
+        $address = $place->address;
         $jobAddress = [
-            'address' => "{$address['street']}, {$address['postCode']}, /
-                          {$address['zone']['name']}",
-            'company' => $place['contactCompany'],
-            'first_name' => $place['contactFirstname'],
-            'last_name' => $place['contactLastname'],
-            'phone' => $place['contactPhone']
+            'address' => "{$address->street}, {$address->postCode}, /
+                          {$address->zone->name}",
+            'company' => $place->contactCompany,
+            'first_name' => $place->contactFirstname,
+            'last_name' => $place->contactLastname,
+            'phone' => $place->contactPhone
         ];
         return $jobAddress;
     }
