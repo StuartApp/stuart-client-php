@@ -2,38 +2,71 @@
 
 namespace Stuart\Tests;
 
-use VCR\VCR;
+use GuzzleHttp\Client;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
+use GuzzleHttp\Psr7\Response;
+use Stuart\Infrastructure\Environment;
 
 use Stuart\Infrastructure\HttpClient;
 use Stuart\Infrastructure\Authenticator;
 
 class HttpClientTest extends \PHPUnit_Framework_TestCase
 {
-
-    private $httpClient;
     private $authenticator;
+
+    private $container;
+
+    const PHP_CLIENT_USER_AGENT = 'stuart-php-client/1.1.0';
 
     public function setUp()
     {
         $this->authenticator = \Phake::mock(Authenticator::class);
-        $this->httpClient = new HttpClient($this->authenticator);
-    }
-
-    public function test_it_sends_the_php_header_on_post()
-    {
+        \Phake::when($this->authenticator)->getEnvironment()->thenReturn(
+            Environment::SANDBOX
+        );
         \Phake::when($this->authenticator)->accessToken()->thenReturn(
             'sample-access-token'
         );
 
-        VCR::turnOn();
-        VCR::configure()->setCassettePath('.');
-        VCR::insertCassette('guzzletest.yml');
+        $this->container = array();
+    }
 
-        //$this->httpClient->performPost(null, '/sample/url');
+    public function test_it_sends_the_php_lib_version_header_on_get()
+    {
+        $httpClient = $this->getNewHttpContainer();
+        $httpClient->performGet('/test');
 
-        VCR::eject();
-        VCR::turnOff();
+        foreach ($this->container as $transaction) {
+            $userAgent = $transaction['request']->getHeaders()['User-Agent'][0];
+            self::assertEquals(self::PHP_CLIENT_USER_AGENT, $userAgent);
+        }
+    }
 
-        self::assertEquals(true, true);
+    public function test_it_sends_the_php_lib_version_header_on_post()
+    {
+        $httpClient = $this->getNewHttpContainer();
+        $httpClient->performPost([], '/test');
+
+        foreach ($this->container as $transaction) {
+            $userAgent = $transaction['request']->getHeaders()['User-Agent'][0];
+            self::assertEquals(self::PHP_CLIENT_USER_AGENT, $userAgent);
+        }
+    }
+
+    private function getNewHttpContainer()
+    {
+        $history = Middleware::history($this->container);
+        $mock = new MockHandler([
+            new Response(200, ['X - Foo' => 'Bar'])
+        ]);
+        $handler = HandlerStack::create($mock);
+        $handler->push($history);
+
+        $client = new Client(['handler' => $handler]);
+        $httpClient = new HttpClient($this->authenticator, $client);
+
+        return $httpClient;
     }
 }
