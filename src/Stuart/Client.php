@@ -13,7 +13,8 @@ class Client
     public function __construct($environment, $api_client_id, $api_client_secret)
     {
         $authenticator = new Authenticator($environment, $api_client_id, $api_client_secret);
-        $httpClient = new HttpClient($authenticator);
+        $guzzleClient = new \GuzzleHttp\Client();
+        $httpClient = new HttpClient($authenticator, $guzzleClient);
         $this->jobRepository = new JobRepository($httpClient);
     }
 

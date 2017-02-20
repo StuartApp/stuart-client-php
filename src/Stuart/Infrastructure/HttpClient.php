@@ -2,7 +2,6 @@
 
 namespace Stuart\Infrastructure;
 
-use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Stuart\ClientError;
 use Stuart\ClientException;
@@ -25,12 +24,13 @@ class HttpClient
     /**
      * HttpClient constructor.
      * @param $authenticator
+     * @param $client
      */
-    public function __construct($authenticator)
+    public function __construct($authenticator, $client)
     {
-        $this->client = new Client();
         $this->authenticator = $authenticator;
         $this->baseUrl = $authenticator->getEnvironment()['base_url'];
+        $this->client = $client;
     }
 
 
@@ -81,8 +81,10 @@ class HttpClient
         if ($e->hasResponse()) {
             $errorResponse = json_decode($e->getResponse()->getBody()->getContents());
             $errors = array();
-            foreach ($errorResponse->errors as $error) {
-                $errors[] = $error;
+            if (isset($errorResponse->errors)) {
+                foreach ($errorResponse->errors as $error) {
+                    $errors[] = $error;
+                }
             }
             throw new ClientException($errors);
         } else {
