@@ -55,6 +55,17 @@ class HttpClientTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    public function test_it_get_with_the_proper_parameters()
+    {
+        $httpClient = $this->getNewHttpContainer();
+        $httpClient->performGet('/test');
+
+        foreach ($this->container as $transaction) {
+            self::assertEquals('GET', $transaction['request']->getMethod());
+            self::assertEquals('/test', $transaction['request']->getUri()->getPath());
+        }
+    }
+
     private function getNewHttpContainer()
     {
         $history = Middleware::history($this->container);
