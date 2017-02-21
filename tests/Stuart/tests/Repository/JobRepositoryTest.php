@@ -1,6 +1,6 @@
 <?php
 
-namespace Stuart\tests;
+namespace Stuart\Tests;
 
 use Stuart\Infrastructure\ApiResponse;
 use Stuart\Repository\JobRepository;
