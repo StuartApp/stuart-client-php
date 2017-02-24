@@ -64,8 +64,36 @@ $package_size = 'small';
 
 $pickupAt = new \DateTime('now', new DateTimeZone('Europe/London'));
 $pickupAt->add(new \DateInterval('PT1H')); // one hour from now
+$options = ['pickup_at' => $pickupAt];
 
-$job = new \Stuart\Job($origin, $destination, $package_size, ['pickup_at' => $pickupAt]);
+$job = new \Stuart\Job($origin, $destination, $package_size, $options);
+
+$stuartJob = $stuartClient->createJob($job);
+```
+
+### Create a Job with additional information
+
+```php
+$origin = [
+    'address'       => '18 rue sidi brahim, 75012 Paris',
+    'company'       => 'WeSellWine Inc.',
+    'first_name'    => 'Marcel',
+    'last_name'     => 'Poisson',
+    'phone'         => '0628739512'
+];
+$destination = [
+    'address'       => '5 rue sidi brahim, 75012 Paris',
+    'company'       => 'Jean-Marc SAS',
+    'first_name'    => 'Jean-Marc',
+    'last_name'     => 'Pinchu',
+    'phone'         => '0628046934'
+];
+$package_size = 'small';
+
+$clientReference = 'my_order_number';
+$options = ['client_reference' => $clientReference];
+
+$job = new \Stuart\Job($origin, $destination, $package_size, $options);
 
 $stuartJob = $stuartClient->createJob($job);
 ```
@@ -79,6 +107,7 @@ $stuartJob->getId(); // 650034
 $stuartJob->getOrigin()['address']; // 5 rue sidi brahim, 75012 Paris
 $stuartJob->getDestination()['first_name']; // Jean-Marc
 $stuartJob->getPackageSize(); // small
+$stuartJob->getClientReference(); // my_order_number
 $stuartJob->getTrackingUrl(); // https://track-sandbox.stuart.com/tracking/40353/8be32c5160f7945ce1ec6484f0ee4e50
 $stuartJob->getPickupAt();
 ```
