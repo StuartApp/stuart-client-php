@@ -39,7 +39,7 @@ class JobRepositoryTest extends \PHPUnit_Framework_TestCase
         \Phake::when($this->httpClient)->performPost(\Phake::anyParameters())->thenReturn(
             new ApiResponse(200, $this->sampleStuartJobResponse())
         );
-        $job = $this->sampleJob('small', []);
+        $job = $this->sampleJob('small', ['client_reference' => 'ref123']);
 
         // when
         $this->jobRepository->save($job);
@@ -270,7 +270,8 @@ class JobRepositoryTest extends \PHPUnit_Framework_TestCase
             'destinationContactFirstname' => $job->getDestination()['first_name'],
             'destinationContactLastname' => $job->getDestination()['last_name'],
             'destinationContactPhone' => $job->getDestination()['phone'],
-            'packageTypeId' => $packageTypeId
+            'packageTypeId' => $packageTypeId,
+            'clientReference' => $job->getClientReference()
         ];
         if ($pickupAt) {
             $formParams['pickupAt'] = $pickupAt;

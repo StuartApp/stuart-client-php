@@ -39,7 +39,8 @@ class JobRepository
             'destinationContactFirstname' => $destination['first_name'],
             'destinationContactLastname' => $destination['last_name'],
             'destinationContactPhone' => $destination['phone'],
-            'packageTypeId' => $this->packageTypeIdMapping[$job->getPackageSize()]
+            'packageTypeId' => $this->packageTypeIdMapping[$job->getPackageSize()],
+            'clientReference' => $job->getClientReference()
         ];
         if ($job->getPickupAt()) {
             $formParams['pickupAt'] = $job->getPickupAt()->format(\DateTime::ATOM);

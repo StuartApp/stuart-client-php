@@ -8,6 +8,7 @@ class Job
     private $origin;
     private $destination;
     private $packageSize;
+    private $clientReference;
     private $pickupAt;
     private $trackingUrl;
 
@@ -23,6 +24,7 @@ class Job
         $this->origin = $origin;
         $this->destination = $destination;
         $this->packageSize = $packageSize;
+        $this->clientReference = $options['client_reference'];
         $this->pickupAt = $options['pickup_at'];
     }
 
@@ -70,6 +72,14 @@ class Job
     public function getPackageSize()
     {
         return $this->packageSize;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getClientReference()
+    {
+        return $this->clientReference;
     }
 
     /**
