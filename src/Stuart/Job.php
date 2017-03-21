@@ -24,14 +24,22 @@ class Job
         $this->origin = $origin;
         $this->destination = $destination;
         $this->packageSize = $packageSize;
-        $this->clientReference = $options['client_reference'];
-        $this->pickupAt = $options['pickup_at'];
+        if (array_key_exists('client_reference', $options)) {
+            $this->clientReference = $options['client_reference'];
+        }
+        if (array_key_exists('pickup_at', $options)) {
+            $this->pickupAt = $options['pickup_at'];
+        }
     }
 
     public function enrich($args)
     {
-        $this->id = $args['id'];
-        $this->trackingUrl = $args['tracking_url'];
+        if (array_key_exists('id', $args)) {
+            $this->id = $args['id'];
+        }
+        if (array_key_exists('tracking_url', $args)) {
+            $this->trackingUrl = $args['tracking_url'];
+        }
     }
 
     /**
