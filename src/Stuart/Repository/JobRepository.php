@@ -108,8 +108,7 @@ class JobRepository
     {
         $address = $place->address;
         $jobAddress = [
-            'address' => "{$address->street}, {$address->postCode}, /
-                          {$address->zone->name}",
+            'address' => "{$address->street}, {$address->postcode}, {$address->zone->name}",
             'company' => $place->contactCompany,
             'first_name' => $place->contactFirstname,
             'last_name' => $place->contactLastname,
