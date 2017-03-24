@@ -2,6 +2,8 @@
 
 namespace Stuart;
 
+use Stuart\Helpers\ArrayHelper;
+
 class Job
 {
     private $id;
@@ -24,22 +26,14 @@ class Job
         $this->origin = $origin;
         $this->destination = $destination;
         $this->packageSize = $packageSize;
-        if (array_key_exists('client_reference', $options)) {
-            $this->clientReference = $options['client_reference'];
-        }
-        if (array_key_exists('pickup_at', $options)) {
-            $this->pickupAt = $options['pickup_at'];
-        }
+        $this->clientReference = ArrayHelper::getSafe($options, 'client_reference');
+        $this->pickupAt = ArrayHelper::getSafe($options, 'pickup_at');
     }
 
     public function enrich($args)
     {
-        if (array_key_exists('id', $args)) {
-            $this->id = $args['id'];
-        }
-        if (array_key_exists('tracking_url', $args)) {
-            $this->trackingUrl = $args['tracking_url'];
-        }
+        $this->id = ArrayHelper::getSafe($args, 'id');
+        $this->trackingUrl = ArrayHelper::getSafe($args, 'tracking_url');
     }
 
     /**

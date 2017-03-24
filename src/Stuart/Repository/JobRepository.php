@@ -2,6 +2,7 @@
 
 namespace Stuart\Repository;
 
+use Stuart\Helpers\ArrayHelper;
 use Stuart\Job;
 
 class JobRepository
@@ -29,16 +30,16 @@ class JobRepository
         $origin = $job->getOrigin();
         $destination = $job->getDestination();
         $formParams = [
-            'originAddressStreet' => $origin['address'],
-            'originContactCompany' => $origin['company'],
-            'originContactFirstname' => $origin['first_name'],
-            'originContactLastname' => $origin['last_name'],
-            'originContactPhone' => $origin['phone'],
-            'destinationAddressStreet' => $destination['address'],
-            'destinationContactCompany' => $destination['company'],
-            'destinationContactFirstname' => $destination['first_name'],
-            'destinationContactLastname' => $destination['last_name'],
-            'destinationContactPhone' => $destination['phone'],
+            'originAddressStreet' => ArrayHelper::getSafe($origin, 'address'),
+            'originContactCompany' => ArrayHelper::getSafe($origin, 'company'),
+            'originContactFirstname' => ArrayHelper::getSafe($origin, 'first_name'),
+            'originContactLastname' => ArrayHelper::getSafe($origin, 'last_name'),
+            'originContactPhone' => ArrayHelper::getSafe($origin, 'phone'),
+            'destinationAddressStreet' => ArrayHelper::getSafe($destination, 'address'),
+            'destinationContactCompany' => ArrayHelper::getSafe($destination, 'company'),
+            'destinationContactFirstname' => ArrayHelper::getSafe($destination, 'first_name'),
+            'destinationContactLastname' => ArrayHelper::getSafe($destination, 'last_name'),
+            'destinationContactPhone' => ArrayHelper::getSafe($destination, 'phone'),
             'packageTypeId' => $this->packageTypeIdMapping[$job->getPackageSize()],
             'clientReference' => $job->getClientReference()
         ];
@@ -74,11 +75,9 @@ class JobRepository
         $options = ['pickup_at' => \DateTime::createFromFormat(\Datetime::ATOM, $body->pickupAt)];
 
         $job = new Job($origin, $destination, $packageSize, $options);
-
-        $jobId = $body->id;
         $job->enrich(
             [
-                'id' => $jobId,
+                'id' => $body->id,
                 'tracking_url' => $body->trackingUrl
             ]
         );
