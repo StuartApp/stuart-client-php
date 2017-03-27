@@ -1,6 +1,6 @@
 <?php
 
-namespace Stuart\Tests;
+namespace Stuart\Tests\Infrastructure;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
