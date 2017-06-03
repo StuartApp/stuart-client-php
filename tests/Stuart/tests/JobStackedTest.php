@@ -91,6 +91,7 @@ class JobStackedTest extends \PHPUnit_Framework_TestCase
             ->setContactPhone($this->pickup_contact_phone);
 
         $job->addDropOff($this->drop_off_address)
+            ->setDropOffAt($this->dropoff_at())
             ->setComment($this->drop_off_comment)
             ->setContactCompany($this->drop_off_contact_company)
             ->setContactFirstName($this->drop_off_contact_first_name)
@@ -98,8 +99,7 @@ class JobStackedTest extends \PHPUnit_Framework_TestCase
             ->setContactPhone($this->drop_off_contact_phone)
             ->setClientReference($this->drop_off_client_reference)
             ->setPackageDescription($this->drop_off_package_description)
-            ->setPackageType($this->drop_off_package_type)
-            ->setDropOffAt($this->dropoff_at());
+            ->setPackageType($this->drop_off_package_type);
 
         // when
         self::assertEquals($this->expected_json_body(), $job->toJson());

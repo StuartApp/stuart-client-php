@@ -45,7 +45,7 @@ $job->addDropOff('156 rue de Charonne, 75011 Paris')
     ->setContactFirstName('Alex')
     ->setContactLastName('Durand')
     ->setContactPhone('+33634981209')
-    ->setClientReference('Order #617312')
+    ->setClientReference('Order #' . mt_rand(10, 10000))
     ->setPackageDescription('Pizza box.')
     ->setPackageType('small')
     ->setDropOffAt($dropOffAt);
