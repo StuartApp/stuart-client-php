@@ -2,6 +2,7 @@
 
 namespace Stuart\Repository;
 
+use Stuart\Converters\StackedJobToJson;
 use Stuart\Helpers\ArrayHelper;
 use Stuart\Job;
 
@@ -55,7 +56,7 @@ class JobRepository
 
     public function saveStackedJob($job)
     {
-        $body = $job->toJson();
+        $body = StackedJobToJson::convert($job);
         $apiResponse = $this->httpClient->performPost($body, '/v2/jobs');
         if ($apiResponse->success()) {
             return $this->getJobFromResponseBody($apiResponse->getBody());

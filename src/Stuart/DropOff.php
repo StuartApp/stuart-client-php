@@ -30,6 +30,7 @@ class DropOff extends Location
     public function setDropOffAt($dropOffAt)
     {
         $this->dropOffAt = $dropOffAt;
+        return $this;
     }
 
     public function getDropOffAt()

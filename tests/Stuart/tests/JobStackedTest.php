@@ -2,6 +2,7 @@
 
 namespace Stuart\tests;
 
+use Stuart\Converters\StackedJobToJson;
 use Stuart\JobStacked;
 
 class JobStackedTest extends \PHPUnit_Framework_TestCase
@@ -102,6 +103,6 @@ class JobStackedTest extends \PHPUnit_Framework_TestCase
             ->setPackageType($this->drop_off_package_type);
 
         // when
-        self::assertEquals($this->expected_json_body(), $job->toJson());
+        self::assertEquals($this->expected_json_body(), StackedJobToJson::convert($job));
     }
 }
