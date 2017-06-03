@@ -26,4 +26,9 @@ class Client
     {
         return $this->jobRepository->get($jobId);
     }
+
+    public function createStackedJob($job)
+    {
+        return $this->jobRepository->saveStackedJob($job);
+    }
 }

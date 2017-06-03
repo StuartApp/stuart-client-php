@@ -53,6 +53,15 @@ class JobRepository
         }
     }
 
+    public function saveStackedJob($job)
+    {
+        $body = $job->toJson();
+        $apiResponse = $this->httpClient->performPost($body, '/v2/jobs');
+        if ($apiResponse->success()) {
+            return $this->getJobFromResponseBody($apiResponse->getBody());
+        }
+    }
+
     public function get($jobId)
     {
         $apiResponse = $this->httpClient->performGet('/v1/jobs/' . $jobId);
