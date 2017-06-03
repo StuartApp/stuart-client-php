@@ -77,12 +77,12 @@ class JobStackedTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function test_it_uses_expected_json()
+    public function test_it_produces_expected_json()
     {
         // given
-        $jobStacked = new JobStacked();
+        $job = new JobStacked();
 
-        $jobStacked->addPickup($this->pickup_address)
+        $job->addPickup($this->pickup_address)
             ->setPickupAt($this->pickup_at())
             ->setComment($this->pickup_comment)
             ->setContactCompany($this->pickup_contact_company)
@@ -90,7 +90,7 @@ class JobStackedTest extends \PHPUnit_Framework_TestCase
             ->setContactLastName($this->pickup_contact_last_name)
             ->setContactPhone($this->pickup_contact_phone);
 
-        $jobStacked->addDropOff($this->drop_off_address)
+        $job->addDropOff($this->drop_off_address)
             ->setComment($this->drop_off_comment)
             ->setContactCompany($this->drop_off_contact_company)
             ->setContactFirstName($this->drop_off_contact_first_name)
@@ -102,6 +102,6 @@ class JobStackedTest extends \PHPUnit_Framework_TestCase
             ->setDropOffAt($this->dropoff_at());
 
         // when
-        self::assertEquals($this->expected_json_body(), $jobStacked->toJson());
+        self::assertEquals($this->expected_json_body(), $job->toJson());
     }
 }

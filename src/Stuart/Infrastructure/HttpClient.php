@@ -38,7 +38,7 @@ class HttpClient
     {
         try {
             $response = $this->client->request('POST', $this->baseUrl . $resource, [
-                'form_params' => $formParams,
+                'body' => $formParams,
                 'headers' => $this->defaultHeaders()
             ]);
         } catch (RequestException $e) {
@@ -72,7 +72,8 @@ class HttpClient
     {
         return [
             'Authorization' => 'Bearer ' . $this->authenticator->getAccessToken(),
-            'User-Agent' => 'stuart-php-client/1.0.0'
+            'User-Agent' => 'stuart-php-client/2.0.0',
+            'Content-Type' => 'application/json'
         ];
     }
 

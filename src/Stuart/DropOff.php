@@ -37,12 +37,18 @@ class DropOff extends Location
         return $this->dropOffAt;
     }
 
-    public function toArray()
+    public function getPackageType()
     {
-        return array_merge(parent::toArray(), array(
-            'package_type' => $this->packageType,
-            'package_description' => $this->packageDescription,
-            'client_reference' => $this->clientReference,
-        ));
+        return $this->packageType;
+    }
+
+    public function getPackageDescription()
+    {
+        return $this->packageDescription;
+    }
+
+    public function getClientReference()
+    {
+        return $this->clientReference;
     }
 }

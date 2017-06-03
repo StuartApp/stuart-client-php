@@ -18,35 +18,39 @@ function _require_all($dir, $depth = 0)
 require 'vendor/autoload.php';
 _require_all('php');
 
+// authenticator
 $environment = \Stuart\Infrastructure\Environment::SANDBOX;
 $api_client_id = '65176d7a1f4e734f6a4d737190825f166f8dadf69fb40af52fffdeac4593e4bc'; // can be found here: https://admin-sandbox.stuart.com/client/api
 $api_client_secret = '681ae68635c7aadef5cd82cbeeef357a808cd9dc794811296446f19268d48fcd'; // can be found here: https://admin-sandbox.stuart.com/client/api
 $authenticator = new \Stuart\Infrastructure\Authenticator($environment, $api_client_id, $api_client_secret);
 
+// client
 $stuartClient = new \Stuart\Client($authenticator);
 
-$origin = [
-    'address' => '18 rue sidi brahim, 75012 Paris',
-    'company' => 'WeSellWine Inc.',
-    'first_name' => 'Marcel',
-    'last_name' => 'Poisson',
-    'phone' => '0628739512'
-];
-$destination = [
-    'address' => '8 rue sidi brahim 75012 paris',
-    'company' => 'Jean-Marc SAS',
-    'first_name' => 'Jean-Marc',
-    'last_name' => 'Pinchu',
-    'phone' => '0628046934'
-];
-$package_size = 'small';
+$dropOffAt = new \DateTime('now', new DateTimeZone('Europe/London'));
+$dropOffAt->add(new \DateInterval('PT2H'));
 
-$pickupAt = new \DateTime('now', new DateTimeZone('Europe/London'));
-$pickupAt->add(new \DateInterval('PT1H'));
+$job = new \Stuart\JobStacked();
 
-$options = ['pickup_at' => $pickupAt];
-$job = new \Stuart\Job($origin, $destination, $package_size, $options);
+$job->addPickup('46 Boulevard Barbès, 75018 Paris')
+    ->setComment('Wait outside for an employee to come.')
+    ->setContactCompany('KFC Paris Barbès')
+    ->setContactFirstName('Martin')
+    ->setContactLastName('Pont')
+    ->setContactPhone('+33698348756');
 
-$stuartJob = $stuartClient->createJob($job);
+$job->addDropOff('156 rue de Charonne, 75011 Paris')
+    ->setComment('code: 3492B. 3e étage droite. Sonner à Durand.')
+    ->setContactCompany('Durand associates.')
+    ->setContactFirstName('Alex')
+    ->setContactLastName('Durand')
+    ->setContactPhone('+33634981209')
+    ->setClientReference('Order #617312')
+    ->setPackageDescription('Pizza box.')
+    ->setPackageType('small')
+    ->setDropOffAt($dropOffAt);
+
+
+$stuartJob = $stuartClient->createStackedJob($job);
 
 print_r($stuartJob);

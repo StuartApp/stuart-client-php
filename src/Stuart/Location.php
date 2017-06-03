@@ -47,17 +47,33 @@ abstract class Location
         return $this;
     }
 
-    public function toArray()
+    public function getAddress()
     {
-        return array(
-            'address' => $this->address,
-            'comment' => $this->comment,
-            'contact' => array(
-                'firstname' => $this->firstName,
-                'lastname' => $this->lastName,
-                'phone' => $this->phone,
-                'company' => $this->company
-            )
-        );
+        return $this->address;
+    }
+
+    public function getComment()
+    {
+        return $this->comment;
+    }
+
+    public function getPhone()
+    {
+        return $this->phone;
+    }
+
+    public function getFirstName()
+    {
+        return $this->firstName;
+    }
+
+    public function getLastName()
+    {
+        return $this->lastName;
+    }
+
+    public function getCompany()
+    {
+        return $this->company;
     }
 }

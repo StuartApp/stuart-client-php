@@ -12,9 +12,6 @@ class Pickup extends Location
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
     public function getPickupAt()
     {
         return $this->pickupAt;
