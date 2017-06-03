@@ -31,12 +31,20 @@ class JobStackedTest extends \PHPUnit_Framework_TestCase
     private $drop_off_package_description = 'decription';
     private $drop_off_package_type = 'small';
 
+    private function dropoff_at()
+    {
+        $pickupAt = new \DateTime('now', new \DateTimeZone('Europe/London'));
+        $pickupAt->add(new \DateInterval('PT2H'));
+        return $pickupAt;
+    }
+
     private function expected_json_body()
     {
         return json_encode(
             array(
                 'job' => array(
                     'pickup_at' => $this->pickup_at()->format(\DateTime::ATOM),
+                    'dropoff_at' => $this->dropoff_at()->format(\DateTime::ATOM),
                     'pickups' => array(
                         array(
                             'address' => $this->pickup_address,
@@ -90,7 +98,8 @@ class JobStackedTest extends \PHPUnit_Framework_TestCase
             ->setContactPhone($this->drop_off_contact_phone)
             ->setClientReference($this->drop_off_client_reference)
             ->setPackageDescription($this->drop_off_package_description)
-            ->setPackageType($this->drop_off_package_type);
+            ->setPackageType($this->drop_off_package_type)
+            ->setDropOffAt($this->dropoff_at());
 
         // when
         self::assertEquals($this->expected_json_body(), $jobStacked->toJson());
