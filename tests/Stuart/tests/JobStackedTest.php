@@ -14,6 +14,13 @@ class JobStackedTest extends \PHPUnit_Framework_TestCase
     private $pickup_contact_last_name = 'lastname';
     private $pickup_contact_phone = '837746';
 
+    private function pickup_at()
+    {
+        $pickupAt = new \DateTime('now', new \DateTimeZone('Europe/London'));
+        $pickupAt->add(new \DateInterval('PT1H'));
+        return $pickupAt;
+    }
+
     private $drop_off_address = '148 rue de Charenton 75012 Paris';
     private $drop_off_comment = 'comment';
     private $drop_off_contact_company = 'company';
@@ -29,6 +36,7 @@ class JobStackedTest extends \PHPUnit_Framework_TestCase
         return json_encode(
             array(
                 'job' => array(
+                    'pickup_at' => $this->pickup_at()->format(\DateTime::ATOM),
                     'pickups' => array(
                         array(
                             'address' => $this->pickup_address,
@@ -67,6 +75,7 @@ class JobStackedTest extends \PHPUnit_Framework_TestCase
         $jobStacked = new JobStacked();
 
         $jobStacked->addPickup($this->pickup_address)
+            ->setPickupAt($this->pickup_at())
             ->setComment($this->pickup_comment)
             ->setContactCompany($this->pickup_contact_company)
             ->setContactFirstName($this->pickup_contact_first_name)

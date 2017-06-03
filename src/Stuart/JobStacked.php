@@ -47,6 +47,9 @@ class JobStacked
         return json_encode(
             array(
                 'job' => array(
+                    'pickup_at' => count($this->pickups) == 1
+                        ? $this->pickups[0]->getPickupAt()->format(\DateTime::ATOM)
+                        : null,
                     'pickups' => $pickups,
                     'dropoffs' => $dropOffs
                 )
