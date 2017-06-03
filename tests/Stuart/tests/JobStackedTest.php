@@ -3,7 +3,6 @@
 namespace Stuart\tests;
 
 use Stuart\JobStacked;
-use VCR\VCR;
 
 class JobStackedTest extends \PHPUnit_Framework_TestCase
 {
