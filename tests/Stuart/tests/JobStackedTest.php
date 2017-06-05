@@ -93,12 +93,18 @@ class JobStackedTest extends \PHPUnit_Framework_TestCase
 
     public function test_it_produces_expected_pickups_and_drop_offs()
     {
-        self::assertEquals(JsonToStackedJob::convert($this->expected_json_body_resp()), $this->job());
+        self::assertEquals(
+            JsonToStackedJob::convert($this->expected_json_body_resp()),
+            $this->job()
+        );
     }
 
     public function test_it_produces_expected_json()
     {
-        self::assertEquals($this->expected_json_body(), StackedJobToJson::convert($this->job()));
+        self::assertEquals(
+            StackedJobToJson::convert($this->job()),
+            $this->expected_json_body()
+        );
     }
 
     private function expected_json_body()
