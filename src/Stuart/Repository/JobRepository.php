@@ -3,6 +3,8 @@
 namespace Stuart\Repository;
 
 use Stuart\Converters\StackedJobToJson;
+use Stuart\Converters\JsonToStackedJob;
+
 use Stuart\Helpers\ArrayHelper;
 use Stuart\Job;
 
@@ -61,6 +63,15 @@ class JobRepository
         if ($apiResponse->success()) {
             return $this->getJobFromResponseBody($apiResponse->getBody());
         }
+    }
+
+    public function getStackedJob($jobId)
+    {
+        $apiResponse = $this->httpClient->performGet('/v2/jobs/' . $jobId);
+        if (!$apiResponse->success()) {
+            return null;
+        }
+        return JsonToStackedJob::convert($apiResponse->getBody());
     }
 
     public function get($jobId)

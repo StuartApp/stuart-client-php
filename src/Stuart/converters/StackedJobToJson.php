@@ -2,9 +2,17 @@
 
 namespace Stuart\Converters;
 
+use Stuart\JobStacked;
+use Stuart\Location;
+
 class StackedJobToJson
 {
-
+    /**
+     * Converts a JobStacked into a Stuart Job as JSON.
+     *
+     * @param JobStacked $job
+     * @return string
+     */
     public static function convert($job)
     {
         $result = array(
@@ -40,6 +48,11 @@ class StackedJobToJson
         return json_encode($result);
     }
 
+
+    /**
+     * @param Location $location
+     * @return array
+     */
     private static function locationAsArray($location)
     {
         return array(

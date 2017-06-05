@@ -9,7 +9,7 @@ class JobStacked
 
     /**
      * @param $address
-     * @return Pickup
+     * @return \Stuart\Pickup
      */
     public function addPickup($address)
     {
