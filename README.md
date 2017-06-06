@@ -22,11 +22,16 @@ $client = new \Stuart\Client($authenticator);
 ```
 
 ### Create a Job
+The only required fields are the pickup and dropoff addresses. But we **highly recommend** that you fill 
+as many information as you can in order to ensure the delivery process goes well. 
 
-#### Simple
+
+#### Minimalist
 ```php
 $job = new \Stuart\Job();
+
 $job->addPickup('46 Boulevard Barbès, 75018 Paris');
+
 $job->addDropOff('156 rue de Charonne, 75011 Paris');
 
 $client->createJob($job);
@@ -35,18 +40,14 @@ $client->createJob($job);
 #### Complete
 
 ```php
-$pickupAt = new \DateTime('now', new DateTimeZone('Europe/London'));
-$pickupAt->add(new \DateInterval('PT2H'));
-
 $job = new \Stuart\Job();
 
 $job->addPickup('46 Boulevard Barbès, 75018 Paris')
-    ->setPickupAt($pickupAt)
-    ->setComment('Wait outside for an employee to come.')
-    ->setContactCompany('KFC Paris Barbès')
-    ->setContactFirstName('Martin')
-    ->setContactLastName('Pont')
-    ->setContactPhone('+33698348756');
+    ->setComment('Wait outside for an employee to come.')   
+    ->setContactCompany('KFC Paris Barbès')                
+    ->setContactFirstName('Martin')                         
+    ->setContactLastName('Pont')                          
+    ->setContactPhone('+33698348756');                     
 
 $job->addDropOff('156 rue de Charonne, 75011 Paris')
     ->setComment('code: 3492B. 3e étage droite. Sonner à Durand.')
@@ -54,7 +55,9 @@ $job->addDropOff('156 rue de Charonne, 75011 Paris')
     ->setContactFirstName('Alex')
     ->setContactLastName('Durand')
     ->setContactPhone('+33634981209')
-    ->setClientReference('Order #' . mt_rand(10, 10000))
     ->setPackageDescription('Pizza box.')
+    ->setClientReference('Order# : 12345678ABCDE') // Must be unique
     ->setPackageType('small');
+    
+$client->createJob($job);
 ```
