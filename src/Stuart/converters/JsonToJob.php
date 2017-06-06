@@ -22,7 +22,7 @@ class JsonToJob
             $job->addPickup(self::fullTextAddress($delivery->pickup->address))
                 ->setPickupAt(\DateTime::createFromFormat(\DateTime::ATOM, $bodyAsArray->pickup_at))
                 ->setComment($delivery->pickup->comment)
-                ->setContactCompany($delivery->pickup->contact->company)
+                ->setContactCompany($delivery->pickup->contact->company_name)
                 ->setContactFirstName($delivery->pickup->contact->firstname)
                 ->setContactLastName($delivery->pickup->contact->lastname)
                 ->setContactPhone($delivery->pickup->contact->phone);
@@ -33,7 +33,7 @@ class JsonToJob
                 ->setPackageDescription($delivery->package_description)
                 ->setClientReference($delivery->client_reference)
                 ->setComment($delivery->dropoff->comment)
-                ->setContactCompany($delivery->dropoff->contact->company)
+                ->setContactCompany($delivery->dropoff->contact->company_name)
                 ->setContactFirstName($delivery->dropoff->contact->firstname)
                 ->setContactLastName($delivery->dropoff->contact->lastname)
                 ->setContactPhone($delivery->dropoff->contact->phone);

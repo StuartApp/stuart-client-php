@@ -44,7 +44,7 @@ class JsonToJobTest extends \PHPUnit_Framework_TestCase
                                 'firstname' => $this->mock->pickup_contact_first_name,
                                 'lastname' => $this->mock->pickup_contact_last_name,
                                 'phone' => $this->mock->pickup_contact_phone,
-                                'company' => $this->mock->pickup_contact_company
+                                'company_name' => $this->mock->pickup_contact_company
                             )
                         ),
                         'dropoff' => array(
@@ -59,7 +59,7 @@ class JsonToJobTest extends \PHPUnit_Framework_TestCase
                                 'firstname' => $this->mock->drop_off_contact_first_name,
                                 'lastname' => $this->mock->drop_off_contact_last_name,
                                 'phone' => $this->mock->drop_off_contact_phone,
-                                'company' => $this->mock->drop_off_contact_company
+                                'company_name' => $this->mock->drop_off_contact_company
                             )
                         )
                     )
