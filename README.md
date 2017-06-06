@@ -18,97 +18,43 @@ $api_client_id = '65176d7a1f4e734f6723hd690825f166f8dadf69fb40af52fffdeac4593e4b
 $api_client_secret = '681ae68635c7aadef5cd1jdng8ef357a808cd9dc794811296446f19268d48fcd'; // can be found here: https://admin-sandbox.stuart.com/client/api
 $authenticator = new \Stuart\Infrastructure\Authenticator($environment, $api_client_id, $api_client_secret);
 
-$stuartClient = new \Stuart\Client($authenticator);
+$client = new \Stuart\Client($authenticator);
 ```
 
 ### Create a Job
 
+#### Simple
 ```php
-$origin = [
-    'address'       => '18 rue sidi brahim, 75012 Paris',
-    'company'       => 'WeSellWine Inc.',
-    'first_name'    => 'Marcel',
-    'last_name'     => 'Poisson',
-    'phone'         => '0628739512'
-];
-$destination = [
-    'address'       => '5 rue sidi brahim, 75012 Paris',
-    'company'       => 'Jean-Marc SAS',
-    'first_name'    => 'Jean-Marc',
-    'last_name'     => 'Pinchu',
-    'phone'         => '0628046934'
-];
-$package_size = 'small';
+$job = new \Stuart\Job();
+$job->addPickup('46 Boulevard Barbès, 75018 Paris');
+$job->addDropOff('156 rue de Charonne, 75011 Paris');
 
-$job = new \Stuart\Job($origin, $destination, $package_size);
-$stuartJob = $stuartClient->createJob($job);
+$client->createJob($job);
 ```
 
-### Create a Scheduled Job
+#### Complete
 
 ```php
-$origin = [
-    'address'       => '18 rue sidi brahim, 75012 Paris',
-    'company'       => 'WeSellWine Inc.',
-    'first_name'    => 'Marcel',
-    'last_name'     => 'Poisson',
-    'phone'         => '0628739512'
-];
-$destination = [
-    'address'       => '5 rue sidi brahim, 75012 Paris',
-    'company'       => 'Jean-Marc SAS',
-    'first_name'    => 'Jean-Marc',
-    'last_name'     => 'Pinchu',
-    'phone'         => '0628046934'
-];
-$package_size = 'small';
-
 $pickupAt = new \DateTime('now', new DateTimeZone('Europe/London'));
-$pickupAt->add(new \DateInterval('PT1H')); // one hour from now
-$options = ['pickup_at' => $pickupAt];
+$pickupAt->add(new \DateInterval('PT2H'));
 
-$job = new \Stuart\Job($origin, $destination, $package_size, $options);
+$job = new \Stuart\Job();
 
-$stuartJob = $stuartClient->createJob($job);
-```
+$job->addPickup('46 Boulevard Barbès, 75018 Paris')
+    ->setPickupAt($pickupAt)
+    ->setComment('Wait outside for an employee to come.')
+    ->setContactCompany('KFC Paris Barbès')
+    ->setContactFirstName('Martin')
+    ->setContactLastName('Pont')
+    ->setContactPhone('+33698348756');
 
-### Create a Job with additional information
-
-```php
-$origin = [
-    'address'       => '18 rue sidi brahim, 75012 Paris',
-    'company'       => 'WeSellWine Inc.',
-    'first_name'    => 'Marcel',
-    'last_name'     => 'Poisson',
-    'phone'         => '0628739512'
-];
-$destination = [
-    'address'       => '5 rue sidi brahim, 75012 Paris',
-    'company'       => 'Jean-Marc SAS',
-    'first_name'    => 'Jean-Marc',
-    'last_name'     => 'Pinchu',
-    'phone'         => '0628046934'
-];
-$package_size = 'small';
-
-$clientReference = 'my_order_number';
-$options = ['client_reference' => $clientReference];
-
-$job = new \Stuart\Job($origin, $destination, $package_size, $options);
-
-$stuartJob = $stuartClient->createJob($job);
-```
-
-### Get a Job
-
-```php
-$stuartJob = $stuartClient->getJob($stuartJobId);
-
-$stuartJob->getId(); // 650034
-$stuartJob->getOrigin()['address']; // 5 rue sidi brahim, 75012 Paris
-$stuartJob->getDestination()['first_name']; // Jean-Marc
-$stuartJob->getPackageSize(); // small
-$stuartJob->getClientReference(); // my_order_number
-$stuartJob->getTrackingUrl(); // https://track-sandbox.stuart.com/tracking/40353/8be32c5160f7945ce1ec6484f0ee4e50
-$stuartJob->getPickupAt();
+$job->addDropOff('156 rue de Charonne, 75011 Paris')
+    ->setComment('code: 3492B. 3e étage droite. Sonner à Durand.')
+    ->setContactCompany('Durand associates.')
+    ->setContactFirstName('Alex')
+    ->setContactLastName('Durand')
+    ->setContactPhone('+33634981209')
+    ->setClientReference('Order #' . mt_rand(10, 10000))
+    ->setPackageDescription('Pizza box.')
+    ->setPackageType('small');
 ```
