@@ -34,6 +34,11 @@ class HttpClient
     }
 
 
+    /**
+     * @param $formParams
+     * @param $resource
+     * @return ApiResponse
+     */
     public function performPost($formParams, $resource)
     {
         try {

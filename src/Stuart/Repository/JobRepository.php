@@ -6,6 +6,7 @@ use Stuart\Converters\StackedJobToJson;
 use Stuart\Converters\JsonToStackedJob;
 
 use Stuart\Helpers\ArrayHelper;
+use Stuart\Infrastructure\HttpClient;
 use Stuart\Job;
 
 class JobRepository
@@ -17,6 +18,10 @@ class JobRepository
         'extra_large' => 4
     ];
 
+
+    /**
+     * @var HttpClient
+     */
     private $httpClient;
 
     /**
@@ -61,17 +66,16 @@ class JobRepository
         $body = StackedJobToJson::convert($job);
         $apiResponse = $this->httpClient->performPost($body, '/v2/jobs');
         if ($apiResponse->success()) {
-            return $this->getJobFromResponseBody($apiResponse->getBody());
+            return JsonToStackedJob::convert($apiResponse->getBody());
         }
     }
 
     public function getStackedJob($jobId)
     {
         $apiResponse = $this->httpClient->performGet('/v2/jobs/' . $jobId);
-        if (!$apiResponse->success()) {
-            return null;
+        if ($apiResponse->success()) {
+            return JsonToStackedJob::convert($apiResponse->getBody());
         }
-        return JsonToStackedJob::convert($apiResponse->getBody());
     }
 
     public function get($jobId)
