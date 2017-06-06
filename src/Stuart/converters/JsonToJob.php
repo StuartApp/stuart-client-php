@@ -2,21 +2,21 @@
 
 namespace Stuart\converters;
 
-use Stuart\JobStacked;
+use Stuart\Job;
 
 class JsonToJob
 {
     /**
-     * Converts a JSON formatted Stuart Job into a JobStacked object.
+     * Converts a JSON formatted Stuart Job into a Job object.
      *
      * @param String $json
-     * @return JobStacked
+     * @return Job
      */
     public static function convert($json)
     {
         $bodyAsArray = json_decode($json);
 
-        $job = new JobStacked();
+        $job = new Job();
 
         foreach ($bodyAsArray->deliveries as $delivery) {
             $job->addPickup(self::fullTextAddress($delivery->pickup->address))

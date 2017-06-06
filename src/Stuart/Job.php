@@ -2,7 +2,7 @@
 
 namespace Stuart;
 
-class JobStacked
+class Job
 {
     private $pickups = array();
     private $dropOffs = array();

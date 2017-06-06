@@ -2,7 +2,7 @@
 
 namespace Stuart\tests\converters;
 
-use \Stuart\JobStacked;
+use \Stuart\Job;
 
 class Mock
 {
@@ -63,7 +63,7 @@ class Mock
 
     public function job()
     {
-        $job = new JobStacked();
+        $job = new Job();
 
         $job->addPickup($this->pickup_address())
             ->setPickupAt($this->pickup_at())

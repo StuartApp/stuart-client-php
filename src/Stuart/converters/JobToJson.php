@@ -2,15 +2,15 @@
 
 namespace Stuart\Converters;
 
-use Stuart\JobStacked;
+use Stuart\Job;
 use Stuart\Location;
 
 class JobToJson
 {
     /**
-     * Converts a JobStacked into a Stuart Job as JSON.
+     * Converts a Job into a Stuart Job as JSON.
      *
-     * @param JobStacked $job
+     * @param Job $job
      * @return string
      */
     public static function convert($job)
