@@ -28,10 +28,10 @@ class JsonToStackedJob
                 ->setContactPhone($delivery->pickup->contact->phone);
 
             $job->addDropOff(self::fullTextAddress($delivery->dropoff->address))
+                ->setDropOffAt(\DateTime::createFromFormat(\DateTime::ATOM, $bodyAsArray->dropoff_at))
                 ->setPackageType($delivery->package_type)
                 ->setPackageDescription($delivery->package_description)
                 ->setClientReference($delivery->client_reference)
-                ->setDropOffAt(\DateTime::createFromFormat(\DateTime::ATOM, $bodyAsArray->dropoff_at))
                 ->setComment($delivery->dropoff->comment)
                 ->setContactCompany($delivery->dropoff->contact->company)
                 ->setContactFirstName($delivery->dropoff->contact->firstname)

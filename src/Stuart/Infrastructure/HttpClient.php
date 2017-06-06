@@ -85,14 +85,7 @@ class HttpClient
     private function handleRequestException(RequestException $e)
     {
         if ($e->hasResponse()) {
-            $errorResponse = json_decode($e->getResponse()->getBody()->getContents());
-            $errors = array();
-            if (isset($errorResponse->errors)) {
-                foreach ($errorResponse->errors as $error) {
-                    $errors[] = $error;
-                }
-            }
-            throw new ClientException($errors);
+            throw new ClientException('An error occurred when sending the HTTP request, error received: ' . $e->getResponse()->getBody()->getContents());
         } else {
             throw $e;
         }
