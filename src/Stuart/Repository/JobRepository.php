@@ -5,20 +5,10 @@ namespace Stuart\Repository;
 use Stuart\Converters\JobToJson;
 use Stuart\Converters\JsonToJob;
 
-use Stuart\Helpers\ArrayHelper;
 use Stuart\Infrastructure\HttpClient;
-use Stuart\Job;
 
 class JobRepository
 {
-    private $packageTypeIdMapping = [
-        'small' => 1,
-        'medium' => 2,
-        'large' => 3,
-        'extra_large' => 4
-    ];
-
-
     /**
      * @var HttpClient
      */
