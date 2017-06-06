@@ -4,7 +4,7 @@ namespace Stuart\converters;
 
 use Stuart\JobStacked;
 
-class JsonToStackedJob
+class JsonToJob
 {
     /**
      * Converts a JSON formatted Stuart Job into a JobStacked object.

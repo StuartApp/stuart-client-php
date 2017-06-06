@@ -2,9 +2,9 @@
 
 namespace Stuart\Tests\Converters;
 
-use \Stuart\Converters\JsonToStackedJob;
+use \Stuart\Converters\JsonToJob;
 
-class JsonToStackedJobTest extends \PHPUnit_Framework_TestCase
+class JsonToJobTest extends \PHPUnit_Framework_TestCase
 {
     private $mock;
 
@@ -16,7 +16,7 @@ class JsonToStackedJobTest extends \PHPUnit_Framework_TestCase
     public function test_it_produces_expected_pickups_and_drop_offs()
     {
         self::assertEquals(
-            JsonToStackedJob::convert($this->expected_json_body_resp()),
+            JsonToJob::convert($this->expected_json_body_resp()),
             $this->mock->job()
         );
     }

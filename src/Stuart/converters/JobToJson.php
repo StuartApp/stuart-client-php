@@ -5,7 +5,7 @@ namespace Stuart\Converters;
 use Stuart\JobStacked;
 use Stuart\Location;
 
-class StackedJobToJson
+class JobToJson
 {
     /**
      * Converts a JobStacked into a Stuart Job as JSON.
@@ -29,12 +29,12 @@ class StackedJobToJson
 
         $pickups = array();
         foreach ($job->getPickups() as $pickup) {
-            $pickups[] = StackedJobToJson::locationAsArray($pickup);
+            $pickups[] = JobToJson::locationAsArray($pickup);
         }
 
         $dropOffs = array();
         foreach ($job->getDropOffs() as $dropOff) {
-            $dropOffs[] = array_merge(StackedJobToJson::locationAsArray($dropOff), array(
+            $dropOffs[] = array_merge(JobToJson::locationAsArray($dropOff), array(
                 'package_type' => $dropOff->getPackageType(),
                 'package_description' => $dropOff->getPackageDescription(),
                 'client_reference' => $dropOff->getClientReference()
