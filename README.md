@@ -61,3 +61,66 @@ $job->addDropOff('156 rue de Charonne, 75011 Paris')
     
 $client->createJob($job);
 ```
+
+#### Complete with scheduling at pickup
+
+```php
+$job = new \Stuart\Job();
+
+$pickupAt = new \DateTime('now', new DateTimeZone('Europe/London'));
+$pickupAt->add(new \DateInterval('PT2H'));
+
+$job->addPickup('46 Boulevard Barbès, 75018 Paris')
+    ->setPickupAt($pickupAt)
+    ->setComment('Wait outside for an employee to come.')   
+    ->setContactCompany('KFC Paris Barbès')                
+    ->setContactFirstName('Martin')                         
+    ->setContactLastName('Pont')                          
+    ->setContactPhone('+33698348756');                     
+
+$job->addDropOff('156 rue de Charonne, 75011 Paris')
+    ->setComment('code: 3492B. 3e étage droite. Sonner à Durand.')
+    ->setContactCompany('Durand associates.')
+    ->setContactFirstName('Alex')
+    ->setContactLastName('Durand')
+    ->setContactPhone('+33634981209')
+    ->setPackageDescription('Pizza box.')
+    ->setClientReference('Order# : 12345678ABCDE') // Must be unique
+    ->setPackageType('small');
+    
+$client->createJob($job);
+```
+
+#### Complete with stacking (multiple drops)
+
+```php
+$job = new \Stuart\Job();
+
+$job->addPickup('46 Boulevard Barbès, 75018 Paris')
+    ->setComment('Wait outside for an employee to come.')   
+    ->setContactCompany('KFC Paris Barbès')                
+    ->setContactFirstName('Martin')                         
+    ->setContactLastName('Pont')                          
+    ->setContactPhone('+33698348756');                     
+
+$job->addDropOff('156 rue de Charonne, 75011 Paris')
+    ->setComment('code: 3492B. 3e étage droite. Sonner à Durand.')
+    ->setContactCompany('Durand associates.')
+    ->setContactFirstName('Alex')
+    ->setContactLastName('Durand')
+    ->setContactPhone('+33634981209')
+    ->setPackageDescription('Red packet.')
+    ->setClientReference('Order# : 12345678ABCDE') // Must be unique
+    ->setPackageType('small');
+    
+$job->addDropOff('12 avenue claude vellefaux, 75010 Paris')
+    ->setComment('code: 92A42. 2e étage gauche')
+    ->setContactFirstName('Maximilien')
+    ->setContactLastName('Lebluc')
+    ->setContactPhone('+33632341209')
+    ->setPackageDescription('Blue packet.')
+    ->setClientReference('Order# : ABCDE213124') // Must be unique
+    ->setPackageType('small');
+    
+$client->createJob($job);
+```
