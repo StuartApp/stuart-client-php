@@ -8,7 +8,6 @@ class DropOff extends Location
     private $packageDescription;
     private $clientReference;
     private $dropOffAt;
-    private $trackingUrl;
 
     public function setPackageType($packageType)
     {
