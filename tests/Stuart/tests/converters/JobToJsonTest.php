@@ -2,6 +2,7 @@
 
 namespace Stuart\Tests\Converters;
 
+use \Stuart\Tests\Mock;
 use \Stuart\Converters\JobToJson;
 
 class JobToJsonTest extends \PHPUnit_Framework_TestCase

@@ -18,6 +18,9 @@ class JsonToJob
 
         $job = new Job();
 
+        $job->setId($bodyAsArray->id);
+        $job->setStatus($bodyAsArray->status);
+
         foreach ($bodyAsArray->deliveries as $delivery) {
             $job->addPickup(self::fullTextAddress($delivery->pickup->address))
                 ->setPickupAt(\DateTime::createFromFormat(\DateTime::ATOM, $bodyAsArray->pickup_at))
@@ -36,7 +39,8 @@ class JsonToJob
                 ->setContactCompany($delivery->dropoff->contact->company_name)
                 ->setContactFirstName($delivery->dropoff->contact->firstname)
                 ->setContactLastName($delivery->dropoff->contact->lastname)
-                ->setContactPhone($delivery->dropoff->contact->phone);
+                ->setContactPhone($delivery->dropoff->contact->phone)
+                ->setTrackingUrl($delivery->tracking_url);
         }
 
         return $job;

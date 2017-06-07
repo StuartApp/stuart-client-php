@@ -1,11 +1,14 @@
 <?php
 
-namespace Stuart\tests\converters;
+namespace Stuart\Tests;
 
 use \Stuart\Job;
 
 class Mock
 {
+    public $id = '1234567';
+    public $status = 'new';
+
     public $pickup_address_street = '12 rue de rivoli';
     public $pickup_address_postcode = '75004';
     public $pickup_address_country = 'france';
@@ -54,6 +57,8 @@ class Mock
     public $drop_off_package_description = 'decription';
     public $drop_off_package_type = 'small';
 
+    public $drop_off_tracking_url = 'https://track-sandbox.stuart.com/tracking/delivery/1234/1234567890';
+
     public function dropoff_at()
     {
         $pickupAt = new \DateTime('now', new \DateTimeZone('Europe/London'));
@@ -64,6 +69,9 @@ class Mock
     public function job()
     {
         $job = new Job();
+
+        $job->setId($this->id);
+        $job->setStatus($this->status);
 
         $job->addPickup($this->pickup_address())
             ->setPickupAt($this->pickup_at())
@@ -82,7 +90,8 @@ class Mock
             ->setContactPhone($this->drop_off_contact_phone)
             ->setClientReference($this->drop_off_client_reference)
             ->setPackageDescription($this->drop_off_package_description)
-            ->setPackageType($this->drop_off_package_type);
+            ->setPackageType($this->drop_off_package_type)
+            ->setTrackingUrl($this->drop_off_tracking_url);
 
         return $job;
     }

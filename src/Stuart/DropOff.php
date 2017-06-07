@@ -8,6 +8,7 @@ class DropOff extends Location
     private $packageDescription;
     private $clientReference;
     private $dropOffAt;
+    private $trackingUrl;
 
     public function setPackageType($packageType)
     {
@@ -51,5 +52,15 @@ class DropOff extends Location
     public function getClientReference()
     {
         return $this->clientReference;
+    }
+
+    public function getTrackingUrl()
+    {
+        return $this->trackingUrl;
+    }
+
+    public function setTrackingUrl($trackingUrl)
+    {
+        $this->trackingUrl = $trackingUrl;
     }
 }

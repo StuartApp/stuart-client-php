@@ -2,6 +2,7 @@
 
 namespace Stuart\Tests\Converters;
 
+use \Stuart\Tests\Mock;
 use \Stuart\Converters\JsonToJob;
 
 class JsonToJobTest extends \PHPUnit_Framework_TestCase
@@ -25,6 +26,8 @@ class JsonToJobTest extends \PHPUnit_Framework_TestCase
     {
         return json_encode(
             array(
+                'id' => $this->mock->id,
+                'status' => $this->mock->status,
                 'pickup_at' => $this->mock->pickup_at()->format(\DateTime::ATOM),
                 'dropoff_at' => $this->mock->dropoff_at()->format(\DateTime::ATOM),
                 'deliveries' => array(
@@ -32,6 +35,7 @@ class JsonToJobTest extends \PHPUnit_Framework_TestCase
                         'package_type' => $this->mock->drop_off_package_type,
                         'package_description' => $this->mock->drop_off_package_description,
                         'client_reference' => $this->mock->drop_off_client_reference,
+                        'tracking_url' => $this->mock->drop_off_tracking_url,
                         'pickup' => array(
                             'comment' => $this->mock->pickup_comment,
                             'address' => array(

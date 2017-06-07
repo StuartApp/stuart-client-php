@@ -1,5 +1,5 @@
 # Stuart PHP Client
-For more details, visit [Stuart API documentation](https://docs.stuart.com).
+For more details, visit [Stuart API documentation](https://stuart.api-docs.io).
 
 ## Install
 Via Composer (**Note:** will be available when published to [packagist](https://packagist.org)).
