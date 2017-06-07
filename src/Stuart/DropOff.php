@@ -53,14 +53,4 @@ class DropOff extends Location
     {
         return $this->clientReference;
     }
-
-    public function getTrackingUrl()
-    {
-        return $this->trackingUrl;
-    }
-
-    public function setTrackingUrl($trackingUrl)
-    {
-        $this->trackingUrl = $trackingUrl;
-    }
 }

@@ -39,8 +39,7 @@ class JsonToJob
                 ->setContactCompany($delivery->dropoff->contact->company_name)
                 ->setContactFirstName($delivery->dropoff->contact->firstname)
                 ->setContactLastName($delivery->dropoff->contact->lastname)
-                ->setContactPhone($delivery->dropoff->contact->phone)
-                ->setTrackingUrl($delivery->tracking_url);
+                ->setContactPhone($delivery->dropoff->contact->phone);
         }
 
         return $job;

@@ -57,8 +57,6 @@ class Mock
     public $drop_off_package_description = 'decription';
     public $drop_off_package_type = 'small';
 
-    public $drop_off_tracking_url = 'https://track-sandbox.stuart.com/tracking/delivery/1234/1234567890';
-
     public function dropoff_at()
     {
         $pickupAt = new \DateTime('now', new \DateTimeZone('Europe/London'));
@@ -90,8 +88,7 @@ class Mock
             ->setContactPhone($this->drop_off_contact_phone)
             ->setClientReference($this->drop_off_client_reference)
             ->setPackageDescription($this->drop_off_package_description)
-            ->setPackageType($this->drop_off_package_type)
-            ->setTrackingUrl($this->drop_off_tracking_url);
+            ->setPackageType($this->drop_off_package_type);
 
         return $job;
     }
