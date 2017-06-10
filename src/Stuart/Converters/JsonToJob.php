@@ -40,7 +40,7 @@ class JsonToJob
                     ->setContactFirstName($delivery->dropoff->contact->firstname)
                     ->setContactLastName($delivery->dropoff->contact->lastname)
                     ->setContactPhone($delivery->dropoff->contact->phone)
-            );
+            )->setId($delivery->id);
         }
 
         return $job;

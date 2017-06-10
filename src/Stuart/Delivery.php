@@ -12,6 +12,7 @@ class Delivery
      * @var Location
      */
     private $destination;
+    private $id;
 
     /**
      * Delivery constructor.
@@ -22,6 +23,11 @@ class Delivery
     {
         $this->origin = $origin;
         $this->destination = $destination;
+    }
+
+    public function setId($id)
+    {
+        $this->id = $id;
     }
 
     /**

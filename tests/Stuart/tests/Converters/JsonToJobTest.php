@@ -17,13 +17,11 @@ class JsonToJobTest extends \PHPUnit_Framework_TestCase
     public function test_it_produces_expected_pickups_and_drop_offs()
     {
         $job = $this->mock->job();
-
+        $job->link($job->getPickups()[0], $job->getDropOffs()[0])
+            ->setId($this->mock->delivery_id);
         self::assertEquals(
             JsonToJob::convert($this->expected_json_body_resp()),
-            $job->link(
-                $job->getPickups()[0],
-                $job->getDropOffs()[0]
-            )
+            $job
         );
     }
 
@@ -37,6 +35,7 @@ class JsonToJobTest extends \PHPUnit_Framework_TestCase
                 'dropoff_at' => $this->mock->dropoff_at()->format(\DateTime::ATOM),
                 'deliveries' => array(
                     0 => array(
+                        'id' => $this->mock->delivery_id,
                         'package_type' => $this->mock->drop_off_package_type,
                         'package_description' => $this->mock->drop_off_package_description,
                         'client_reference' => $this->mock->drop_off_client_reference,

@@ -43,7 +43,7 @@ class Job
     {
         $delivery = new Delivery($origin, $destination);
         $this->deliveries[] = $delivery;
-        return $this;
+        return $delivery;
     }
 
     /**

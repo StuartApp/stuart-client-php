@@ -64,6 +64,7 @@ class Mock
         return $pickupAt;
     }
 
+    public $delivery_id = '7654321';
 
     /**
      * @return Job
