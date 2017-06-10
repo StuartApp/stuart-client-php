@@ -46,34 +46,6 @@ class Job
         return $this;
     }
 
-    public function hasRoute()
-    {
-        $arrayObject = new \ArrayObject($this->deliveries);
-        $iterator = $arrayObject->getIterator();
-
-        return $this->hasRouteRec($iterator, $iterator->current());
-    }
-
-    private function hasRouteRec($deliveriesIterator, $currentDelivery)
-    {
-        if ($deliveriesIterator->count() === 0) {
-            return false;
-        }
-
-        if (null !== $deliveriesIterator->current()) {
-            if ($currentDelivery->getDestination() !== $deliveriesIterator->current()->getOrigin()) {
-                return false;
-            } else {
-                $deliveriesIterator->next();
-                return $this->hasRouteRec($deliveriesIterator, $deliveriesIterator->current());
-            }
-        } else {
-            return true;
-        }
-
-        return false;
-    }
-
     /**
      * @return Pickup[]
      */

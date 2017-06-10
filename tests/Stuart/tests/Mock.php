@@ -64,6 +64,10 @@ class Mock
         return $pickupAt;
     }
 
+
+    /**
+     * @return Job
+     */
     public function job()
     {
         $job = new Job();
@@ -93,30 +97,19 @@ class Mock
         return $job;
     }
 
-    public function job_($pickupCount, $dropOffCount)
+    public function add_dropoff($job)
     {
-        $job = $this->job();
-        for ($i = 1; $i < $pickupCount; $i++) {
-            $job->addPickup($this->pickup_address())
-                ->setPickupAt($this->pickup_at())
-                ->setComment($this->pickup_comment)
-                ->setContactCompany($this->pickup_contact_company)
-                ->setContactFirstName($this->pickup_contact_first_name)
-                ->setContactLastName($this->pickup_contact_last_name)
-                ->setContactPhone($this->pickup_contact_phone);
-        }
-        for ($i = 1; $i < $dropOffCount; $i++) {
-            $job->addDropOff($this->drop_off_address())
-                ->setDropOffAt($this->dropoff_at())
-                ->setComment($this->drop_off_comment)
-                ->setContactCompany($this->drop_off_contact_company)
-                ->setContactFirstName($this->drop_off_contact_first_name)
-                ->setContactLastName($this->drop_off_contact_last_name)
-                ->setContactPhone($this->drop_off_contact_phone)
-                ->setClientReference($this->drop_off_client_reference)
-                ->setPackageDescription($this->drop_off_package_description)
-                ->setPackageType($this->drop_off_package_type);
-        }
+        $job->addDropOff($this->drop_off_address())
+            ->setDropOffAt($this->dropoff_at())
+            ->setComment($this->drop_off_comment)
+            ->setContactCompany($this->drop_off_contact_company)
+            ->setContactFirstName($this->drop_off_contact_first_name)
+            ->setContactLastName($this->drop_off_contact_last_name)
+            ->setContactPhone($this->drop_off_contact_phone)
+            ->setClientReference($this->drop_off_client_reference)
+            ->setPackageDescription($this->drop_off_package_description)
+            ->setPackageType($this->drop_off_package_type);
+
         return $job;
     }
 }
