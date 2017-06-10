@@ -8,6 +8,7 @@ class Job
     private $status;
     private $pickups = array();
     private $dropOffs = array();
+    private $deliveries = array();
 
     /**
      * @param $address
@@ -31,6 +32,18 @@ class Job
         $dropOff->setAddress($address);
         $this->dropOffs[] = $dropOff;
         return $dropOff;
+    }
+
+    /**
+     * @param Location $origin
+     * @param Location $destination
+     * @return Delivery
+     */
+    public function link($origin, $destination)
+    {
+        $delivery = new Delivery($origin, $destination);
+        $this->deliveries[] = $delivery;
+        return $this;
     }
 
     /**
