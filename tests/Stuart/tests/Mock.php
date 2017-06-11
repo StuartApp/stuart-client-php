@@ -65,6 +65,8 @@ class Mock
     }
 
     public $delivery_id = '7654321';
+    public $delivery_tracking_url = 'https://my-tracking-url';
+    public $delivery_status = 'pending';
 
     /**
      * @return Job

@@ -18,7 +18,10 @@ class JsonToJobTest extends \PHPUnit_Framework_TestCase
     {
         $job = $this->mock->job();
         $job->link($job->getPickups()[0], $job->getDropOffs()[0])
-            ->setId($this->mock->delivery_id);
+            ->setId($this->mock->delivery_id)
+            ->setStatus($this->mock->delivery_status)
+            ->setTrackingUrl($this->mock->delivery_tracking_url);
+
         self::assertEquals(
             JsonToJob::convert($this->expected_json_body_resp()),
             $job
@@ -39,7 +42,8 @@ class JsonToJobTest extends \PHPUnit_Framework_TestCase
                         'package_type' => $this->mock->drop_off_package_type,
                         'package_description' => $this->mock->drop_off_package_description,
                         'client_reference' => $this->mock->drop_off_client_reference,
-                        'tracking_url' => $this->mock->drop_off_tracking_url,
+                        'tracking_url' => $this->mock->delivery_tracking_url,
+                        'status' => $this->mock->delivery_status,
                         'pickup' => array(
                             'comment' => $this->mock->pickup_comment,
                             'address' => array(

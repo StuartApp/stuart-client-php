@@ -4,6 +4,10 @@ namespace Stuart;
 
 class Delivery
 {
+    private $id;
+    private $status;
+    private $trackingUrl;
+
     /**
      * @var Location
      */
@@ -12,7 +16,6 @@ class Delivery
      * @var Location
      */
     private $destination;
-    private $id;
 
     /**
      * Delivery constructor.
@@ -28,6 +31,19 @@ class Delivery
     public function setId($id)
     {
         $this->id = $id;
+        return $this;
+    }
+
+    public function setStatus($status)
+    {
+        $this->status = $status;
+        return $this;
+    }
+
+    public function setTrackingUrl($trackingUrl)
+    {
+        $this->trackingUrl = $trackingUrl;
+        return $this;
     }
 
     /**
