@@ -2,6 +2,8 @@
 
 namespace Stuart;
 
+use Stuart\converters\JsonToJob;
+
 class Job
 {
     private $id;
@@ -35,9 +37,14 @@ class Job
     }
 
     /**
+     * This method allows you to create deliveries from two locations. It's only used by the
+     * JsonToJob converter, you cannot create you own route.
+     *
      * @param Location $origin
      * @param Location $destination
      * @return Delivery
+     *
+     * @see JsonToJob
      */
     public function link($origin, $destination)
     {
@@ -60,6 +67,14 @@ class Job
     public function getDropOffs()
     {
         return $this->dropOffs;
+    }
+
+    /**
+     * @return Delivery[]
+     */
+    public function getDeliveries()
+    {
+        return $this->deliveries;
     }
 
     /**

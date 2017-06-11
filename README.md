@@ -1,5 +1,5 @@
 # Stuart PHP Client
-For more details, visit [Stuart API documentation](https://stuart.api-docs.io).
+For a complete documentation of all endpoints offered by the Stuart API, you can visit [Stuart API documentation](https://stuart.api-docs.io).
 
 ## Install
 Via Composer (**Note:** will be available when published to [packagist](https://packagist.org)).
@@ -10,7 +10,7 @@ $ composer require stuartapp/stuart-client-php
 
 ## Usage
 
-### Stuart Client
+### Initialize client
 
 ```php
 $environment = \Stuart\Infrastructure\Environment::SANDBOX;
@@ -22,8 +22,8 @@ $client = new \Stuart\Client($authenticator);
 ```
 
 ### Create a Job
-The only required fields are the pickup and dropoff addresses. But we **highly recommend** that you fill 
-as many information as you can in order to ensure the delivery process goes well. 
+**Important**: Even if you can create a Job with a minimal set of parameters, we **highly recommend** that you fill as many information as 
+you can in order to ensure the delivery process goes well.
 
 
 #### Minimalist
@@ -32,8 +32,9 @@ $job = new \Stuart\Job();
 
 $job->addPickup('46 Boulevard Barbès, 75018 Paris');
 
-$job->addDropOff('156 rue de Charonne, 75011 Paris');
-
+$job->addDropOff('156 rue de Charonne, 75011 Paris')
+    ->setPackageType('small');
+    
 $client->createJob($job);
 ```
 
@@ -56,13 +57,13 @@ $job->addDropOff('156 rue de Charonne, 75011 Paris')
     ->setContactLastName('Durand')
     ->setContactPhone('+33634981209')
     ->setPackageDescription('Pizza box.')
-    ->setClientReference('Order# : 12345678ABCDE') // Must be unique
+    ->setClientReference('12345678ABCDE') // Must be unique
     ->setPackageType('small');
     
 $client->createJob($job);
 ```
 
-#### Complete with scheduling at pickup
+##### With scheduling at pickup
 
 ```php
 $job = new \Stuart\Job();
@@ -85,13 +86,42 @@ $job->addDropOff('156 rue de Charonne, 75011 Paris')
     ->setContactLastName('Durand')
     ->setContactPhone('+33634981209')
     ->setPackageDescription('Pizza box.')
-    ->setClientReference('Order# : 12345678ABCDE') // Must be unique
+    ->setClientReference('12345678ABCDE') // Must be unique
     ->setPackageType('small');
     
 $client->createJob($job);
 ```
 
-#### Complete with stacking (multiple drops)
+##### With scheduling at drop-off
+
+```php
+$job = new \Stuart\Job();
+
+$dropOffAt = new \DateTime('now', new DateTimeZone('Europe/London'));
+$dropOffAt->add(new \DateInterval('PT2H'));
+
+$job->addPickup('46 Boulevard Barbès, 75018 Paris')
+    ->setComment('Wait outside for an employee to come.')   
+    ->setContactCompany('KFC Paris Barbès')                
+    ->setContactFirstName('Martin')                         
+    ->setContactLastName('Pont')                          
+    ->setContactPhone('+33698348756');                     
+
+$job->addDropOff('156 rue de Charonne, 75011 Paris')
+    ->setDropOffAt($dropOffAt)
+    ->setComment('code: 3492B. 3e étage droite. Sonner à Durand.')
+    ->setContactCompany('Durand associates.')
+    ->setContactFirstName('Alex')
+    ->setContactLastName('Durand')
+    ->setContactPhone('+33634981209')
+    ->setPackageDescription('Pizza box.')
+    ->setClientReference('12345678ABCDE') // Must be unique
+    ->setPackageType('small');
+    
+$client->createJob($job);
+```
+
+##### With stacking (multi-drop)
 
 ```php
 $job = new \Stuart\Job();
@@ -124,3 +154,32 @@ $job->addDropOff('12 avenue claude vellefaux, 75010 Paris')
     
 $client->createJob($job);
 ```
+
+### Get a Job
+
+Once you successfully created a Job you can retrieve it this way:
+
+```php
+$jobId = 126532;
+$job = $client->getJob($jobId);
+```
+
+Or when you create a new Job:
+
+```php
+$job = new \Stuart\Job();
+
+$job->addPickup('46 Boulevard Barbès, 75018 Paris');
+
+$job->addDropOff('156 rue de Charonne, 75011 Paris')
+    ->setPackageType('small');
+    
+$jobWithRoute = $client->createJob($job);
+
+$jobWithRoute->getDeliveries();
+```
+
+The Stuart API determine the optimal route on your behalf, 
+that's why the `getDeliveries()` method will return an empty 
+array when the Job has not been created yet. The `getDeliveries()` 
+method will return an array of `Delivery` as soon as the Job is created.
