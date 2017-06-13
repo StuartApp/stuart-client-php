@@ -183,3 +183,23 @@ The Stuart API determine the optimal route on your behalf,
 that's why the `getDeliveries()` method will return an empty 
 array when the Job has not been created yet. The `getDeliveries()` 
 method will return an array of `Delivery` as soon as the Job is created.
+
+### Custom requests
+You can also send requests on your own without relying on the `\Stuart\Client`.
+It allows you to use endpoint that are not yet available on the `\Stuart\Client` and enjoy the `\Stuart\Authenticator`.
+
+```php
+$environment = \Stuart\Infrastructure\Environment::SANDBOX;
+$api_client_id = '65176d7a1f4e734f6723hd690825f166f8dadf69fb40af52fffdeac4593e4bc'; // can be found here: https://admin-sandbox.stuart.com/client/api
+$api_client_secret = '681ae68635c7aadef5cd1jdng8ef357a808cd9dc794811296446f19268d48fcd'; // can be found here: https://admin-sandbox.stuart.com/client/api
+$authenticator = new \Stuart\Infrastructure\Authenticator($environment, $api_client_id, $api_client_secret);
+
+$httpClient = new \Stuart\HttpClient($authenticator);
+
+// Example: get scheduling slots for paris for the 22nd of May.
+$apiResponse = $httpClient->performGet('/v2/jobs/schedules/paris/pickup/2017-06-22);
+
+// Read the response from the ApiResponse object
+$apiResponse->getStatus();
+$apiResponse->getBody();
+```
