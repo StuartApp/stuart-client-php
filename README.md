@@ -186,7 +186,7 @@ method will return an array of `Delivery` as soon as the Job is created.
 
 ### Custom requests
 You can also send requests on your own without relying on the `\Stuart\Client`.
-It allows you to use endpoint that are not yet available on the `\Stuart\Client` and enjoy the `\Stuart\Authenticator`.
+It allows you to use endpoints that are not yet available on the `\Stuart\Client` and enjoy the `\Stuart\Authenticator`.
 
 ```php
 $environment = \Stuart\Infrastructure\Environment::SANDBOX;
