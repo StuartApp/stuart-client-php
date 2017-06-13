@@ -204,12 +204,12 @@ $api_client_id = '65176d7a1f4e734f6723hd690825f166f8dadf69fb40af52fffdeac4593e4b
 $api_client_secret = '681ae68635c7aadef5cd1jdng8ef357a808cd9dc794811296446f19268d48fcd'; // can be found here: https://admin-sandbox.stuart.com/client/api
 $authenticator = new \Stuart\Infrastructure\Authenticator($environment, $api_client_id, $api_client_secret);
 
-$httpClient = new \Stuart\HttpClient($authenticator);
+$httpClient = new \Stuart\Infrastructure\HttpClient($this->authenticator);
 
 // Example: get scheduling slots for paris for the 22nd of May.
-$apiResponse = $httpClient->performGet('/v2/jobs/schedules/paris/pickup/2017-06-22');
+$apiResponse = $httpClient->performGet('/v2/jobs');
 
 // Read the response from the ApiResponse object
-$apiResponse->getStatus();
+$apiResponse->success();
 $apiResponse->getBody();
 ```
