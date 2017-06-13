@@ -115,4 +115,95 @@ class Mock
 
         return $job;
     }
+
+    public function to_json()
+    {
+        return json_encode(
+            array(
+                'job' => array(
+                    'pickup_at' => $this->pickup_at()->format(\DateTime::ATOM),
+                    'dropoff_at' => $this->dropoff_at()->format(\DateTime::ATOM),
+                    'pickups' => array(
+                        array(
+                            'address' => $this->pickup_address(),
+                            'comment' => $this->pickup_comment,
+                            'contact' => array(
+                                'firstname' => $this->pickup_contact_first_name,
+                                'lastname' => $this->pickup_contact_last_name,
+                                'phone' => $this->pickup_contact_phone,
+                                'company' => $this->pickup_contact_company
+                            )
+                        )
+                    ),
+                    'dropoffs' => array(
+                        array(
+                            'address' => $this->drop_off_address(),
+                            'comment' => $this->drop_off_comment,
+                            'contact' => array(
+                                'firstname' => $this->drop_off_contact_first_name,
+                                'lastname' => $this->drop_off_contact_last_name,
+                                'phone' => $this->drop_off_contact_phone,
+                                'company' => $this->drop_off_contact_company
+                            ),
+                            'package_type' => $this->drop_off_package_type,
+                            'package_description' => $this->drop_off_package_description,
+                            'client_reference' => $this->drop_off_client_reference
+                        )
+                    )
+                )
+            )
+        );
+    }
+
+    public function to_json_response()
+    {
+        return json_encode(
+            array(
+                'id' => $this->id,
+                'status' => $this->status,
+                'pickup_at' => $this->pickup_at()->format(\DateTime::ATOM),
+                'dropoff_at' => $this->dropoff_at()->format(\DateTime::ATOM),
+                'deliveries' => array(
+                    0 => array(
+                        'id' => $this->delivery_id,
+                        'package_type' => $this->drop_off_package_type,
+                        'package_description' => $this->drop_off_package_description,
+                        'client_reference' => $this->drop_off_client_reference,
+                        'tracking_url' => $this->delivery_tracking_url,
+                        'status' => $this->delivery_status,
+                        'pickup' => array(
+                            'comment' => $this->pickup_comment,
+                            'address' => array(
+                                'street' => $this->pickup_address_street,
+                                'postcode' => $this->pickup_address_postcode,
+                                'city' => $this->pickup_address_city,
+                                'country' => $this->pickup_address_country
+                            ),
+                            'contact' => array(
+                                'firstname' => $this->pickup_contact_first_name,
+                                'lastname' => $this->pickup_contact_last_name,
+                                'phone' => $this->pickup_contact_phone,
+                                'company_name' => $this->pickup_contact_company
+                            )
+                        ),
+                        'dropoff' => array(
+                            'comment' => $this->drop_off_comment,
+                            'address' => array(
+                                'street' => $this->drop_off_address_street,
+                                'postcode' => $this->drop_off_address_postcode,
+                                'city' => $this->pickup_address_city,
+                                'country' => $this->pickup_address_country
+                            ),
+                            'contact' => array(
+                                'firstname' => $this->drop_off_contact_first_name,
+                                'lastname' => $this->drop_off_contact_last_name,
+                                'phone' => $this->drop_off_contact_phone,
+                                'company_name' => $this->drop_off_contact_company
+                            )
+                        )
+                    )
+                )
+            )
+        );
+    }
 }

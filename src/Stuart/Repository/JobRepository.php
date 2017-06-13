@@ -16,7 +16,7 @@ class JobRepository
 
     /**
      * JobRepository constructor.
-     * @param $httpClient
+     * @param HttpClient $httpClient
      */
     public function __construct($httpClient)
     {
