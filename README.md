@@ -206,10 +206,7 @@ $authenticator = new \Stuart\Infrastructure\Authenticator($environment, $api_cli
 
 $httpClient = new \Stuart\Infrastructure\HttpClient($this->authenticator);
 
-// Example: get scheduling slots for paris for the 22nd of May.
-$apiResponse = $httpClient->performGet('/v2/jobs');
-
-// Read the response from the ApiResponse object
+$apiResponse = $httpClient->performGet('/v2/jobs?page=1');
 $apiResponse->success();
 $apiResponse->getBody();
 ```
