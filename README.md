@@ -197,7 +197,7 @@ $authenticator = new \Stuart\Infrastructure\Authenticator($environment, $api_cli
 $httpClient = new \Stuart\HttpClient($authenticator);
 
 // Example: get scheduling slots for paris for the 22nd of May.
-$apiResponse = $httpClient->performGet('/v2/jobs/schedules/paris/pickup/2017-06-22);
+$apiResponse = $httpClient->performGet('/v2/jobs/schedules/paris/pickup/2017-06-22');
 
 // Read the response from the ApiResponse object
 $apiResponse->getStatus();
