@@ -10,6 +10,16 @@ $ composer require stuartapp/stuart-client-php
 
 ## Usage
 
+1. [Initialize Client](#initialize-client)
+2. [Create a Job](#create-a-job)
+    1. [Minimalist](#minimalist)
+    2. [Complete](#complete)
+        1. [With scheduling at pickup](#with-scheduling-at-pickup)
+        2. [With scheduling at drop-off](#with-scheduling-at-drop-off)
+        3. [With stacking (multi-drop)](#with-stacking-multi-drop)
+3. [Get a Job](#get-a-job)
+4. [Custom requests](#custom-requests)
+
 ### Initialize client
 
 ```php
