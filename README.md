@@ -51,14 +51,14 @@ $job->addPickup('46 Boulevard Barbès, 75018 Paris')
     ->setContactPhone('+33698348756');                     
 
 $job->addDropOff('156 rue de Charonne, 75011 Paris')
+    ->setPackageType('small')
     ->setComment('code: 3492B. 3e étage droite. Sonner à Durand.')
     ->setContactCompany('Durand associates.')
     ->setContactFirstName('Alex')
     ->setContactLastName('Durand')
     ->setContactPhone('+33634981209')
     ->setPackageDescription('Pizza box.')
-    ->setClientReference('12345678ABCDE') // Must be unique
-    ->setPackageType('small');
+    ->setClientReference('12345678ABCDE'); // Must be unique
     
 $client->createJob($job);
 ```
@@ -80,14 +80,14 @@ $job->addPickup('46 Boulevard Barbès, 75018 Paris')
     ->setContactPhone('+33698348756');                     
 
 $job->addDropOff('156 rue de Charonne, 75011 Paris')
+    ->setPackageType('small')
     ->setComment('code: 3492B. 3e étage droite. Sonner à Durand.')
     ->setContactCompany('Durand associates.')
     ->setContactFirstName('Alex')
     ->setContactLastName('Durand')
     ->setContactPhone('+33634981209')
     ->setPackageDescription('Pizza box.')
-    ->setClientReference('12345678ABCDE') // Must be unique
-    ->setPackageType('small');
+    ->setClientReference('12345678ABCDE'); // Must be unique
     
 $client->createJob($job);
 ```
@@ -108,6 +108,7 @@ $job->addPickup('46 Boulevard Barbès, 75018 Paris')
     ->setContactPhone('+33698348756');                     
 
 $job->addDropOff('156 rue de Charonne, 75011 Paris')
+    ->setPackageType('small')
     ->setDropOffAt($dropOffAt)
     ->setComment('code: 3492B. 3e étage droite. Sonner à Durand.')
     ->setContactCompany('Durand associates.')
@@ -115,8 +116,7 @@ $job->addDropOff('156 rue de Charonne, 75011 Paris')
     ->setContactLastName('Durand')
     ->setContactPhone('+33634981209')
     ->setPackageDescription('Pizza box.')
-    ->setClientReference('12345678ABCDE') // Must be unique
-    ->setPackageType('small');
+    ->setClientReference('12345678ABCDE'); // Must be unique
     
 $client->createJob($job);
 ```
@@ -134,23 +134,23 @@ $job->addPickup('46 Boulevard Barbès, 75018 Paris')
     ->setContactPhone('+33698348756');                     
 
 $job->addDropOff('156 rue de Charonne, 75011 Paris')
+    ->setPackageType('small')
     ->setComment('code: 3492B. 3e étage droite. Sonner à Durand.')
     ->setContactCompany('Durand associates.')
     ->setContactFirstName('Alex')
     ->setContactLastName('Durand')
     ->setContactPhone('+33634981209')
     ->setPackageDescription('Red packet.')
-    ->setClientReference('Order# : 12345678ABCDE') // Must be unique
-    ->setPackageType('small');
+    ->setClientReference('12345678ABCDE'); // Must be unique;
     
 $job->addDropOff('12 avenue claude vellefaux, 75010 Paris')
+    ->setPackageType('small')
     ->setComment('code: 92A42. 2e étage gauche')
     ->setContactFirstName('Maximilien')
     ->setContactLastName('Lebluc')
     ->setContactPhone('+33632341209')
     ->setPackageDescription('Blue packet.')
-    ->setClientReference('Order# : ABCDE213124') // Must be unique
-    ->setPackageType('small');
+    ->setClientReference('ABCDE213124'); // Must be unique
     
 $client->createJob($job);
 ```
