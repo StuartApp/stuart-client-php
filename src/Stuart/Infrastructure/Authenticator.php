@@ -83,7 +83,7 @@ class Authenticator
 
     private function accessTokenCacheKey()
     {
-        $envAsString = $this->environment === Environment::SANDBOX ? 'SANDBOX' : 'PRODUTION';
+        $envAsString = $this->environment === Environment::SANDBOX ? 'SANDBOX' : 'PRODUCTION';
         return 'STUART_' . $envAsString . '_CACHE_ACCESS_TOKEN_KEY';
     }
 }

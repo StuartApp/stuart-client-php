@@ -18,7 +18,7 @@ class HttpClientTest extends \PHPUnit_Framework_TestCase
 
     private $container;
 
-    const PHP_CLIENT_USER_AGENT = 'stuart-php-client/1.0.0';
+    const PHP_CLIENT_USER_AGENT = 'stuart-php-client/2.0.0';
 
     public function setUp()
     {
@@ -47,7 +47,7 @@ class HttpClientTest extends \PHPUnit_Framework_TestCase
     public function test_it_sends_the_php_lib_version_header_on_post()
     {
         $httpClient = $this->getNewHttpContainer();
-        $httpClient->performPost([], '/test');
+        $httpClient->performPost(null, '/test');
 
         foreach ($this->container as $transaction) {
             $userAgent = $transaction['request']->getHeaders()['User-Agent'][0];

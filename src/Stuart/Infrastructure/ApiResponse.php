@@ -20,6 +20,6 @@ class ApiResponse
 
     public function success()
     {
-        return $this->statusCode === 200;
+        return in_array($this->statusCode, [200, 201], true);
     }
 }

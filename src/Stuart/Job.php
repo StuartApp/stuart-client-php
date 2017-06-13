@@ -2,46 +2,79 @@
 
 namespace Stuart;
 
-use Stuart\Helpers\ArrayHelper;
+use Stuart\converters\JsonToJob;
 
 class Job
 {
     private $id;
-    private $origin;
-    private $destination;
-    private $packageSize;
-    private $clientReference;
-    private $pickupAt;
-    private $trackingUrl;
+    private $status;
+    private $pickups = array();
+    private $dropOffs = array();
+    private $deliveries = array();
 
     /**
-     * Job constructor.
-     * @param $origin
-     * @param $destination
-     * @param $packageSize
-     * @param $options
+     * @param $address
+     * @return \Stuart\Pickup
      */
-    public function __construct($origin, $destination, $packageSize, array $options = array())
+    public function addPickup($address)
     {
-        $this->origin = $origin;
-        $this->destination = $destination;
-        $this->packageSize = $packageSize;
-        $this->clientReference = ArrayHelper::getSafe($options, 'client_reference');
-        $this->pickupAt = ArrayHelper::getSafe($options, 'pickup_at');
-    }
-
-    public function enrich($args)
-    {
-        $this->id = ArrayHelper::getSafe($args, 'id');
-        $this->trackingUrl = ArrayHelper::getSafe($args, 'tracking_url');
+        $pickup = new Pickup();
+        $pickup->setAddress($address);
+        $this->pickups[] = $pickup;
+        return $pickup;
     }
 
     /**
-     * @return \DateTime
+     * @param $address
+     * @return DropOff
      */
-    public function getPickupAt()
+    public function addDropOff($address)
     {
-        return $this->pickupAt;
+        $dropOff = new DropOff();
+        $dropOff->setAddress($address);
+        $this->dropOffs[] = $dropOff;
+        return $dropOff;
+    }
+
+    /**
+     * This method allows you to create deliveries from two locations. It's only used by the
+     * JsonToJob converter, you cannot create you own route.
+     *
+     * @param Location $origin
+     * @param Location $destination
+     * @return Delivery
+     *
+     * @see JsonToJob
+     */
+    public function link($origin, $destination)
+    {
+        $delivery = new Delivery($origin, $destination);
+        $this->deliveries[] = $delivery;
+        return $delivery;
+    }
+
+    /**
+     * @return Pickup[]
+     */
+    public function getPickups()
+    {
+        return $this->pickups;
+    }
+
+    /**
+     * @return DropOff[]
+     */
+    public function getDropOffs()
+    {
+        return $this->dropOffs;
+    }
+
+    /**
+     * @return Delivery[]
+     */
+    public function getDeliveries()
+    {
+        return $this->deliveries;
     }
 
     /**
@@ -53,42 +86,26 @@ class Job
     }
 
     /**
-     * @return mixed
+     * @param mixed $id
      */
-    public function getOrigin()
+    public function setId($id)
     {
-        return $this->origin;
+        $this->id = $id;
     }
 
     /**
      * @return mixed
      */
-    public function getDestination()
+    public function getStatus()
     {
-        return $this->destination;
+        return $this->status;
     }
 
     /**
-     * @return mixed
+     * @param mixed $status
      */
-    public function getPackageSize()
+    public function setStatus($status)
     {
-        return $this->packageSize;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getClientReference()
-    {
-        return $this->clientReference;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTrackingUrl()
-    {
-        return $this->trackingUrl;
+        $this->status = $status;
     }
 }

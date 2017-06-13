@@ -2,7 +2,6 @@
 
 namespace Stuart;
 
-use Stuart\Infrastructure\Authenticator;
 use Stuart\Infrastructure\HttpClient;
 use Stuart\Repository\JobRepository;
 
