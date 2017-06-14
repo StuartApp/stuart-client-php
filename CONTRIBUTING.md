@@ -1,6 +1,6 @@
 # Contributing
 
-This project is yours, feel free to contribute and make this it better.
+This project is yours, feel free to contribute and make it better.
 
 
 ## Fork and clone the repository locally
