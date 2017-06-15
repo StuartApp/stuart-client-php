@@ -75,6 +75,8 @@ $client->createJob($job);
 
 ##### With scheduling at pickup
 
+For more information about job scheduling you should [check our API documentation](https://stuart.api-docs.io/v2/jobs/scheduling-a-job).
+
 ```php
 $job = new \Stuart\Job();
 
@@ -103,6 +105,8 @@ $client->createJob($job);
 ```
 
 ##### With scheduling at drop-off
+
+For more information about job scheduling you should [check our API documentation](https://stuart.api-docs.io/v2/jobs/scheduling-a-job).
 
 ```php
 $job = new \Stuart\Job();
