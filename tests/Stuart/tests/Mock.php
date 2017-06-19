@@ -32,7 +32,7 @@ class Mock
     {
         $pickupAt = new \DateTime('now', new \DateTimeZone('Europe/London'));
         $pickupAt->add(new \DateInterval('PT1H'));
-        return $pickupAt;
+        return $pickupAt->format(\DateTime::ATOM);
     }
 
     public $drop_off_address_street = '148 rue de charenton';
@@ -61,7 +61,7 @@ class Mock
     {
         $pickupAt = new \DateTime('now', new \DateTimeZone('Europe/London'));
         $pickupAt->add(new \DateInterval('PT2H'));
-        return $pickupAt;
+        return $pickupAt->format(\DateTime::ATOM);
     }
 
     public $delivery_id = '7654321';
@@ -79,7 +79,7 @@ class Mock
         $job->setStatus($this->status);
 
         $job->addPickup($this->pickup_address())
-            ->setPickupAt($this->pickup_at())
+            ->setPickupAt(\DateTime::createFromFormat(\DateTime::ATOM, $this->pickup_at()))
             ->setComment($this->pickup_comment)
             ->setContactCompany($this->pickup_contact_company)
             ->setContactFirstName($this->pickup_contact_first_name)
@@ -87,7 +87,7 @@ class Mock
             ->setContactPhone($this->pickup_contact_phone);
 
         $job->addDropOff($this->drop_off_address())
-            ->setDropOffAt($this->dropoff_at())
+            ->setDropOffAt(\DateTime::createFromFormat(\DateTime::ATOM, $this->dropoff_at()))
             ->setComment($this->drop_off_comment)
             ->setContactCompany($this->drop_off_contact_company)
             ->setContactFirstName($this->drop_off_contact_first_name)
@@ -102,8 +102,10 @@ class Mock
 
     public function add_dropoff($job)
     {
+
+
         $job->addDropOff($this->drop_off_address())
-            ->setDropOffAt($this->dropoff_at())
+            ->setDropOffAt(\DateTime::createFromFormat(\DateTime::ATOM, $this->dropoff_at()))
             ->setComment($this->drop_off_comment)
             ->setContactCompany($this->drop_off_contact_company)
             ->setContactFirstName($this->drop_off_contact_first_name)
@@ -121,8 +123,8 @@ class Mock
         return json_encode(
             array(
                 'job' => array(
-                    'pickup_at' => $this->pickup_at()->format(\DateTime::ATOM),
-                    'dropoff_at' => $this->dropoff_at()->format(\DateTime::ATOM),
+                    'pickup_at' => $this->pickup_at(),
+                    'dropoff_at' => $this->dropoff_at(),
                     'pickups' => array(
                         array(
                             'address' => $this->pickup_address(),
@@ -161,8 +163,8 @@ class Mock
             array(
                 'id' => $this->id,
                 'status' => $this->status,
-                'pickup_at' => $this->pickup_at()->format(\DateTime::ATOM),
-                'dropoff_at' => $this->dropoff_at()->format(\DateTime::ATOM),
+                'pickup_at' => $this->pickup_at(),
+                'dropoff_at' => $this->dropoff_at(),
                 'deliveries' => array(
                     0 => array(
                         'id' => $this->delivery_id,
