@@ -5,7 +5,7 @@
   "type": "library",
   "license": "MIT",
   "require": {
-    "php": "5.6.*",
+    "php": ">=5.3",
     "guzzlehttp/guzzle": "^6.2",
     "league/oauth2-client": "^2.1",
     "desarrolla2/cache": "^2.0"
