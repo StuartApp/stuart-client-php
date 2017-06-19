@@ -21,7 +21,7 @@ composer install
 All the tests should run successfully:
 
 ```bash
-php vendor/bin/phpunit ./tests
+vendor/bin/phpunit --debug -c phpunit.xml.dist
 ```
 
 ## Create a pull request
