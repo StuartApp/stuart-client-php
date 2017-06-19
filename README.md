@@ -1,3 +1,5 @@
+[ ![Codeship Status for StuartApp/stuart-client-php](https://app.codeship.com/projects/724b1210-3725-0135-3056-466529bde11a/status?branch=master)](https://app.codeship.com/projects/227364)
+
 # Stuart PHP Client
 For a complete documentation of all endpoints offered by the Stuart API, you can visit [Stuart API documentation](https://stuart.api-docs.io).
 
