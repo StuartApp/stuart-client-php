@@ -4,7 +4,7 @@
 For a complete documentation of all endpoints offered by the Stuart API, you can visit [Stuart API documentation](https://stuart.api-docs.io).
 
 ## Install
-Via Composer (**Note:** will be available when published to [packagist](https://packagist.org)).
+Via Composer:
 
 ``` bash
 $ composer require stuartapp/stuart-client-php
