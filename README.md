@@ -17,8 +17,7 @@ $ composer require stuartapp/stuart-client-php
     1. [Minimalist](#minimalist)
     2. [Complete](#complete)
         1. [With scheduling at pickup](#with-scheduling-at-pickup)
-        2. [With scheduling at drop-off](#with-scheduling-at-drop-off)
-        3. [With stacking (multi-drop)](#with-stacking-multi-drop)
+        2. [With stacking (multi-drop)](#with-stacking-multi-drop)
 3. [Get a Job](#get-a-job)
 4. [Custom requests](#custom-requests)
 
@@ -95,37 +94,6 @@ $job->addPickup('46 Boulevard Barbès, 75018 Paris')
 
 $job->addDropOff('156 rue de Charonne, 75011 Paris')
     ->setPackageType('small')
-    ->setComment('code: 3492B. 3e étage droite. Sonner à Durand.')
-    ->setContactCompany('Durand associates.')
-    ->setContactFirstName('Alex')
-    ->setContactLastName('Durand')
-    ->setContactPhone('+33634981209')
-    ->setPackageDescription('Pizza box.')
-    ->setClientReference('12345678ABCDE'); // Must be unique
-    
-$client->createJob($job);
-```
-
-##### With scheduling at drop-off
-
-For more information about job scheduling you should [check our API documentation](https://stuart.api-docs.io/v2/jobs/scheduling-a-job).
-
-```php
-$job = new \Stuart\Job();
-
-$dropOffAt = new \DateTime('now', new DateTimeZone('Europe/London'));
-$dropOffAt->add(new \DateInterval('PT2H'));
-
-$job->addPickup('46 Boulevard Barbès, 75018 Paris')
-    ->setComment('Wait outside for an employee to come.')   
-    ->setContactCompany('KFC Paris Barbès')                
-    ->setContactFirstName('Martin')                         
-    ->setContactLastName('Pont')                          
-    ->setContactPhone('+33698348756');                     
-
-$job->addDropOff('156 rue de Charonne, 75011 Paris')
-    ->setPackageType('small')
-    ->setDropOffAt($dropOffAt)
     ->setComment('code: 3492B. 3e étage droite. Sonner à Durand.')
     ->setContactCompany('Durand associates.')
     ->setContactFirstName('Alex')
