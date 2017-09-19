@@ -1,6 +1,6 @@
 <?php
 
-namespace Stuart\converters;
+namespace Stuart\Converters;
 
 use Stuart\Job;
 
