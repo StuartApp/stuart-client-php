@@ -4,7 +4,6 @@ namespace Stuart\Repository;
 
 use Stuart\Converters\JobToJson;
 use Stuart\Converters\JsonToJob;
-
 use Stuart\Infrastructure\HttpClient;
 
 class JobRepository
@@ -29,6 +28,8 @@ class JobRepository
         $apiResponse = $this->httpClient->performPost($body, '/v2/jobs');
         if ($apiResponse->success()) {
             return JsonToJob::convert($apiResponse->getBody());
+        } else {
+            return json_decode($apiResponse->getBody());
         }
     }
 
@@ -37,6 +38,8 @@ class JobRepository
         $apiResponse = $this->httpClient->performGet('/v2/jobs/' . $jobId);
         if ($apiResponse->success()) {
             return JsonToJob::convert($apiResponse->getBody());
+        } else {
+            return json_decode($apiResponse->getBody());
         }
     }
 }

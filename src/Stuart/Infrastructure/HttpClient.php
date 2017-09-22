@@ -5,7 +5,6 @@ namespace Stuart\Infrastructure;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Stuart\ClientError;
-use Stuart\ClientException;
 
 class HttpClient
 {
@@ -48,7 +47,11 @@ class HttpClient
                 'headers' => $this->defaultHeaders()
             ]);
         } catch (RequestException $e) {
-            $this->handleRequestException($e);
+            if ($e->hasResponse()) {
+                $response = $e->getResponse();
+            } else {
+                throw $e;
+            }
         }
 
         return ApiResponseFactory::fromGuzzleHttpResponse($response);
@@ -65,7 +68,11 @@ class HttpClient
                 'headers' => $this->defaultHeaders()
             ]);
         } catch (RequestException $e) {
-            $this->handleRequestException($e);
+            if ($e->hasResponse()) {
+                $response = $e->getResponse();
+            } else {
+                throw $e;
+            }
         }
 
         return ApiResponseFactory::fromGuzzleHttpResponse($response);
@@ -81,14 +88,5 @@ class HttpClient
             'User-Agent' => 'stuart-php-client/2.0.0',
             'Content-Type' => 'application/json'
         ];
-    }
-
-    private function handleRequestException(RequestException $e)
-    {
-        if ($e->hasResponse()) {
-            throw new ClientException('An error occurred when sending the HTTP request, error received: ' . $e->getResponse()->getBody()->getContents());
-        } else {
-            throw $e;
-        }
     }
 }

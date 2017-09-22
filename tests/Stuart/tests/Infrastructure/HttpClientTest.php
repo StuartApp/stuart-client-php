@@ -7,10 +7,9 @@ use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
-use Stuart\Infrastructure\Environment;
-
-use Stuart\Infrastructure\HttpClient;
 use Stuart\Infrastructure\Authenticator;
+use Stuart\Infrastructure\Environment;
+use Stuart\Infrastructure\HttpClient;
 
 class HttpClientTest extends \PHPUnit_Framework_TestCase
 {
@@ -35,7 +34,7 @@ class HttpClientTest extends \PHPUnit_Framework_TestCase
 
     public function test_it_sends_the_php_lib_version_header_on_get()
     {
-        $httpClient = $this->getNewHttpContainer();
+        $httpClient = $this->httpClientWith200OK();
         $httpClient->performGet('/test');
 
         foreach ($this->container as $transaction) {
@@ -46,7 +45,7 @@ class HttpClientTest extends \PHPUnit_Framework_TestCase
 
     public function test_it_sends_the_php_lib_version_header_on_post()
     {
-        $httpClient = $this->getNewHttpContainer();
+        $httpClient = $this->httpClientWith200OK();
         $httpClient->performPost(null, '/test');
 
         foreach ($this->container as $transaction) {
@@ -57,7 +56,7 @@ class HttpClientTest extends \PHPUnit_Framework_TestCase
 
     public function test_it_get_with_the_proper_parameters()
     {
-        $httpClient = $this->getNewHttpContainer();
+        $httpClient = $this->httpClientWith200OK();
         $httpClient->performGet('/test');
 
         foreach ($this->container as $transaction) {
@@ -66,11 +65,36 @@ class HttpClientTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    private function getNewHttpContainer()
+    public function test_it_gets_correct_error_response()
+    {
+        $httpClient = $this->httpClientWith422CantGeocodeAddress();
+        $response = $httpClient->performGet('/test');
+        $response_as_object = json_decode($response->getBody());
+
+        self::assertEquals("CANT_GEOCODE_ADDRESS", $response_as_object->error);
+        self::assertEquals("The address can't be geocoded", $response_as_object->message);
+    }
+
+    private function httpClientWith200OK()
     {
         $history = Middleware::history($this->container);
         $mock = new MockHandler([
             new Response(200, ['X - Foo' => 'Bar'])
+        ]);
+        $handler = HandlerStack::create($mock);
+        $handler->push($history);
+
+        $client = new Client(['handler' => $handler]);
+        $httpClient = new HttpClient($this->authenticator, $client);
+
+        return $httpClient;
+    }
+
+    private function httpClientWith422CantGeocodeAddress()
+    {
+        $history = Middleware::history($this->container);
+        $mock = new MockHandler([
+            new Response(422, [], "{ \"error\": \"CANT_GEOCODE_ADDRESS\", \"message\": \"The address can't be geocoded\"}")
         ]);
         $handler = HandlerStack::create($mock);
         $handler->push($history);
