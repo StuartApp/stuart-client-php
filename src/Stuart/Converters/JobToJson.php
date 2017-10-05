@@ -20,11 +20,11 @@ class JobToJson
         );
 
         if (count($job->getPickups()) === 1 && $job->getPickups()[0]->getPickupAt() !== null) {
-            $result['job']['pickup_at'] = $job->getPickups()[0]->getPickupAt()->format(\DateTime::ATOM);
+            $result['job']['pickup_at'] = $job->getPickups()[0]->getPickupAt()->format(JsonToJob::$STUART_DATE_FORMAT);
         }
 
         if (count($job->getDropOffs()) === 1 && $job->getDropOffs()[0]->getDropOffAt() !== null) {
-            $result['job']['dropoff_at'] = $job->getDropOffs()[0]->getDropOffAt()->format(\DateTime::ATOM);
+            $result['job']['dropoff_at'] = $job->getDropOffs()[0]->getDropOffAt()->format(JsonToJob::$STUART_DATE_FORMAT);
         }
 
         $pickups = array();

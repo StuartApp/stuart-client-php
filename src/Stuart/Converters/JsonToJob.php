@@ -6,6 +6,8 @@ use Stuart\Job;
 
 class JsonToJob
 {
+    public static $STUART_DATE_FORMAT = "Y-m-d\TH:i:s.uO";
+
     /**
      * Converts a JSON formatted Stuart Job into a Job object.
      *
@@ -24,14 +26,14 @@ class JsonToJob
             $job
                 ->link(
                     $job->addPickup(self::fullTextAddress($delivery->pickup->address))
-                        ->setPickupAt(\DateTime::createFromFormat(\DateTime::ATOM, $body->pickup_at))
+                        ->setPickupAt(\DateTime::createFromFormat(self::$STUART_DATE_FORMAT, $body->pickup_at))
                         ->setComment($delivery->pickup->comment)
                         ->setContactCompany($delivery->pickup->contact->company_name)
                         ->setContactFirstName($delivery->pickup->contact->firstname)
                         ->setContactLastName($delivery->pickup->contact->lastname)
                         ->setContactPhone($delivery->pickup->contact->phone),
                     $job->addDropOff(self::fullTextAddress($delivery->dropoff->address))
-                        ->setDropOffAt(\DateTime::createFromFormat(\DateTime::ATOM, $body->dropoff_at))
+                        ->setDropOffAt(\DateTime::createFromFormat(self::$STUART_DATE_FORMAT, $body->dropoff_at))
                         ->setPackageType($delivery->package_type)
                         ->setPackageDescription($delivery->package_description)
                         ->setClientReference($delivery->client_reference)

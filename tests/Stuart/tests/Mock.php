@@ -2,6 +2,7 @@
 
 namespace Stuart\Tests;
 
+use Stuart\Converters\JsonToJob;
 use \Stuart\Job;
 
 class Mock
@@ -30,9 +31,9 @@ class Mock
 
     public function pickup_at()
     {
-        $pickupAt = new \DateTime('now', new \DateTimeZone('Europe/London'));
+        $pickupAt = new \DateTime('2000-01-01', new \DateTimeZone('Europe/London'));
         $pickupAt->add(new \DateInterval('PT1H'));
-        return $pickupAt->format(\DateTime::ATOM);
+        return $pickupAt->format(JsonToJob::$STUART_DATE_FORMAT);
     }
 
     public $drop_off_address_street = '148 rue de charenton';
@@ -59,9 +60,9 @@ class Mock
 
     public function dropoff_at()
     {
-        $pickupAt = new \DateTime('now', new \DateTimeZone('Europe/London'));
+        $pickupAt = new \DateTime('2000-01-02', new \DateTimeZone('Europe/London'));
         $pickupAt->add(new \DateInterval('PT2H'));
-        return $pickupAt->format(\DateTime::ATOM);
+        return $pickupAt->format(JsonToJob::$STUART_DATE_FORMAT);
     }
 
     public $delivery_id = '7654321';
@@ -79,7 +80,7 @@ class Mock
         $job->setStatus($this->status);
 
         $job->addPickup($this->pickup_address())
-            ->setPickupAt(\DateTime::createFromFormat(\DateTime::ATOM, $this->pickup_at()))
+            ->setPickupAt(\DateTime::createFromFormat(JsonToJob::$STUART_DATE_FORMAT, $this->pickup_at()))
             ->setComment($this->pickup_comment)
             ->setContactCompany($this->pickup_contact_company)
             ->setContactFirstName($this->pickup_contact_first_name)
@@ -87,7 +88,7 @@ class Mock
             ->setContactPhone($this->pickup_contact_phone);
 
         $job->addDropOff($this->drop_off_address())
-            ->setDropOffAt(\DateTime::createFromFormat(\DateTime::ATOM, $this->dropoff_at()))
+            ->setDropOffAt(\DateTime::createFromFormat(JsonToJob::$STUART_DATE_FORMAT, $this->dropoff_at()))
             ->setComment($this->drop_off_comment)
             ->setContactCompany($this->drop_off_contact_company)
             ->setContactFirstName($this->drop_off_contact_first_name)
@@ -105,7 +106,7 @@ class Mock
 
 
         $job->addDropOff($this->drop_off_address())
-            ->setDropOffAt(\DateTime::createFromFormat(\DateTime::ATOM, $this->dropoff_at()))
+            ->setDropOffAt(\DateTime::createFromFormat(JsonToJob::$STUART_DATE_FORMAT, $this->dropoff_at()))
             ->setComment($this->drop_off_comment)
             ->setContactCompany($this->drop_off_contact_company)
             ->setContactFirstName($this->drop_off_contact_first_name)
