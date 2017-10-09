@@ -22,4 +22,9 @@ class ApiResponse
     {
         return in_array($this->statusCode, [200, 201], true);
     }
+
+    public function getStatusCode()
+    {
+        return $this->statusCode;
+    }
 }
