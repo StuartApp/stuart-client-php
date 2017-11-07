@@ -40,6 +40,10 @@ class Delivery
         return $this;
     }
 
+    public function getTrackingUrl(){
+        return $this->trackingUrl;
+    }
+
     public function setTrackingUrl($trackingUrl)
     {
         $this->trackingUrl = $trackingUrl;
