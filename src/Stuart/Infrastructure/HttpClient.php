@@ -85,7 +85,7 @@ class HttpClient
     {
         return [
             'Authorization' => 'Bearer ' . $this->authenticator->getAccessToken(),
-            'User-Agent' => 'stuart-php-client/2.1.2',
+            'User-Agent' => 'stuart-php-client/2.1.3',
             'Content-Type' => 'application/json'
         ];
     }
