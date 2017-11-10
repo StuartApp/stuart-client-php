@@ -17,7 +17,7 @@ class HttpClientTest extends \PHPUnit_Framework_TestCase
 
     private $container;
 
-    const PHP_CLIENT_USER_AGENT = 'stuart-php-client/2.1.2';
+    const PHP_CLIENT_USER_AGENT = 'stuart-php-client/2.1.4';
 
     public function setUp()
     {
