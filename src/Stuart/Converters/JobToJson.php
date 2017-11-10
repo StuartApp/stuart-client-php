@@ -23,10 +23,6 @@ class JobToJson
             $result['job']['pickup_at'] = $job->getPickups()[0]->getPickupAt()->format(JsonToJob::$STUART_DATE_FORMAT);
         }
 
-        if (count($job->getDropOffs()) === 1 && $job->getDropOffs()[0]->getDropOffAt() !== null) {
-            $result['job']['dropoff_at'] = $job->getDropOffs()[0]->getDropOffAt()->format(JsonToJob::$STUART_DATE_FORMAT);
-        }
-
         $pickups = array();
         foreach ($job->getPickups() as $pickup) {
             $pickups[] = JobToJson::locationAsArray($pickup);

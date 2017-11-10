@@ -58,13 +58,6 @@ class Mock
     public $drop_off_package_description = 'decription';
     public $drop_off_package_type = 'small';
 
-    public function dropoff_at()
-    {
-        $pickupAt = new \DateTime('2000-01-02', new \DateTimeZone('Europe/London'));
-        $pickupAt->add(new \DateInterval('PT2H'));
-        return $pickupAt->format(JsonToJob::$STUART_DATE_FORMAT);
-    }
-
     public $delivery_id = '7654321';
     public $delivery_tracking_url = 'https://my-tracking-url';
     public $delivery_status = 'pending';
@@ -88,7 +81,6 @@ class Mock
             ->setContactPhone($this->pickup_contact_phone);
 
         $job->addDropOff($this->drop_off_address())
-            ->setDropOffAt(\DateTime::createFromFormat(JsonToJob::$STUART_DATE_FORMAT, $this->dropoff_at()))
             ->setComment($this->drop_off_comment)
             ->setContactCompany($this->drop_off_contact_company)
             ->setContactFirstName($this->drop_off_contact_first_name)
@@ -106,7 +98,6 @@ class Mock
 
 
         $job->addDropOff($this->drop_off_address())
-            ->setDropOffAt(\DateTime::createFromFormat(JsonToJob::$STUART_DATE_FORMAT, $this->dropoff_at()))
             ->setComment($this->drop_off_comment)
             ->setContactCompany($this->drop_off_contact_company)
             ->setContactFirstName($this->drop_off_contact_first_name)
@@ -125,7 +116,6 @@ class Mock
             array(
                 'job' => array(
                     'pickup_at' => $this->pickup_at(),
-                    'dropoff_at' => $this->dropoff_at(),
                     'pickups' => array(
                         array(
                             'address' => $this->pickup_address(),
@@ -165,7 +155,6 @@ class Mock
                 'id' => $this->id,
                 'status' => $this->status,
                 'pickup_at' => $this->pickup_at(),
-                'dropoff_at' => $this->dropoff_at(),
                 'deliveries' => array(
                     0 => array(
                         'id' => $this->delivery_id,
