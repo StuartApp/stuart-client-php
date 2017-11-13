@@ -20,7 +20,7 @@ class JobPricingRepositoryTest extends \PHPUnit_Framework_TestCase
         $this->mock = new Mock();
 
         \Phake::when($this->httpClient)->performPost(\Phake::anyParameters())->thenReturn(
-            new ApiResponse(200, $this->mock->job_creation_response_json())
+            new ApiResponse(200, $this->mock->job_pricing_response_json())
         );
     }
 

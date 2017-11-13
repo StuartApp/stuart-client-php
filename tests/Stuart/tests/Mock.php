@@ -196,4 +196,14 @@ class Mock
             )
         );
     }
+
+    public function job_pricing_response_json()
+    {
+        return json_encode(
+            array(
+                'amount' => 11.5,
+                'currency' => "EUR"
+            )
+        );
+    }
 }
