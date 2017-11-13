@@ -15,7 +15,7 @@ class AuthenticatorTestTest extends \PHPUnit_Framework_TestCase
         // given
         $adapter = new InMemoryAdapter();
         $cache = new Cache($adapter);
-        $accessToken = new AccessToken(['access_token' => 'sample-access-token', 'expires' => '1510403613']);
+        $accessToken = new AccessToken(['access_token' => 'sample-access-token', 'expires' => '1920806443']);
         $cache->set('STUART_SANDBOX_CACHE_ACCESS_TOKEN_KEY', $accessToken);
         $authenticator = new Authenticator(
             Environment::SANDBOX, 'sample_client_id', 'sample_client_secret', $cache
