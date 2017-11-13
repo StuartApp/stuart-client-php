@@ -23,7 +23,7 @@ class JsonToJobTest extends \PHPUnit_Framework_TestCase
             ->setTrackingUrl($this->mock->delivery_tracking_url);
 
         self::assertEquals(
-            JsonToJob::convert($this->mock->to_json_response()),
+            JsonToJob::convert($this->mock->job_creation_response_json()),
             $job
         );
     }

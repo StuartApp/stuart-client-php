@@ -95,8 +95,6 @@ class Mock
 
     public function add_dropoff($job)
     {
-
-
         $job->addDropOff($this->drop_off_address())
             ->setComment($this->drop_off_comment)
             ->setContactCompany($this->drop_off_contact_company)
@@ -110,7 +108,7 @@ class Mock
         return $job;
     }
 
-    public function to_json()
+    public function job_request_json()
     {
         return json_encode(
             array(
@@ -148,7 +146,7 @@ class Mock
         );
     }
 
-    public function to_json_response()
+    public function job_creation_response_json()
     {
         return json_encode(
             array(
