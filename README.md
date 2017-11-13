@@ -168,6 +168,24 @@ that's why the `getDeliveries()` method will return an empty
 array when the Job has not been created yet. The `getDeliveries()` 
 method will return an array of `Delivery` as soon as the Job is created.
 
+### Get a pricing
+
+Before creating a Job you can ask for a pricing. Asking for a pricing is **optional** and does not prevent you from creating a Job.
+
+```php
+$job = new \Stuart\Job();
+
+$job->addPickup('46 Boulevard Barbès, 75018 Paris');
+
+$job->addDropOff('156 rue de Charonne, 75011 Paris')
+    ->setPackageType('small');
+    
+$pricing = $client->getPricing($job);
+
+$pricing->amount; // example: 11.5
+$pricing->currency; // example: "EUR"
+```
+
 ### Custom requests
 You can also send requests on your own without relying on the `\Stuart\Client`.
 It allows you to use endpoints that are not yet available on the `\Stuart\Client` and enjoy the `\Stuart\Authenticator`.

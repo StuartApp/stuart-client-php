@@ -20,11 +20,11 @@ class JobRepositoryTest extends \PHPUnit_Framework_TestCase
         $this->mock = new Mock();
 
         \Phake::when($this->httpClient)->performGet(\Phake::anyParameters())->thenReturn(
-            new ApiResponse(200, $this->mock->to_json_response())
+            new ApiResponse(200, $this->mock->job_creation_response_json())
         );
 
         \Phake::when($this->httpClient)->performPost(\Phake::anyParameters())->thenReturn(
-            new ApiResponse(200, $this->mock->to_json_response())
+            new ApiResponse(200, $this->mock->job_creation_response_json())
         );
     }
 

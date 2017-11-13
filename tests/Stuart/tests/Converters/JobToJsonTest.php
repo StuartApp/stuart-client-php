@@ -18,7 +18,7 @@ class JobToJsonTest extends \PHPUnit_Framework_TestCase
     {
         self::assertEquals(
             JobToJson::convert($this->mock->job()),
-            $this->mock->to_json()
+            $this->mock->job_request_json()
         );
     }
 }
