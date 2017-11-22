@@ -188,7 +188,8 @@ $pricing->currency; // example: "EUR"
 
 ### Get a job ETA
 
-Before creating a Job you can ask for ETA. Asking for ETA is **optional** and does not prevent you from creating a job.
+Before creating a Job you can ask for an estimated time of arrival at the pickup location (expressed in seconds). 
+Asking for ETA is **optional** and does not prevent you from creating a job.
 
 ```php
 $job = new \Stuart\Job();
