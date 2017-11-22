@@ -186,6 +186,23 @@ $pricing->amount; // example: 11.5
 $pricing->currency; // example: "EUR"
 ```
 
+### Get a job ETA
+
+Before creating a Job you can ask for ETA. Asking for ETA is **optional** and does not prevent you from creating a job.
+
+```php
+$job = new \Stuart\Job();
+
+$job->addPickup('46 Boulevard Barbès, 75018 Paris');
+
+$job->addDropOff('156 rue de Charonne, 75011 Paris')
+    ->setPackageType('small');
+    
+$eta = $client->getEta($job);
+
+$eta->eta; // example: 672
+```
+
 ### Custom requests
 You can also send requests on your own without relying on the `\Stuart\Client`.
 It allows you to use endpoints that are not yet available on the `\Stuart\Client` and enjoy the `\Stuart\Authenticator`.
