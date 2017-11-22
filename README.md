@@ -32,6 +32,15 @@ $authenticator = new \Stuart\Infrastructure\Authenticator($environment, $api_cli
 $client = new \Stuart\Client($authenticator);
 ```
 
+You can also pass your own Guzzle client instance to the `\Stuart\Client` constructor:
+
+```php
+$guzzleClient = new \Guzzle\Client();
+$client = new \Stuart\Client($authenticator, $guzzleClient);
+```
+
+This can be useful if you need to attach middlewares to the Guzzle client used by the Stuart client.
+
 ### Create a Job
 **Important**: Even if you can create a Job with a minimal set of parameters, we **highly recommend** that you fill as many information as 
 you can in order to ensure the delivery process goes well.
