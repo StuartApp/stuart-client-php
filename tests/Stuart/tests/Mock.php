@@ -206,4 +206,13 @@ class Mock
             )
         );
     }
+
+    public function job_eta_response_json()
+    {
+        return json_encode(
+            array(
+                'eta' => 672
+            )
+        );
+    }
 }
