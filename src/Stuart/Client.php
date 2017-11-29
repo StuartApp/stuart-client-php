@@ -13,9 +13,9 @@ class Client
     private $jobPricingRepository;
     private $jobEtaRepository;
 
-    public function __construct($authenticator)
+    public function __construct($authenticator, \GuzzleHttp\Client $client = null)
     {
-        $guzzleClient = new \GuzzleHttp\Client();
+        $guzzleClient = $client ?: new \GuzzleHttp\Client();
         $httpClient = new HttpClient($authenticator, $guzzleClient);
         $this->jobRepository = new JobRepository($httpClient);
         $this->jobPricingRepository = new JobPricingRepository($httpClient);
