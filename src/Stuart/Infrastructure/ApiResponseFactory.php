@@ -7,7 +7,7 @@ class ApiResponseFactory
     public static function fromGuzzleHttpResponse($guzzleHttpResponse)
     {
         $statusCode = $guzzleHttpResponse->getStatusCode();
-        $body = $guzzleHttpResponse->getBody()->getContents();
+        $body = (string) $guzzleHttpResponse->getBody();
         return new ApiResponse($statusCode, $body);
     }
 }
