@@ -7,6 +7,7 @@ use Stuart\converters\JsonToJob;
 class Job
 {
     private $id;
+    private $transportType;
     private $status;
     private $pickups = array();
     private $dropOffs = array();
@@ -107,5 +108,21 @@ class Job
     public function setStatus($status)
     {
         $this->status = $status;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTransportType()
+    {
+        return $this->transportType;
+    }
+
+    /**
+     * @param mixed $transportType
+     */
+    public function setTransportType($transportType)
+    {
+        $this->transportType = $transportType;
     }
 }

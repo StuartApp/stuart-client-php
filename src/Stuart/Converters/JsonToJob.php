@@ -20,6 +20,7 @@ class JsonToJob
         $job = new Job();
 
         $job->setId($body->id);
+        $job->setTransportType($body->transport_type !== null ? $body->transport_type : null);
         $job->setStatus($body->status);
 
         foreach ($body->deliveries as $delivery) {
@@ -43,6 +44,7 @@ class JsonToJob
                         ->setContactPhone($delivery->dropoff->contact->phone)
                 )
                 ->setId($delivery->id)
+                ->setStatus($delivery->status)
                 ->setStatus($delivery->status)
                 ->setTrackingUrl($delivery->tracking_url);
         }
