@@ -146,7 +146,7 @@ $client->createJob($job);
 
 ##### With stacking (multi-drop)
 
-##### Package size based
+###### Package size based
 
 ```php
 $job = new \Stuart\Job();
@@ -180,7 +180,7 @@ $job->addDropOff('12 avenue claude vellefaux, 75010 Paris')
 $client->createJob($job);
 ```
 
-##### Transport type based (France only)
+###### Transport type based (France only)
 
 ```php
 $job = new \Stuart\Job();
