@@ -126,7 +126,7 @@ $job->addDropOff('156 rue de Charonne, 75011 Paris')
 $client->createJob($job);
 ```
 
-##### With scheduling at pickup
+#### With scheduling at pickup
 
 For more information about job scheduling you should [check our API documentation](https://stuart.api-docs.io/v2/jobs/scheduling-a-job).
 
@@ -144,9 +144,9 @@ $job->addDropOff('156 rue de Charonne, 75011 Paris')
 $client->createJob($job);
 ```
 
-##### With stacking (multi-drop)
+#### With stacking (multi-drop)
 
-###### Package size based
+##### Package size based
 
 ```php
 $job = new \Stuart\Job();
@@ -180,7 +180,7 @@ $job->addDropOff('12 avenue claude vellefaux, 75010 Paris')
 $client->createJob($job);
 ```
 
-###### Transport type based (France only)
+##### Transport type based (France only)
 
 ```php
 $job = new \Stuart\Job();
