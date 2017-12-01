@@ -195,7 +195,6 @@ $job->addPickup('46 Boulevard Barbès, 75018 Paris')
     ->setContactPhone('+33698348756');                     
 
 $job->addDropOff('156 rue de Charonne, 75011 Paris')
-    ->setPackageType('small')
     ->setComment('code: 3492B. 3e étage droite. Sonner à Durand.')
     ->setContactCompany('Durand associates.')
     ->setContactFirstName('Alex')
