@@ -20,7 +20,7 @@ class JsonToJob
         $job = new Job();
 
         $job->setId($body->id);
-        $job->setTransportType($body->transport_type ?? null ? $body->transport_type : null);
+        $job->setTransportType($body->transport_type !== null ? $body->transport_type : null);
         $job->setStatus($body->status);
 
         foreach ($body->deliveries as $delivery) {
