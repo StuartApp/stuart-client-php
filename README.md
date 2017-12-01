@@ -42,11 +42,13 @@ $client = new \Stuart\Client($authenticator, $guzzleClient);
 This can be useful if you need to attach middlewares to the Guzzle client used by the Stuart client.
 
 ### Create a Job
+
 **Important**: Even if you can create a Job with a minimal set of parameters, we **highly recommend** that you fill as many information as 
 you can in order to ensure the delivery process goes well.
 
-
 #### Minimalist
+
+##### Package size based
 ```php
 $job = new \Stuart\Job();
 
@@ -58,7 +60,22 @@ $job->addDropOff('156 rue de Charonne, 75011 Paris')
 $client->createJob($job);
 ```
 
+##### Transport type based (France only)
+```php
+$job = new \Stuart\Job();
+
+$job->setTransportType('bike);
+
+$job->addPickup('46 Boulevard Barbès, 75018 Paris');
+
+$job->addDropOff('156 rue de Charonne, 75011 Paris');
+    
+$client->createJob($job);
+```
+
 #### Complete
+
+##### Package size based
 
 ```php
 $job = new \Stuart\Job();
@@ -72,6 +89,32 @@ $job->addPickup('46 Boulevard Barbès, 75018 Paris')
 
 $job->addDropOff('156 rue de Charonne, 75011 Paris')
     ->setPackageType('small')
+    ->setComment('code: 3492B. 3e étage droite. Sonner à Durand.')
+    ->setContactCompany('Durand associates.')
+    ->setContactFirstName('Alex')
+    ->setContactLastName('Durand')
+    ->setContactPhone('+33634981209')
+    ->setPackageDescription('Pizza box.')
+    ->setClientReference('12345678ABCDE'); // Must be unique
+    
+$client->createJob($job);
+```
+
+##### Transport type based (France only)
+
+```php
+$job = new \Stuart\Job();
+
+$job->setTransportType('bike);
+
+$job->addPickup('46 Boulevard Barbès, 75018 Paris')
+    ->setComment('Wait outside for an employee to come.')   
+    ->setContactCompany('KFC Paris Barbès')                
+    ->setContactFirstName('Martin')                         
+    ->setContactLastName('Pont')                          
+    ->setContactPhone('+33698348756');                     
+
+$job->addDropOff('156 rue de Charonne, 75011 Paris')
     ->setComment('code: 3492B. 3e étage droite. Sonner à Durand.')
     ->setContactCompany('Durand associates.')
     ->setContactFirstName('Alex')
@@ -93,28 +136,17 @@ $job = new \Stuart\Job();
 $pickupAt = new \DateTime('now', new DateTimeZone('Europe/London'));
 $pickupAt->add(new \DateInterval('PT2H'));
 
-$job->addPickup('46 Boulevard Barbès, 75018 Paris')
-    ->setPickupAt($pickupAt)
-    ->setComment('Wait outside for an employee to come.')   
-    ->setContactCompany('KFC Paris Barbès')                
-    ->setContactFirstName('Martin')                         
-    ->setContactLastName('Pont')                          
-    ->setContactPhone('+33698348756');                     
+$job->addPickup('46 Boulevard Barbès, 75018 Paris');                     
 
 $job->addDropOff('156 rue de Charonne, 75011 Paris')
-    ->setPackageType('small')
-    ->setComment('code: 3492B. 3e étage droite. Sonner à Durand.')
-    ->setContactCompany('Durand associates.')
-    ->setContactFirstName('Alex')
-    ->setContactLastName('Durand')
-    ->setContactPhone('+33634981209')
-    ->setPackageDescription('Pizza box.')
-    ->setClientReference('12345678ABCDE'); // Must be unique
+    ->setPackageType('small');
     
 $client->createJob($job);
 ```
 
 ##### With stacking (multi-drop)
+
+##### Package size based
 
 ```php
 $job = new \Stuart\Job();
@@ -138,6 +170,41 @@ $job->addDropOff('156 rue de Charonne, 75011 Paris')
     
 $job->addDropOff('12 avenue claude vellefaux, 75010 Paris')
     ->setPackageType('small')
+    ->setComment('code: 92A42. 2e étage gauche')
+    ->setContactFirstName('Maximilien')
+    ->setContactLastName('Lebluc')
+    ->setContactPhone('+33632341209')
+    ->setPackageDescription('Blue packet.')
+    ->setClientReference('ABCDE213124'); // Must be unique
+    
+$client->createJob($job);
+```
+
+##### Transport type based (France only)
+
+```php
+$job = new \Stuart\Job();
+
+$job->setTransportType('bike);
+
+$job->addPickup('46 Boulevard Barbès, 75018 Paris')
+    ->setComment('Wait outside for an employee to come.')   
+    ->setContactCompany('KFC Paris Barbès')                
+    ->setContactFirstName('Martin')                         
+    ->setContactLastName('Pont')                          
+    ->setContactPhone('+33698348756');                     
+
+$job->addDropOff('156 rue de Charonne, 75011 Paris')
+    ->setPackageType('small')
+    ->setComment('code: 3492B. 3e étage droite. Sonner à Durand.')
+    ->setContactCompany('Durand associates.')
+    ->setContactFirstName('Alex')
+    ->setContactLastName('Durand')
+    ->setContactPhone('+33634981209')
+    ->setPackageDescription('Red packet.')
+    ->setClientReference('12345678ABCDE'); // Must be unique;
+    
+$job->addDropOff('12 avenue claude vellefaux, 75010 Paris')
     ->setComment('code: 92A42. 2e étage gauche')
     ->setContactFirstName('Maximilien')
     ->setContactLastName('Lebluc')
