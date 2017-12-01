@@ -60,7 +60,7 @@ $job->addDropOff('156 rue de Charonne, 75011 Paris')
 $client->createJob($job);
 ```
 
-##### Transport type based (🇫🇷 France only)
+##### Transport type based (France only)
 ```php
 $job = new \Stuart\Job();
 
@@ -100,7 +100,7 @@ $job->addDropOff('156 rue de Charonne, 75011 Paris')
 $client->createJob($job);
 ```
 
-##### Transport type based (🇫🇷 France only)
+##### Transport type based (France only)
 
 ```php
 $job = new \Stuart\Job();
@@ -180,7 +180,7 @@ $job->addDropOff('12 avenue claude vellefaux, 75010 Paris')
 $client->createJob($job);
 ```
 
-##### Transport type based (🇫🇷 France only)
+##### Transport type based (France only)
 
 ```php
 $job = new \Stuart\Job();
