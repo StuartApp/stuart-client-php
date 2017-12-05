@@ -64,7 +64,7 @@ $client->createJob($job);
 ```php
 $job = new \Stuart\Job();
 
-$job->setTransportType('bike);
+$job->setTransportType('bike');
 
 $job->addPickup('46 Boulevard Barbès, 75018 Paris');
 
@@ -105,7 +105,7 @@ $client->createJob($job);
 ```php
 $job = new \Stuart\Job();
 
-$job->setTransportType('bike);
+$job->setTransportType('bike');
 
 $job->addPickup('46 Boulevard Barbès, 75018 Paris')
     ->setComment('Wait outside for an employee to come.')   
@@ -185,7 +185,7 @@ $client->createJob($job);
 ```php
 $job = new \Stuart\Job();
 
-$job->setTransportType('bike);
+$job->setTransportType('bike');
 
 $job->addPickup('46 Boulevard Barbès, 75018 Paris')
     ->setComment('Wait outside for an employee to come.')   
