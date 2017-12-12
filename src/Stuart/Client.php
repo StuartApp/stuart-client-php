@@ -32,6 +32,11 @@ class Client
         return $this->jobRepository->get($jobId);
     }
 
+    public function cancelJob($jobId)
+    {
+        return $this->jobRepository->cancel($jobId);
+    }
+
     public function getPricing($job)
     {
         return $this->jobPricingRepository->save($job);
