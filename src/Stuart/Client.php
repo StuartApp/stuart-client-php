@@ -9,6 +9,7 @@ use Stuart\Repository\JobRepository;
 
 class Client
 {
+    private $httpClient;
     private $jobRepository;
     private $jobPricingRepository;
     private $jobEtaRepository;
@@ -16,10 +17,10 @@ class Client
     public function __construct($authenticator, \GuzzleHttp\Client $client = null)
     {
         $guzzleClient = $client ?: new \GuzzleHttp\Client();
-        $httpClient = new HttpClient($authenticator, $guzzleClient);
-        $this->jobRepository = new JobRepository($httpClient);
-        $this->jobPricingRepository = new JobPricingRepository($httpClient);
-        $this->jobEtaRepository = new JobEtaRepository($httpClient);
+        $this->httpClient = new HttpClient($authenticator, $guzzleClient);
+        $this->jobRepository = new JobRepository($this->httpClient);
+        $this->jobPricingRepository = new JobPricingRepository($this->httpClient);
+        $this->jobEtaRepository = new JobEtaRepository($this->httpClient);
     }
 
     public function createJob($job)
@@ -34,7 +35,13 @@ class Client
 
     public function cancelJob($jobId)
     {
-        return $this->jobRepository->cancel($jobId);
+        $apiResponse = $this->httpClient->performPost('', '/v2/jobs/' . $jobId . '/cancel');
+
+        if ($apiResponse->success()) {
+            return true;
+        } else {
+            return json_decode($apiResponse->getBody());
+        }
     }
 
     public function getPricing($job)

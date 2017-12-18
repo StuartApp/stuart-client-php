@@ -42,15 +42,4 @@ class JobRepository
             return json_decode($apiResponse->getBody());
         }
     }
-
-    public function cancel($jobId)
-    {
-        $apiResponse = $this->httpClient->performPost('', '/v2/jobs/' . $jobId . '/cancel');
-
-        if ($apiResponse->success()) {
-            return true;
-        } else {
-            return json_decode($apiResponse->getBody());
-        }
-    }
 }
