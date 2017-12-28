@@ -27,4 +27,17 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
         self::assertTrue($client->cancelJob(123));
     }
+
+    public function test_it_cancels_a_job_with_correct_parameters()
+    {
+        $client = new Client($this->authenticator, $this->httpClient);
+
+        $client->cancelJob(123);
+
+        \Phake::verify($this->httpClient)->request(
+            'POST',
+            '/v2/jobs/123/cancel',
+            new \PHPUnit_Framework_Constraint_ArraySubset([ 'body' => '' ])
+        );
+    }
 }
