@@ -19,7 +19,10 @@ $ composer require stuartapp/stuart-client-php
         1. [With scheduling at pickup](#with-scheduling-at-pickup)
         2. [With stacking (multi-drop)](#with-stacking-multi-drop)
 3. [Get a Job](#get-a-job)
-4. [Custom requests](#custom-requests)
+4. [Cancel a Job](#cancel-a-job)
+5. [Get a pricing](#get-a-pricing)
+6. [Get a job eta to pickup](#get-a-job-eta-to-pickup)
+7. [Custom requests](#custom-requests)
 
 ### Initialize client
 
@@ -275,7 +278,7 @@ $pricing->amount; // example: 11.5
 $pricing->currency; // example: "EUR"
 ```
 
-### Get a job ETA
+### Get a job ETA to pickup
 
 Before creating a Job you can ask for an estimated time of arrival at the pickup location (expressed in seconds). 
 Asking for ETA is **optional** and does not prevent you from creating a job.
