@@ -42,7 +42,6 @@ class JobRepositoryTest extends \PHPUnit_Framework_TestCase
         \Phake::verify($this->httpClient)->performGet('/v2/jobs/' . $sampleJobId);
     }
 
-
     public function test_create_a_job_returns_a_job()
     {
         self::assertNotNull($this->jobRepository->get(123));

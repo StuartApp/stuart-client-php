@@ -243,6 +243,20 @@ that's why the `getDeliveries()` method will return an empty
 array when the Job has not been created yet. The `getDeliveries()` 
 method will return an array of `Delivery` as soon as the Job is created.
 
+### Cancel a job
+
+Once you successfuly created a Job you can cancel it in this way:
+
+```
+$jobId = 126532;
+$result = $client->cancelJob($jobId);
+```
+
+The result will hold the boolean value `true` if the job was cancelled. If
+there was an error, it will contain an error object.
+
+For more details about how cancelation works, please refer to our [dedicated documentation section](https://stuart.api-docs.io/v2/jobs/job-cancellation).
+
 ### Get a pricing
 
 Before creating a Job you can ask for a pricing. Asking for a pricing is **optional** and does not prevent you from creating a Job.
