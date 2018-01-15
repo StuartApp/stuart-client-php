@@ -139,7 +139,8 @@ $job = new \Stuart\Job();
 $pickupAt = new \DateTime('now', new DateTimeZone('Europe/London'));
 $pickupAt->add(new \DateInterval('PT2H'));
 
-$job->addPickup('46 Boulevard Barbès, 75018 Paris');                     
+$job->addPickup('46 Boulevard Barbès, 75018 Paris')
+    ->setPickupAt($pickupAt);
 
 $job->addDropOff('156 rue de Charonne, 75011 Paris')
     ->setPackageType('small');
