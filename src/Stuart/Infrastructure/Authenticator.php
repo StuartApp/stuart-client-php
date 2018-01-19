@@ -2,8 +2,8 @@
 
 namespace Stuart\Infrastructure;
 
-use \Desarrolla2\Cache\Cache;
-use \League\OAuth2\Client\Provider\GenericProvider;
+use Psr\SimpleCache\CacheInterface;
+use League\OAuth2\Client\Provider\GenericProvider;
 
 class Authenticator
 {
@@ -19,7 +19,7 @@ class Authenticator
      * @param $cache is a https://github.com/desarrolla2/Cache allowing you to cache an access token
      * for future re-use.
      */
-    public function __construct($environment, $api_client_id, $api_client_secret, Cache $cache = null)
+    public function __construct($environment, $api_client_id, $api_client_secret, CacheInterface $cache = null)
     {
         $base_url = $environment['base_url'];
         $this->environment = $environment;
