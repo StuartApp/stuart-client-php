@@ -19,7 +19,7 @@ class Authenticator
      * @param $cache is a https://github.com/desarrolla2/Cache allowing you to cache an access token
      * for future re-use.
      */
-    public function __construct($environment, $api_client_id, $api_client_secret, CacheInterface $cache = null)
+    public function __construct($environment, $api_client_id, $api_client_secret, $cache = null)
     {
         $base_url = $environment['base_url'];
         $this->environment = $environment;
@@ -31,7 +31,9 @@ class Authenticator
             'urlAuthorize' => $base_url . '/oauth/authorize',
             'urlResourceOwnerDetails' => $base_url . '/oauth/resource'
         ]);
-        $this->cache = $cache;
+        if ($cache instanceof CacheInterface) {
+            $this->cache = $cache;
+        }
     }
 
     /**
