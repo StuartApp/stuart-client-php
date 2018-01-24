@@ -32,7 +32,8 @@ class JsonToJob
                         ->setContactCompany($delivery->pickup->contact->company_name)
                         ->setContactFirstName($delivery->pickup->contact->firstname)
                         ->setContactLastName($delivery->pickup->contact->lastname)
-                        ->setContactPhone($delivery->pickup->contact->phone),
+                        ->setContactPhone($delivery->pickup->contact->phone)
+                        ->setContactEmail($delivery->pickup->contact->email),
                     $job->addDropOff(self::fullTextAddress($delivery->dropoff->address))
                         ->setPackageType($delivery->package_type)
                         ->setPackageDescription($delivery->package_description)
@@ -42,6 +43,7 @@ class JsonToJob
                         ->setContactFirstName($delivery->dropoff->contact->firstname)
                         ->setContactLastName($delivery->dropoff->contact->lastname)
                         ->setContactPhone($delivery->dropoff->contact->phone)
+                        ->setContactEmail($delivery->dropoff->contact->email)
                 )
                 ->setId($delivery->id)
                 ->setStatus($delivery->status)
