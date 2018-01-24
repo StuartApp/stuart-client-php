@@ -23,6 +23,10 @@ class JobToJson
             $result['job']['transport_type'] = $job->getTransportType();
         }
 
+        if ($job->getAssignmentCode() !== null) {
+            $result['job']['assignment_code'] = $job->getAssignmentCode();
+        }
+
         if (count($job->getPickups()) === 1 && $job->getPickups()[0]->getPickupAt() !== null) {
             $result['job']['pickup_at'] = $job->getPickups()[0]->getPickupAt()->format(JsonToJob::$STUART_DATE_FORMAT);
         }

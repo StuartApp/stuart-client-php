@@ -8,6 +8,7 @@ class Job
 {
     private $id;
     private $transportType;
+    private $assignmentCode;
     private $status;
     private $pickups = array();
     private $dropOffs = array();
@@ -124,5 +125,21 @@ class Job
     public function setTransportType($transportType)
     {
         $this->transportType = $transportType;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAssignmentCode()
+    {
+        return $this->assignmentCode;
+    }
+
+    /**
+     * @param string $assignmentCode
+     */
+    public function setAssignmentCode($assignmentCode)
+    {
+        $this->assignmentCode = $assignmentCode;
     }
 }
