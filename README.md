@@ -20,9 +20,10 @@ $ composer require stuartapp/stuart-client-php
         2. [With stacking (multi-drop)](#with-stacking-multi-drop)
 3. [Get a Job](#get-a-job)
 4. [Cancel a Job](#cancel-a-job)
-5. [Get a pricing](#get-a-pricing)
-6. [Get a job eta to pickup](#get-a-job-eta-to-pickup)
-7. [Custom requests](#custom-requests)
+5. [Validate a Job](#validate-a-job)
+6. [Get a pricing](#get-a-pricing)
+7. [Get a job eta to pickup](#get-a-job-eta-to-pickup)
+8. [Custom requests](#custom-requests)
 
 ### Initialize client
 
@@ -260,6 +261,24 @@ The result will hold the boolean value `true` if the job was cancelled. If
 there was an error, it will contain an error object.
 
 For more details about how cancelation works, please refer to our [dedicated documentation section](https://stuart.api-docs.io/v2/jobs/job-cancellation).
+
+### Validate a Job
+
+Before creating a Job you can validate it (control delivery area & address format). Validating a Job is **optional** and does not prevent you from creating a Job.
+
+```php
+$job = new \Stuart\Job();
+
+$job->addPickup('46 Boulevard Barbès, 75018 Paris');
+
+$job->addDropOff('156 rue de Charonne, 75011 Paris')
+    ->setPackageType('small');
+    
+$result = $client->validateJob($job);
+```
+
+The result will hold the boolean value `true` if the job is valid. If
+there was an error, it will contain an error object.
 
 ### Get a pricing
 

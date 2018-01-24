@@ -2,6 +2,7 @@
 
 namespace Stuart;
 
+use Stuart\Converters\JobToJson;
 use Stuart\Infrastructure\HttpClient;
 use Stuart\Repository\JobEtaRepository;
 use Stuart\Repository\JobPricingRepository;
@@ -21,6 +22,23 @@ class Client
         $this->jobRepository = new JobRepository($this->httpClient);
         $this->jobPricingRepository = new JobPricingRepository($this->httpClient);
         $this->jobEtaRepository = new JobEtaRepository($this->httpClient);
+    }
+
+    /**
+     * @param Job $job
+     *
+     * @return bool|\stdClass
+     */
+    public function validateJob(Job $job)
+    {
+        $body = JobToJson::convert($job);
+        $apiResponse = $this->httpClient->performPost($body, '/v2/jobs/validate');
+
+        if ($apiResponse->success()) {
+            return json_decode($apiResponse->getBody())->valid;
+        } else {
+            return json_decode($apiResponse->getBody());
+        }
     }
 
     public function createJob($job)
