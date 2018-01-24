@@ -29,6 +29,7 @@ class Mock
     public $pickup_contact_first_name = 'firstname';
     public $pickup_contact_last_name = 'lastname';
     public $pickup_contact_phone = '837746';
+    public $pickup_contact_email = 'lastname@company.com';
 
     public function pickup_at()
     {
@@ -55,6 +56,7 @@ class Mock
     public $drop_off_contact_first_name = 'firstname';
     public $drop_off_contact_last_name = 'lastname';
     public $drop_off_contact_phone = '837746';
+    public $drop_off_contact_email = 'firstname@gmail.com';
     public $drop_off_client_reference = 'reference';
     public $drop_off_package_description = 'decription';
     public $drop_off_package_type = 'small';
@@ -80,7 +82,9 @@ class Mock
             ->setContactCompany($this->pickup_contact_company)
             ->setContactFirstName($this->pickup_contact_first_name)
             ->setContactLastName($this->pickup_contact_last_name)
-            ->setContactPhone($this->pickup_contact_phone);
+            ->setContactPhone($this->pickup_contact_phone)
+            ->setContactEmail($this->pickup_contact_email)
+        ;
 
         $job->addDropOff($this->drop_off_address())
             ->setComment($this->drop_off_comment)
@@ -88,6 +92,7 @@ class Mock
             ->setContactFirstName($this->drop_off_contact_first_name)
             ->setContactLastName($this->drop_off_contact_last_name)
             ->setContactPhone($this->drop_off_contact_phone)
+            ->setContactEmail($this->drop_off_contact_email)
             ->setClientReference($this->drop_off_client_reference)
             ->setPackageDescription($this->drop_off_package_description)
             ->setPackageType($this->drop_off_package_type);
@@ -103,6 +108,7 @@ class Mock
             ->setContactFirstName($this->drop_off_contact_first_name)
             ->setContactLastName($this->drop_off_contact_last_name)
             ->setContactPhone($this->drop_off_contact_phone)
+            ->setContactEmail($this->drop_off_contact_email)
             ->setClientReference($this->drop_off_client_reference)
             ->setPackageDescription($this->drop_off_package_description)
             ->setPackageType($this->drop_off_package_type);
@@ -125,6 +131,7 @@ class Mock
                                 'firstname' => $this->pickup_contact_first_name,
                                 'lastname' => $this->pickup_contact_last_name,
                                 'phone' => $this->pickup_contact_phone,
+                                'email' => $this->pickup_contact_email,
                                 'company' => $this->pickup_contact_company
                             )
                         )
@@ -137,6 +144,7 @@ class Mock
                                 'firstname' => $this->drop_off_contact_first_name,
                                 'lastname' => $this->drop_off_contact_last_name,
                                 'phone' => $this->drop_off_contact_phone,
+                                'email' => $this->drop_off_contact_email,
                                 'company' => $this->drop_off_contact_company
                             ),
                             'package_type' => $this->drop_off_package_type,
@@ -177,6 +185,7 @@ class Mock
                                 'firstname' => $this->pickup_contact_first_name,
                                 'lastname' => $this->pickup_contact_last_name,
                                 'phone' => $this->pickup_contact_phone,
+                                'email' => $this->pickup_contact_email,
                                 'company_name' => $this->pickup_contact_company
                             )
                         ),
@@ -192,6 +201,7 @@ class Mock
                                 'firstname' => $this->drop_off_contact_first_name,
                                 'lastname' => $this->drop_off_contact_last_name,
                                 'phone' => $this->drop_off_contact_phone,
+                                'email' => $this->drop_off_contact_email,
                                 'company_name' => $this->drop_off_contact_company
                             )
                         )

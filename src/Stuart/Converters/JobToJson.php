@@ -62,6 +62,7 @@ class JobToJson
                 'firstname' => $location->getFirstName(),
                 'lastname' => $location->getLastName(),
                 'phone' => $location->getPhone(),
+                'email' => $location->getEmail(),
                 'company' => $location->getCompany()
             )
         );

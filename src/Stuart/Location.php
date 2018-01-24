@@ -7,6 +7,7 @@ abstract class Location
     private $address;
     private $comment;
     private $phone;
+    private $email;
     private $firstName;
     private $lastName;
     private $company;
@@ -26,6 +27,12 @@ abstract class Location
     public function setContactPhone($phone)
     {
         $this->phone = $phone;
+        return $this;
+    }
+
+    public function setContactEmail($email)
+    {
+        $this->email = $email;
         return $this;
     }
 
@@ -60,6 +67,11 @@ abstract class Location
     public function getPhone()
     {
         return $this->phone;
+    }
+
+    public function getEmail()
+    {
+        return $this->email;
     }
 
     public function getFirstName()
