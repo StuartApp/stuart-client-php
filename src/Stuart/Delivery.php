@@ -5,7 +5,12 @@ namespace Stuart;
 class Delivery
 {
     private $id;
+
+    /**
+     * @var string
+     */
     private $status;
+
     private $trackingUrl;
 
     /**
@@ -39,6 +44,19 @@ class Delivery
         return $this;
     }
 
+    /**
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param $status
+     *
+     * @return self
+     */
     public function setStatus($status)
     {
         $this->status = $status;
