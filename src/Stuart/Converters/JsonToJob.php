@@ -21,6 +21,7 @@ class JsonToJob
 
         $job->setId($body->id);
         $job->setTransportType(isset($body->transport_type) ? $body->transport_type : null);
+        $job->setAssignmentCode(isset($body->assignment_code) ? $body->assignment_code : null);
         $job->setStatus($body->status);
 
         foreach ($body->deliveries as $delivery) {

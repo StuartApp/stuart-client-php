@@ -10,6 +10,7 @@ class Mock
     public $id = '1234567';
     public $status = 'new';
     public $transport_type = 'bike';
+    public $assignment_code = 'Order 123';
 
     public $pickup_address_street = '12 rue de rivoli';
     public $pickup_address_postcode = '75004';
@@ -75,6 +76,7 @@ class Mock
         $job->setId($this->id);
         $job->setStatus($this->status);
         $job->setTransportType($this->transport_type);
+        $job->setAssignmentCode($this->assignment_code);
 
         $job->addPickup($this->pickup_address())
             ->setPickupAt(\DateTime::createFromFormat(JsonToJob::$STUART_DATE_FORMAT, $this->pickup_at()))
@@ -122,6 +124,7 @@ class Mock
             array(
                 'job' => array(
                     'transport_type' => 'bike',
+                    'assignment_code' => $this->assignment_code,
                     'pickup_at' => $this->pickup_at(),
                     'pickups' => array(
                         array(
@@ -164,6 +167,7 @@ class Mock
                 'id' => $this->id,
                 'status' => $this->status,
                 'transport_type' => $this->transport_type,
+                'assignment_code' => $this->assignment_code,
                 'pickup_at' => $this->pickup_at(),
                 'deliveries' => array(
                     0 => array(
