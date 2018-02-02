@@ -34,7 +34,19 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         self::assertTrue($client->cancelJob(123));
     }
 
-    public function test_it_cancels_a_job_with_correct_parameters()
+	public function test_cancel_a_delivery_returns_true()
+	{
+		\Phake::when($this->httpClient)->request(\Phake::anyParameters())->thenReturn(
+			new Response(200, [], null)
+		);
+
+		$client = new Client($this->authenticator, $this->httpClient);
+
+		self::assertTrue($client->cancelDelivery(123));
+	}
+
+
+	public function test_it_cancels_a_job_with_correct_parameters()
     {
         \Phake::when($this->httpClient)->request(\Phake::anyParameters())->thenReturn(
             new Response(200, [], null)

@@ -21,9 +21,10 @@ $ composer require stuartapp/stuart-client-php
 3. [Get a Job](#get-a-job)
 4. [Cancel a Job](#cancel-a-job)
 5. [Validate a Job](#validate-a-job)
-6. [Get a pricing](#get-a-pricing)
-7. [Get a job eta to pickup](#get-a-job-eta-to-pickup)
-8. [Custom requests](#custom-requests)
+6. [Cancel a delivery](#cancel-a-delivery)
+7. [Get a pricing](#get-a-pricing)
+8. [Get a job eta to pickup](#get-a-job-eta-to-pickup)
+9. [Custom requests](#custom-requests)
 
 ### Initialize client
 
@@ -250,9 +251,9 @@ method will return an array of `Delivery` as soon as the Job is created.
 
 ### Cancel a job
 
-Once you successfuly created a Job you can cancel it in this way:
+Once you successfully created a Job you can cancel it in this way:
 
-```
+```php
 $jobId = 126532;
 $result = $client->cancelJob($jobId);
 ```
@@ -260,7 +261,7 @@ $result = $client->cancelJob($jobId);
 The result will hold the boolean value `true` if the job was cancelled. If
 there was an error, it will contain an error object.
 
-For more details about how cancelation works, please refer to our [dedicated documentation section](https://stuart.api-docs.io/v2/jobs/job-cancellation).
+For more details about how cancellation works, please refer to our [dedicated documentation section](https://stuart.api-docs.io/v2/jobs/job-cancellation).
 
 ### Validate a Job
 
@@ -279,6 +280,16 @@ $result = $client->validateJob($job);
 
 The result will hold the boolean value `true` if the job is valid. If
 there was an error, it will contain an error object.
+
+### Cancel a delivery
+
+Once you successfully created a Delivery you can cancel it in this way:
+
+```php
+$deliveryId = 126532;
+$result = $client->cancelDelivery($deliveryId);
+```
+
 
 ### Get a pricing
 

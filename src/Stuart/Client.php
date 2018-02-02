@@ -62,6 +62,17 @@ class Client
         }
     }
 
+	public function cancelDelivery($deliveryId)
+	{
+		$apiResponse = $this->httpClient->performPost('', '/v2/deliveries/' . $deliveryId . '/cancel');
+
+		if ($apiResponse->success()) {
+			return true;
+		} else {
+			return json_decode($apiResponse->getBody());
+		}
+	}
+
     public function getPricing($job)
     {
         return $this->jobPricingRepository->save($job);
