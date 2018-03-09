@@ -39,7 +39,7 @@ $httpClient = new \Stuart\Infrastructure\HttpClient($authenticator)
 $client = new \Stuart\Client($httpClient);
 ```
 
-You can also pass your own Guzzle client instance to the `\Stuart\Client` constructor:
+You can also pass your own Guzzle client instance to the `\Stuart\HttpClient` constructor:
 
 ```php
 $guzzleClient = new \Guzzle\Client();
