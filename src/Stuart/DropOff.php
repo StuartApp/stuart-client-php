@@ -8,10 +8,20 @@ class DropOff extends Location
     private $packageDescription;
     private $clientReference;
 
+    public function getPackageType()
+    {
+        return $this->packageType;
+    }
+
     public function setPackageType($packageType)
     {
         $this->packageType = $packageType;
         return $this;
+    }
+
+    public function getPackageDescription()
+    {
+        return $this->packageDescription;
     }
 
     public function setPackageDescription($packageDescription)
@@ -20,24 +30,14 @@ class DropOff extends Location
         return $this;
     }
 
+    public function getClientReference()
+    {
+        return $this->clientReference;
+    }
+
     public function setClientReference($clientReference)
     {
         $this->clientReference = $clientReference;
         return $this;
-    }
-
-    public function getPackageType()
-    {
-        return $this->packageType;
-    }
-
-    public function getPackageDescription()
-    {
-        return $this->packageDescription;
-    }
-
-    public function getClientReference()
-    {
-        return $this->clientReference;
     }
 }

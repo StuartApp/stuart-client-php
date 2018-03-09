@@ -3,23 +3,15 @@
 namespace Stuart;
 
 use Stuart\Converters\JobToJson;
-use Stuart\Repository\JobEtaRepository;
-use Stuart\Repository\JobPricingRepository;
-use Stuart\Repository\JobRepository;
+use Stuart\Converters\JsonToJob;
 
 class Client
 {
     private $httpClient;
-    private $jobRepository;
-    private $jobPricingRepository;
-    private $jobEtaRepository;
 
     public function __construct($httpClient)
     {
         $this->httpClient = $httpClient;
-        $this->jobRepository = new JobRepository($this->httpClient);
-        $this->jobPricingRepository = new JobPricingRepository($this->httpClient);
-        $this->jobEtaRepository = new JobEtaRepository($this->httpClient);
     }
 
     /**
@@ -41,12 +33,25 @@ class Client
 
     public function createJob($job)
     {
-        return $this->jobRepository->save($job);
+        $body = JobToJson::convert($job);
+
+        $apiResponse = $this->httpClient->performPost($body, '/v2/jobs');
+        if ($apiResponse->success()) {
+            return JsonToJob::convert($apiResponse->getBody());
+        } else {
+            return json_decode($apiResponse->getBody());
+        }
     }
 
     public function getJob($jobId)
     {
-        return $this->jobRepository->get($jobId);
+        $apiResponse = $this->httpClient->performGet('/v2/jobs/' . $jobId);
+
+        if ($apiResponse->success()) {
+            return JsonToJob::convert($apiResponse->getBody());
+        } else {
+            return json_decode($apiResponse->getBody());
+        }
     }
 
     public function cancelJob($jobId)
@@ -60,24 +65,30 @@ class Client
         }
     }
 
-	public function cancelDelivery($deliveryId)
-	{
-		$apiResponse = $this->httpClient->performPost('', '/v2/deliveries/' . $deliveryId . '/cancel');
+    public function cancelDelivery($deliveryId)
+    {
+        $apiResponse = $this->httpClient->performPost('', '/v2/deliveries/' . $deliveryId . '/cancel');
 
-		if ($apiResponse->success()) {
-			return true;
-		} else {
-			return json_decode($apiResponse->getBody());
-		}
-	}
+        if ($apiResponse->success()) {
+            return true;
+        } else {
+            return json_decode($apiResponse->getBody());
+        }
+    }
 
     public function getPricing($job)
     {
-        return $this->jobPricingRepository->save($job);
+        $body = JobToJson::convert($job);
+
+        $apiResponse = $this->httpClient->performPost($body, '/v2/jobs/pricing');
+        return json_decode($apiResponse->getBody());
     }
 
     public function getEta($job)
     {
-        return $this->jobEtaRepository->save($job);
+        $body = JobToJson::convert($job);
+
+        $apiResponse = $this->httpClient->performPost($body, '/v2/jobs/eta');
+        return json_decode($apiResponse->getBody());
     }
 }

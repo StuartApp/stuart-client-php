@@ -2,9 +2,8 @@
 
 namespace Stuart\Tests\Infrastructure;
 
-use Psr\SimpleCache\CacheInterface;
 use League\OAuth2\Client\Token\AccessToken;
-
+use Psr\SimpleCache\CacheInterface;
 use Stuart\Infrastructure\Authenticator;
 use Stuart\Infrastructure\Environment;
 
@@ -14,8 +13,7 @@ class AuthenticatorTestTest extends \PHPUnit_Framework_TestCase
     {
         // given
         $cache = new InMemoryCache();
-        if($cache instanceof CacheInterface)
-        {
+        if ($cache instanceof CacheInterface) {
             $accessToken = new AccessToken(['access_token' => 'sample-access-token', 'expires' => '1920806443']);
             $cache->set('STUART_SANDBOX_CACHE_ACCESS_TOKEN_KEY', $accessToken);
             $authenticator = new Authenticator(

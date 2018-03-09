@@ -12,18 +12,6 @@ abstract class Location
     private $lastName;
     private $company;
 
-    public function setAddress($address)
-    {
-        $this->address = $address;
-        return $this;
-    }
-
-    public function setComment($comment)
-    {
-        $this->comment = $comment;
-        return $this;
-    }
-
     public function setContactPhone($phone)
     {
         $this->phone = $phone;
@@ -59,9 +47,21 @@ abstract class Location
         return $this->address;
     }
 
+    public function setAddress($address)
+    {
+        $this->address = $address;
+        return $this;
+    }
+
     public function getComment()
     {
         return $this->comment;
+    }
+
+    public function setComment($comment)
+    {
+        $this->comment = $comment;
+        return $this;
     }
 
     public function getPhone()

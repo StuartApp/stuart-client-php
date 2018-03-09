@@ -30,41 +30,19 @@ class HttpClient
     {
         $this->authenticator = $authenticator;
         $this->baseUrl = $authenticator->getEnvironment()['base_url'];
-        $this->client = $client === null ? new Client() : $client;
+        $this->client = $client ?? new Client();
     }
 
-
     /**
-     * @param $formParams
+     * @param $body
      * @param $resource
      * @return ApiResponse
      */
-    public function performPost($formParams, $resource)
+    public function performPost($body, $resource)
     {
         try {
             $response = $this->client->request('POST', $this->baseUrl . $resource, [
-                'body' => $formParams,
-                'headers' => $this->defaultHeaders()
-            ]);
-        } catch (RequestException $e) {
-            if ($e->hasResponse()) {
-                $response = $e->getResponse();
-            } else {
-                throw $e;
-            }
-        }
-
-        return ApiResponseFactory::fromGuzzleHttpResponse($response);
-    }
-
-    /**
-     * @param $resource
-     * @return ApiResponse
-     */
-    public function performGet($resource)
-    {
-        try {
-            $response = $this->client->request('GET', $this->baseUrl . $resource, [
+                'body' => $body,
                 'headers' => $this->defaultHeaders()
             ]);
         } catch (RequestException $e) {
@@ -88,5 +66,26 @@ class HttpClient
             'User-Agent' => 'stuart-php-client/2.8.0',
             'Content-Type' => 'application/json'
         ];
+    }
+
+    /**
+     * @param $resource
+     * @return ApiResponse
+     */
+    public function performGet($resource)
+    {
+        try {
+            $response = $this->client->request('GET', $this->baseUrl . $resource, [
+                'headers' => $this->defaultHeaders()
+            ]);
+        } catch (RequestException $e) {
+            if ($e->hasResponse()) {
+                $response = $e->getResponse();
+            } else {
+                throw $e;
+            }
+        }
+
+        return ApiResponseFactory::fromGuzzleHttpResponse($response);
     }
 }
