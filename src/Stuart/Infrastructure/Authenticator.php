@@ -2,8 +2,8 @@
 
 namespace Stuart\Infrastructure;
 
-use Psr\SimpleCache\CacheInterface;
 use League\OAuth2\Client\Provider\GenericProvider;
+use Psr\SimpleCache\CacheInterface;
 
 class Authenticator
 {
@@ -51,12 +51,20 @@ class Authenticator
         return $this->getNewAccessToken();
     }
 
-    /**
-     * @return \Stuart\Infrastructure\Environment
-     */
-    public function getEnvironment()
+    private function accessTokenIsCachable()
     {
-        return $this->environment;
+        return $this->cache !== null;
+    }
+
+    private function getAccessTokenFromCache()
+    {
+        return $this->cache->get($this->accessTokenCacheKey());
+    }
+
+    private function accessTokenCacheKey()
+    {
+        $envAsString = $this->environment === Environment::SANDBOX ? 'SANDBOX' : 'PRODUCTION';
+        return 'STUART_' . $envAsString . '_CACHE_ACCESS_TOKEN_KEY';
     }
 
     private function getNewAccessToken()
@@ -68,24 +76,16 @@ class Authenticator
         return $accessToken;
     }
 
-    private function accessTokenIsCachable()
-    {
-        return $this->cache !== null;
-    }
-
-    private function getAccessTokenFromCache()
-    {
-        return $this->cache->get($this->accessTokenCacheKey());
-    }
-
     private function addAccessTokenToCache($accessToken)
     {
         $this->cache->set($this->accessTokenCacheKey(), $accessToken);
     }
 
-    private function accessTokenCacheKey()
+    /**
+     * @return \Stuart\Infrastructure\Environment
+     */
+    public function getEnvironment()
     {
-        $envAsString = $this->environment === Environment::SANDBOX ? 'SANDBOX' : 'PRODUCTION';
-        return 'STUART_' . $envAsString . '_CACHE_ACCESS_TOKEN_KEY';
+        return $this->environment;
     }
 }

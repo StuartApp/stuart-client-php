@@ -13,11 +13,9 @@ use Stuart\Infrastructure\HttpClient;
 
 class HttpClientTest extends \PHPUnit_Framework_TestCase
 {
+    const PHP_CLIENT_USER_AGENT = 'stuart-php-client/3.0.0';
     private $authenticator;
-
     private $container;
-
-    const PHP_CLIENT_USER_AGENT = 'stuart-php-client/2.8.0';
 
     public function setUp()
     {
@@ -41,6 +39,21 @@ class HttpClientTest extends \PHPUnit_Framework_TestCase
             $userAgent = $transaction['request']->getHeaders()['User-Agent'][0];
             self::assertEquals(self::PHP_CLIENT_USER_AGENT, $userAgent);
         }
+    }
+
+    private function httpClientWith200OK()
+    {
+        $history = Middleware::history($this->container);
+        $mock = new MockHandler([
+            new Response(200, ['X - Foo' => 'Bar'])
+        ]);
+        $handler = HandlerStack::create($mock);
+        $handler->push($history);
+
+        $client = new Client(['handler' => $handler]);
+        $httpClient = new HttpClient($this->authenticator, $client);
+
+        return $httpClient;
     }
 
     public function test_it_sends_the_php_lib_version_header_on_post()
@@ -73,21 +86,6 @@ class HttpClientTest extends \PHPUnit_Framework_TestCase
 
         self::assertEquals("CANT_GEOCODE_ADDRESS", $response_as_object->error);
         self::assertEquals("The address can't be geocoded", $response_as_object->message);
-    }
-
-    private function httpClientWith200OK()
-    {
-        $history = Middleware::history($this->container);
-        $mock = new MockHandler([
-            new Response(200, ['X - Foo' => 'Bar'])
-        ]);
-        $handler = HandlerStack::create($mock);
-        $handler->push($history);
-
-        $client = new Client(['handler' => $handler]);
-        $httpClient = new HttpClient($this->authenticator, $client);
-
-        return $httpClient;
     }
 
     private function httpClientWith422CantGeocodeAddress()

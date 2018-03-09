@@ -3,7 +3,7 @@
 namespace Stuart\Tests;
 
 use Stuart\Converters\JsonToJob;
-use \Stuart\Job;
+use Stuart\Job;
 
 class Mock
 {
@@ -16,42 +16,16 @@ class Mock
     public $pickup_address_postcode = '75004';
     public $pickup_address_country = 'france';
     public $pickup_address_city = 'paris';
-
-    public function pickup_address()
-    {
-        return $this->pickup_address_street
-            . ', ' . $this->pickup_address_postcode
-            . ', ' . $this->pickup_address_city
-            . ', ' . $this->pickup_address_country;
-    }
-
     public $pickup_comment = 'comment';
     public $pickup_contact_company = 'company';
     public $pickup_contact_first_name = 'firstname';
     public $pickup_contact_last_name = 'lastname';
     public $pickup_contact_phone = '837746';
     public $pickup_contact_email = 'lastname@company.com';
-
-    public function pickup_at()
-    {
-        $pickupAt = new \DateTime('2000-01-01', new \DateTimeZone('Europe/London'));
-        $pickupAt->add(new \DateInterval('PT1H'));
-        return $pickupAt->format(JsonToJob::$STUART_DATE_FORMAT);
-    }
-
     public $drop_off_address_street = '148 rue de charenton';
     public $drop_off_address_postcode = '75012';
     public $drop_off_address_country = 'france';
     public $drop_off_address_city = 'paris';
-
-    public function drop_off_address()
-    {
-        return $this->drop_off_address_street
-            . ', ' . $this->drop_off_address_postcode
-            . ', ' . $this->drop_off_address_city
-            . ', ' . $this->drop_off_address_country;
-    }
-
     public $drop_off_comment = 'comment';
     public $drop_off_contact_company = 'company';
     public $drop_off_contact_first_name = 'firstname';
@@ -61,7 +35,6 @@ class Mock
     public $drop_off_client_reference = 'reference';
     public $drop_off_package_description = 'decription';
     public $drop_off_package_type = 'small';
-
     public $delivery_id = '7654321';
     public $delivery_tracking_url = 'https://my-tracking-url';
     public $delivery_status = 'pending';
@@ -85,8 +58,7 @@ class Mock
             ->setContactFirstName($this->pickup_contact_first_name)
             ->setContactLastName($this->pickup_contact_last_name)
             ->setContactPhone($this->pickup_contact_phone)
-            ->setContactEmail($this->pickup_contact_email)
-        ;
+            ->setContactEmail($this->pickup_contact_email);
 
         $job->addDropOff($this->drop_off_address())
             ->setComment($this->drop_off_comment)
@@ -100,6 +72,29 @@ class Mock
             ->setPackageType($this->drop_off_package_type);
 
         return $job;
+    }
+
+    public function pickup_address()
+    {
+        return $this->pickup_address_street
+            . ', ' . $this->pickup_address_postcode
+            . ', ' . $this->pickup_address_city
+            . ', ' . $this->pickup_address_country;
+    }
+
+    public function pickup_at()
+    {
+        $pickupAt = new \DateTime('2000-01-01', new \DateTimeZone('Europe/London'));
+        $pickupAt->add(new \DateInterval('PT1H'));
+        return $pickupAt->format(JsonToJob::$STUART_DATE_FORMAT);
+    }
+
+    public function drop_off_address()
+    {
+        return $this->drop_off_address_street
+            . ', ' . $this->drop_off_address_postcode
+            . ', ' . $this->drop_off_address_city
+            . ', ' . $this->drop_off_address_country;
     }
 
     public function add_dropoff($job)

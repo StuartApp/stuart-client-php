@@ -6,14 +6,14 @@ class Pickup extends Location
 {
     private $pickupAt;
 
+    public function getPickupAt()
+    {
+        return $this->pickupAt;
+    }
+
     public function setPickupAt($pickupAt)
     {
         $this->pickupAt = $pickupAt;
         return $this;
-    }
-
-    public function getPickupAt()
-    {
-        return $this->pickupAt;
     }
 }

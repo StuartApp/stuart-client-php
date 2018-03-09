@@ -34,17 +34,19 @@ $api_client_id = '65176d7a1f4e734f6723hd690825f166f8dadf69fb40af52fffdeac4593e4b
 $api_client_secret = '681ae68635c7aadef5cd1jdng8ef357a808cd9dc794811296446f19268d48fcd'; // can be found here: https://admin-sandbox.stuart.com/client/api
 $authenticator = new \Stuart\Infrastructure\Authenticator($environment, $api_client_id, $api_client_secret);
 
-$client = new \Stuart\Client($authenticator);
+$httpClient = new \Stuart\Infrastructure\HttpClient($authenticator)
+
+$client = new \Stuart\Client($httpClient);
 ```
 
-You can also pass your own Guzzle client instance to the `\Stuart\Client` constructor:
+You can also pass your own Guzzle client instance to the `\Stuart\HttpClient` constructor:
 
 ```php
 $guzzleClient = new \Guzzle\Client();
-$client = new \Stuart\Client($authenticator, $guzzleClient);
+$httpClient = new \Stuart\Infrastructure\HttpClient($authenticator, $guzzleClient);
 ```
 
-This can be useful if you need to attach middlewares to the Guzzle client used by the Stuart client.
+This can be useful if you need to attach middlewares to the Guzzle client.
 
 ### Create a Job
 
@@ -332,13 +334,6 @@ You can also send requests on your own without relying on the `\Stuart\Client`.
 It allows you to use endpoints that are not yet available on the `\Stuart\Client` and enjoy the `\Stuart\Authenticator`.
 
 ```php
-$environment = \Stuart\Infrastructure\Environment::SANDBOX;
-$api_client_id = '65176d7a1f4e734f6723hd690825f166f8dadf69fb40af52fffdeac4593e4bc'; // can be found here: https://admin-sandbox.stuart.com/client/api
-$api_client_secret = '681ae68635c7aadef5cd1jdng8ef357a808cd9dc794811296446f19268d48fcd'; // can be found here: https://admin-sandbox.stuart.com/client/api
-$authenticator = new \Stuart\Infrastructure\Authenticator($environment, $api_client_id, $api_client_secret);
-
-$httpClient = new \Stuart\Infrastructure\HttpClient($this->authenticator);
-
 $apiResponse = $httpClient->performGet('/v2/jobs?page=1');
 $apiResponse->success();
 $apiResponse->getBody();
