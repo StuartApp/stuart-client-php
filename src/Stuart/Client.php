@@ -3,7 +3,6 @@
 namespace Stuart;
 
 use Stuart\Converters\JobToJson;
-use Stuart\Infrastructure\HttpClient;
 use Stuart\Repository\JobEtaRepository;
 use Stuart\Repository\JobPricingRepository;
 use Stuart\Repository\JobRepository;
@@ -15,10 +14,9 @@ class Client
     private $jobPricingRepository;
     private $jobEtaRepository;
 
-    public function __construct($authenticator, \GuzzleHttp\Client $client = null)
+    public function __construct($httpClient)
     {
-        $guzzleClient = $client ?: new \GuzzleHttp\Client();
-        $this->httpClient = new HttpClient($authenticator, $guzzleClient);
+        $this->httpClient = $httpClient;
         $this->jobRepository = new JobRepository($this->httpClient);
         $this->jobPricingRepository = new JobPricingRepository($this->httpClient);
         $this->jobEtaRepository = new JobEtaRepository($this->httpClient);
