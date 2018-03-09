@@ -30,7 +30,7 @@ class HttpClient
     {
         $this->authenticator = $authenticator;
         $this->baseUrl = $authenticator->getEnvironment()['base_url'];
-        $this->client = $client ?? new Client();
+        $this->client = $client === null ? new Client() : $client;
     }
 
     /**
