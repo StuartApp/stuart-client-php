@@ -46,7 +46,7 @@ $guzzleClient = new \Guzzle\Client();
 $httpClient = new \Stuart\Infrastructure\HttpClient($authenticator, $guzzleClient);
 ```
 
-This can be useful if you need to attach middlewares to the Guzzle client used by the Stuart client.
+This can be useful if you need to attach middlewares to the Guzzle client.
 
 ### Create a Job
 
