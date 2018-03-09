@@ -81,4 +81,31 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         self::assertTrue($this->client->validateJob($job));
         \Phake::verify($this->httpClient)->performPost(JobToJson::convert($job), '/v2/jobs/validate');
     }
+
+    public function test_get_an_eta()
+    {
+        \Phake::when($this->httpClient)->performPost(\Phake::anyParameters())->thenReturn(
+            new ApiResponse(200, $this->mock->job_eta_response_json())
+        );
+
+        $job = $this->mock->job();
+        $eta = $this->client->getEta($job);
+
+        self::assertEquals($eta->eta, 672);
+        \Phake::verify($this->httpClient)->performPost(JobToJson::convert($job), '/v2/jobs/eta');
+    }
+
+    public function test_get_a_pricing()
+    {
+        \Phake::when($this->httpClient)->performPost(\Phake::anyParameters())->thenReturn(
+            new ApiResponse(200, $this->mock->job_pricing_response_json())
+        );
+
+        $job = $this->mock->job();
+        $pricing = $this->client->getPricing($job);
+
+        self::assertEquals($pricing->amount, 11.5);
+        self::assertEquals($pricing->currency, 'EUR');
+        \Phake::verify($this->httpClient)->performPost(JobToJson::convert($job), '/v2/jobs/pricing');
+    }
 }
