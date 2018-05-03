@@ -70,13 +70,15 @@ class HttpClient
 
     /**
      * @param $resource
+     * @param $query
      * @return ApiResponse
      */
-    public function performGet($resource)
+    public function performGet($resource, $query = [])
     {
         try {
             $response = $this->client->request('GET', $this->baseUrl . $resource, [
-                'headers' => $this->defaultHeaders()
+                'headers' => $this->defaultHeaders(),
+                'query' => $query
             ]);
         } catch (RequestException $e) {
             if ($e->hasResponse()) {
