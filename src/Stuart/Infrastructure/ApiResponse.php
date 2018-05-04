@@ -20,7 +20,7 @@ class ApiResponse
 
     public function success()
     {
-        return in_array($this->statusCode, [200, 201], true);
+        return $this->statusCode >= 200 && $this->statusCode <= 299;
     }
 
     public function getStatusCode()
