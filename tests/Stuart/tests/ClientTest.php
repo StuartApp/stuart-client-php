@@ -109,19 +109,36 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         \Phake::verify($this->httpClient)->performPost(JobToJson::convert($job), '/v2/jobs/pricing');
     }
 
-    public function test_validate_an_address()
+    public function test_validate_a_pickup_address()
     {
         \Phake::when($this->httpClient)->performGet(\Phake::anyParameters())->thenReturn(
             new ApiResponse(200, $this->mock->address_validate_response_json())
         );
 
         $address = $this->mock->pickup_address();
-        $picking = true;
-        $validity = $this->client->validateAddress($address, $picking);
+        $validity = $this->client->validatePickupAddress($address);
 
         $query = array(
             'address' => $address,
-            'type' => $picking ? 'picking' : 'delivering'
+            'type' => 'picking'
+        );
+
+        self::assertEquals($validity->success, true);
+        \Phake::verify($this->httpClient)->performGet('/v2/addresses/validate', $query);
+    }
+
+    public function test_validate_a_dropoff_address()
+    {
+        \Phake::when($this->httpClient)->performGet(\Phake::anyParameters())->thenReturn(
+            new ApiResponse(200, $this->mock->address_validate_response_json())
+        );
+
+        $address = $this->mock->drop_off_address();
+        $validity = $this->client->validateDropoffAddress($address);
+
+        $query = array(
+            'address' => $address,
+            'type' => 'delivering'
         );
 
         self::assertEquals($validity->success, true);
