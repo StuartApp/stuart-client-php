@@ -91,4 +91,25 @@ class Client
         $apiResponse = $this->httpClient->performPost($body, '/v2/jobs/eta');
         return json_decode($apiResponse->getBody());
     }
+
+    private function validateAddress($address, $type)
+    {
+        $query = array(
+            'address' => $address,
+            'type' => $type
+        );
+
+        $apiResponse = $this->httpClient->performGet('/v2/addresses/validate', $query);
+        return json_decode($apiResponse->getBody());
+    }
+
+    public function validatePickupAddress($address)
+    {
+        return $this->validateAddress($address, 'picking');
+    }
+
+    public function validateDropoffAddress($address)
+    {
+        return $this->validateAddress($address, 'delivering');
+    }
 }

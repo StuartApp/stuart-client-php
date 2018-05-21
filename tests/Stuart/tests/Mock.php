@@ -228,4 +228,13 @@ class Mock
             )
         );
     }
+
+    public function address_validate_response_json()
+    {
+        return json_encode(
+            array(
+                'success' => true
+            )
+        );
+    }
 }
