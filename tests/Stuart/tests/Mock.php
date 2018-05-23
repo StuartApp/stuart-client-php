@@ -61,6 +61,7 @@ class Mock
             ->setContactEmail($this->pickup_contact_email);
 
         $job->addDropOff($this->drop_off_address())
+            ->setDropoffAt(\DateTime::createFromFormat(JsonToJob::$STUART_DATE_FORMAT, $this->dropoff_at()))
             ->setComment($this->drop_off_comment)
             ->setContactCompany($this->drop_off_contact_company)
             ->setContactFirstName($this->drop_off_contact_first_name)
@@ -89,28 +90,20 @@ class Mock
         return $pickupAt->format(JsonToJob::$STUART_DATE_FORMAT);
     }
 
+    public function dropoff_at()
+    {
+        $dropoffAt = new \DateTime('2000-01-01', new \DateTimeZone('Europe/London'));
+        $dropoffAt->add(new \DateInterval('PT1H'));
+        return $dropoffAt->format(JsonToJob::$STUART_DATE_FORMAT);
+    }
+
+
     public function drop_off_address()
     {
         return $this->drop_off_address_street
             . ', ' . $this->drop_off_address_postcode
             . ', ' . $this->drop_off_address_city
             . ', ' . $this->drop_off_address_country;
-    }
-
-    public function add_dropoff($job)
-    {
-        $job->addDropOff($this->drop_off_address())
-            ->setComment($this->drop_off_comment)
-            ->setContactCompany($this->drop_off_contact_company)
-            ->setContactFirstName($this->drop_off_contact_first_name)
-            ->setContactLastName($this->drop_off_contact_last_name)
-            ->setContactPhone($this->drop_off_contact_phone)
-            ->setContactEmail($this->drop_off_contact_email)
-            ->setClientReference($this->drop_off_client_reference)
-            ->setPackageDescription($this->drop_off_package_description)
-            ->setPackageType($this->drop_off_package_type);
-
-        return $job;
     }
 
     public function job_request_json()
@@ -121,6 +114,7 @@ class Mock
                     'transport_type' => 'bike',
                     'assignment_code' => $this->assignment_code,
                     'pickup_at' => $this->pickup_at(),
+                    'dropoff_at' => $this->dropoff_at(),
                     'pickups' => array(
                         array(
                             'address' => $this->pickup_address(),
@@ -164,6 +158,7 @@ class Mock
                 'transport_type' => $this->transport_type,
                 'assignment_code' => $this->assignment_code,
                 'pickup_at' => $this->pickup_at(),
+                'dropoff_at' => $this->dropoff_at(),
                 'deliveries' => array(
                     0 => array(
                         'id' => $this->delivery_id,
