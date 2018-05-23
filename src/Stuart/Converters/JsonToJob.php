@@ -36,6 +36,7 @@ class JsonToJob
                         ->setContactPhone($delivery->pickup->contact->phone)
                         ->setContactEmail($delivery->pickup->contact->email),
                     $job->addDropOff(self::fullTextAddress($delivery->dropoff->address))
+                        ->setDropoffAt(\DateTime::createFromFormat(self::$STUART_DATE_FORMAT, $body->dropoff_at))
                         ->setPackageType($delivery->package_type)
                         ->setPackageDescription($delivery->package_description)
                         ->setClientReference($delivery->client_reference)

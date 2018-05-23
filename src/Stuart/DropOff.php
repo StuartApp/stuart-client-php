@@ -7,6 +7,7 @@ class DropOff extends Location
     private $packageType;
     private $packageDescription;
     private $clientReference;
+    private $dropoffAt;
 
     public function getPackageType()
     {
@@ -38,6 +39,17 @@ class DropOff extends Location
     public function setClientReference($clientReference)
     {
         $this->clientReference = $clientReference;
+        return $this;
+    }
+
+    public function getDropoffAt()
+    {
+        return $this->dropoffAt;
+    }
+
+    public function setDropoffAt($dropoffAt)
+    {
+        $this->dropoffAt = $dropoffAt;
         return $this;
     }
 }

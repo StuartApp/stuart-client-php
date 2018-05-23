@@ -17,6 +17,7 @@ $ composer require stuartapp/stuart-client-php
     1. [Minimalist](#minimalist)
     2. [Complete](#complete)
         1. [With scheduling at pickup](#with-scheduling-at-pickup)
+        1. [With scheduling at drop off](#with-scheduling-at-dropoff)
         2. [With stacking (multi-drop)](#with-stacking-multi-drop)
 3. [Get a Job](#get-a-job)
 4. [Cancel a Job](#cancel-a-job)
@@ -148,6 +149,27 @@ $job->addPickup('46 Boulevard Barbès, 75018 Paris')
 
 $job->addDropOff('156 rue de Charonne, 75011 Paris')
     ->setPackageType('small');
+    
+$client->createJob($job);
+```
+
+#### With scheduling at dropoff
+
+For more information about job scheduling you should [check our API documentation](https://stuart.api-docs.io/v2/jobs/scheduling-a-job).
+
+Please note that this feature can only be used with only one dropoff.
+
+```php
+$job = new \Stuart\Job();
+
+$dropoffAt = new \DateTime('now', new DateTimeZone('Europe/London'));
+$dropoffAt->add(new \DateInterval('PT2H'));
+
+$job->addPickup('46 Boulevard Barbès, 75018 Paris');
+
+$job->addDropOff('156 rue de Charonne, 75011 Paris')
+    ->setPackageType('small')
+    ->setDropoffAt($dropoffAt);
     
 $client->createJob($job);
 ```
