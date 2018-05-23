@@ -17,6 +17,7 @@ $ composer require stuartapp/stuart-client-php
     1. [Minimalist](#minimalist)
     2. [Complete](#complete)
         1. [With scheduling at pickup](#with-scheduling-at-pickup)
+        1. [With scheduling at drop off](#with-scheduling-at-dropoff)
         2. [With stacking (multi-drop)](#with-stacking-multi-drop)
 3. [Get a Job](#get-a-job)
 4. [Cancel a Job](#cancel-a-job)
