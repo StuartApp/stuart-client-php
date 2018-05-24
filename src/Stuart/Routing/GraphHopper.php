@@ -27,19 +27,60 @@ class GraphHopper
 
     public function findRound($pickup, $dropoffs)
     {
-
         $computedDropoffs = [];
         $wastedDropoffs = [];
+
+        $optimizedApiResponse = $this->httpPostOptimize($pickup, $dropoffs);
+        if (!$optimizedApiResponse->success()) {
+            // TODO: handle error
+            return null;
+        }
+
+        $solutionApiResponse = $this->pollForFinishedSolution(json_decode($optimizedApiResponse->getBody())->job_id);
+        if (!$solutionApiResponse->success()) {
+            // TODO: handle error
+            return null;
+        }
+
+        $orderedAddresses = $this->getOrderedAddresses(json_decode($solutionApiResponse->getBody()));
+
+        print_r($orderedAddresses);
+
         return (object)[$pickup, $computedDropoffs, $wastedDropoffs];
     }
 
-    public function validateDropoffs($dropoffs)
+    private function pollForFinishedSolution($jobId)
     {
-        // cannot have pickup at on the pikcup
+        $solutionApiResponse = $this->httpGetSolution($jobId);
+        $solutionStatus = json_decode($solutionApiResponse->getBody())->status;
 
+        while ($solutionStatus !== 'finished') {
+            $solutionApiResponse = $this->httpGetSolution($jobId);
+            $solutionStatus = json_decode($solutionApiResponse->getBody())->status;
+        }
+
+        return $solutionApiResponse;
     }
 
-    public function optimize($pickup, $dropoffs)
+    private function getOrderedAddresses($solution)
+    {
+        unset($solution->solution->routes[0]->activities[0], $solution->solution->routes[0]->activities[1]);
+
+        $addresses = array();
+
+        foreach ($solution->solution->routes[0]->activities as $activity) {
+            $addresses[] = $activity->address->location_id;
+        }
+
+        return $addresses;
+    }
+
+    private function validateDropoffs($dropoffs)
+    {
+        // TODO: cannot have pickup at on the pikcup
+    }
+
+    private function httpPostOptimize($pickup, $dropoffs)
     {
         $url = 'https://graphhopper.com/api/1/vrp/optimize?key=' . self::GRAPHHOPPER_API_KEY;
         $body = json_encode($this->getRequest($pickup, $dropoffs));
@@ -60,7 +101,7 @@ class GraphHopper
         return ApiResponseFactory::fromGuzzleHttpResponse($response);
     }
 
-    public function solution($jobId)
+    private function httpGetSolution($jobId)
     {
         $url = 'https://graphhopper.com/api/1/vrp/solution/' . $jobId . '?key=' . self::GRAPHHOPPER_API_KEY;
 
@@ -79,15 +120,18 @@ class GraphHopper
         return ApiResponseFactory::fromGuzzleHttpResponse($response);
     }
 
-    public function getRequest($pickup, $dropoffs)
+    private function getRequest($pickup, $dropoffs)
     {
         $result = array();
 
         // vehicles
         $vehicles = array();
+        // TODO: configuration as parameter
         $vehicles[] = array(
             'vehicle_id' => '0001',
-            'start_address' => $this->getAddress($pickup)
+            'start_address' => $this->getAddress($pickup),
+            'return_to_depot' => false,
+            //'max_activities' => 8
         );
         $result['vehicles'] = $vehicles;
 
@@ -122,6 +166,26 @@ class GraphHopper
 
     private function geocode($fullTextAddress)
     {
-        return (object)array('lat' => 0.123, 'lon' => 2.1234);
+        $url = 'https://graphhopper.com/api/1/geocode?q=' . $fullTextAddress . '&key=' . self::GRAPHHOPPER_API_KEY;
+
+        try {
+            $response = $this->client->request('GET', $url, [
+                'headers' => ['Content-Type' => 'application/json']
+            ]);
+        } catch (RequestException $e) {
+            if ($e->hasResponse()) {
+                $response = $e->getResponse();
+            } else {
+                throw $e;
+            }
+        }
+
+        $apiResponse = ApiResponseFactory::fromGuzzleHttpResponse($response);
+        if ($apiResponse->success()) {
+            $decodedBody = json_decode($apiResponse->getBody());
+            return (object)array('lat' => $decodedBody->hits[0]->point->lat, 'lon' => $decodedBody->hits[0]->point->lng);
+        }
+        // handle failure
+        return null;
     }
 }
