@@ -42,8 +42,8 @@ class GraphHopper
             return null;
         }
 
-        $orderedAddresses = $this->getOrderedAddresses(json_decode($solutionApiResponse->getBody()));
 
+        $orderedAddresses = $this->getOrderedAddresses(json_decode($solutionApiResponse->getBody()));
         print_r($orderedAddresses);
 
         return (object)[$pickup, $computedDropoffs, $wastedDropoffs];
@@ -64,20 +64,17 @@ class GraphHopper
 
     private function getOrderedAddresses($solution)
     {
-        unset($solution->solution->routes[0]->activities[0], $solution->solution->routes[0]->activities[1]);
-
-        $addresses = array();
-
-        foreach ($solution->solution->routes[0]->activities as $activity) {
-            $addresses[] = $activity->address->location_id;
+        $rounds = array();
+        foreach ($solution->solution->routes as $route) {
+            unset($route->activities[0], $route->activities[1]);
+            $addresses = array();
+            foreach ($route->activities as $activity) {
+                $addresses[] = $activity->address->location_id;
+            }
+            $rounds[] = $addresses;
         }
 
-        return $addresses;
-    }
-
-    private function validateDropoffs($dropoffs)
-    {
-        // TODO: cannot have pickup at on the pikcup
+        return $rounds;
     }
 
     private function httpPostOptimize($pickup, $dropoffs)
@@ -125,14 +122,8 @@ class GraphHopper
         $result = array();
 
         // vehicles
-        $vehicles = array();
-        // TODO: configuration as parameter
-        $vehicles[] = array(
-            'vehicle_id' => '0001',
-            'start_address' => $this->getAddress($pickup),
-            'return_to_depot' => false,
-            //'max_activities' => 8
-        );
+        $vehicles = $this->getVehicles($pickup, 10);
+
         $result['vehicles'] = $vehicles;
 
         // services
@@ -187,5 +178,32 @@ class GraphHopper
         }
         // handle failure
         return null;
+    }
+
+    private function validateDropoffs($dropoffs)
+    {
+        // TODO: cannot have pickup at on the pikcup
+    }
+
+    private function getVehicles($pickup): array
+    {
+        $vehicles = array();
+
+        // TODO: configuration as parameter
+        $vehicleCount = 10;
+        $returnToDepot = false;
+        $maxActivities = 9;
+        while ($vehicleCount > 0) {
+            $vehicles[] = array(
+                'vehicle_id' => '000' . $vehicleCount
+                ,
+                'start_address' => $this->getAddress($pickup),
+                'return_to_depot' => $returnToDepot,
+                'max_activities' => $maxActivities
+            );
+            $vehicleCount--;
+        }
+
+        return $vehicles;
     }
 }
