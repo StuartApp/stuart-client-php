@@ -8,7 +8,6 @@ use Stuart\Infrastructure\ApiResponseFactory;
 
 class GraphHopper
 {
-
     const GRAPHHOPPER_API_KEY = 'f8b0585b-1bed-4cda-aede-dfdd2c4899a9';
 
     /**
@@ -24,12 +23,8 @@ class GraphHopper
         $this->client = new Client();
     }
 
-
-    public function findRound($pickup, $dropoffs)
+    public function findRounds($pickup, $dropoffs)
     {
-        $computedDropoffs = [];
-        $wastedDropoffs = [];
-
         $optimizedApiResponse = $this->httpPostOptimize($pickup, $dropoffs);
         if (!$optimizedApiResponse->success()) {
             // TODO: handle error
@@ -42,11 +37,51 @@ class GraphHopper
             return null;
         }
 
-
+        $jobs = array();
         $rounds = $this->getRounds(json_decode($solutionApiResponse->getBody()));
-        print_r($rounds);
+        foreach ($rounds as $round) {
+            $orderedDropoffs = $this->orderDropoffs($round, $dropoffs);
+            $this->clearDropoffAt($orderedDropoffs);
 
-        return (object)[$pickup, $computedDropoffs, $wastedDropoffs];
+            $job = new \Stuart\Job();
+            $job->pushPickup($pickup);
+            foreach ($orderedDropoffs as $dropoff) {
+                $job->pushDropoff($dropoff);
+            }
+            $jobs[] = $job;
+        }
+
+        return (object)array(
+            'jobs' => $jobs,
+            'waste' => []
+        );
+    }
+
+    private function orderDropoffs($rounds, $dropoffs)
+    {
+        $result = array();
+
+        foreach ($rounds as $address) {
+            $result[] = $this->matchDropoff($address, $dropoffs);
+        }
+
+        return $result;
+    }
+
+    private function matchDropoff($address, $dropoffs)
+    {
+        foreach ($dropoffs as $dropoff) {
+            if ($dropoff->getAddress() === $address) {
+                return $dropoff;
+            }
+        }
+    }
+
+    private function clearDropoffAt($dropoffs)
+    {
+        foreach ($dropoffs as $dropoff) {
+            $dropoff->setDropoffAt(null);
+        }
     }
 
     private function pollForFinishedSolution($jobId)
@@ -71,7 +106,9 @@ class GraphHopper
             foreach ($route->activities as $activity) {
                 $addresses[] = $activity->address->location_id;
             }
-            $rounds[] = $addresses;
+            if (count($addresses) > 0) {
+                $rounds[] = $addresses;
+            }
         }
 
         return $rounds;
@@ -80,7 +117,7 @@ class GraphHopper
     private function httpPostOptimize($pickup, $dropoffs)
     {
         $url = 'https://graphhopper.com/api/1/vrp/optimize?key=' . self::GRAPHHOPPER_API_KEY;
-        $body = json_encode($this->getRequest($pickup, $dropoffs));
+        $body = json_encode($this->optimizeRequestBody($pickup, $dropoffs));
 
         try {
             $response = $this->client->request('POST', $url, [
@@ -117,8 +154,10 @@ class GraphHopper
         return ApiResponseFactory::fromGuzzleHttpResponse($response);
     }
 
-    private function getRequest($pickup, $dropoffs)
+    private function optimizeRequestBody($pickup, $dropoffs)
     {
+        $slotSizeInMinutes = 30;
+
         $result = array();
 
         // vehicles
@@ -135,9 +174,16 @@ class GraphHopper
         );
 
         foreach ($dropoffs as $dropoff) {
+            $timeWindows = array();
+            $timeWindows[] = array(
+                'earliest' => $dropoff->getDropoffAt()->getTimestamp(),
+                'latest' => $dropoff->getDropoffAt()->add(new \DateInterval('PT' . $slotSizeInMinutes . 'M'))->getTimestamp()
+            );
+
             $services[] = array(
                 'id' => $dropoff->getAddress(),
-                'address' => $this->getAddress($dropoff)
+                'address' => $this->getAddress($dropoff),
+                'time_windows' => $timeWindows
             );
         }
         $result['services'] = $services;
@@ -176,16 +222,12 @@ class GraphHopper
             $decodedBody = json_decode($apiResponse->getBody());
             return (object)array('lat' => $decodedBody->hits[0]->point->lat, 'lon' => $decodedBody->hits[0]->point->lng);
         }
+
         // handle failure
         return null;
     }
 
-    private function validateDropoffs($dropoffs)
-    {
-        // TODO: cannot have pickup at on the pikcup
-    }
-
-    private function getVehicles($pickup): array
+    private function getVehicles($pickup)
     {
         $vehicles = array();
 
@@ -193,6 +235,7 @@ class GraphHopper
         $vehicleCount = 10;
         $returnToDepot = false;
         $maxActivities = 9;
+
         while ($vehicleCount > 0) {
             $vehicles[] = array(
                 'vehicle_id' => '000' . $vehicleCount
@@ -205,5 +248,11 @@ class GraphHopper
         }
 
         return $vehicles;
+    }
+
+    private function validateDropoffs($dropoffs)
+    {
+        // TODO: cannot have pickup at on the pikcup
+        // TODO: all dropoffs must have dropoff_at
     }
 }

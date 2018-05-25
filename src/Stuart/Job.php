@@ -26,6 +26,11 @@ class Job
         return $pickup;
     }
 
+    public function pushPickup($pickup)
+    {
+        $this->pickups[] = $pickup;
+    }
+
     /**
      * @param $address
      * @return DropOff
@@ -36,6 +41,11 @@ class Job
         $dropOff->setAddress($address);
         $this->dropOffs[] = $dropOff;
         return $dropOff;
+    }
+
+    public function pushDropoff($dropoff)
+    {
+        $this->dropOffs[] = $dropoff;
     }
 
     /**

@@ -22,56 +22,51 @@ class GraphHopperTest extends \PHPUnit_Framework_TestCase
         // given
         $pickup = new Pickup();
         $pickup->setAddress('26 rue taine 75012 paris');
-        $dropoff1 = new DropOff();
-        $dropoff1
-            ->setAddress('3 rue d\'edimbourg 75008 paris')
-            ->setClientReference('ref1');
-
-        $dropoff2 = new DropOff();
-        $dropoff2
-            ->setAddress('23 rue de richelieu 75002 paris')
-            ->setClientReference('ref2');
-
-        $dropoff3 = new DropOff();
-        $dropoff3
-            ->setAddress('156 rue de charonne 75012 paris')
-            ->setClientReference('ref3');
-
-        $dropoff4 = new DropOff();
-        $dropoff4
-            ->setAddress('8 rue sidi brahim 75012 paris')
-            ->setClientReference('ref4');
-
-        $dropoff5 = new DropOff();
-        $dropoff5
-            ->setAddress('5 passage du chantier 75012 paris')
-            ->setClientReference('ref5');
-
-
-        $dropoff6 = new DropOff();
-        $dropoff6
-            ->setAddress('Hôpital Saint-Louis, 75010 Paris')
-            ->setClientReference('ref6');
-
 
         // when
-        $result = $this->graphHopper->findRound($pickup,
+        $result = $this->graphHopper->findRounds($pickup,
             [
-                $this->dropoff('23 rue de richelieu 75002 paris'), $this->dropoff('3 rue d\'edimbourg 75008 paris'), $this->dropoff('156 rue de charonne 75012 paris'),
-                $this->dropoff('8 rue sidi brahim 75012 paris'), $this->dropoff('5 passage du chantier 75012 paris'), $this->dropoff('Hôpital Saint-Louis, 75010 Paris'),
-                $this->dropoff('1 Rue des Deux Gares, 75010 Paris'),  $this->dropoff('137 Rue la Fayette, 75010 Paris'), $this->dropoff('34 Rue Pierre Semard, 75009 Paris'),
-                $this->dropoff('46 Rue Lecourbe, 75015 Paris'),  $this->dropoff('178 Rue Lecourbe, 75015 Paris'), $this->dropoff('43 Rue des Alouettes 75019 Paris')
+                $this->dropoff('23 rue de richelieu 75002 paris', \DateTime::createFromFormat('Y-m-d H:i:s', '2018-05-26 12:40:00')),
+                $this->dropoff('3 rue d\'edimbourg 75008 paris', \DateTime::createFromFormat('Y-m-d H:i:s', '2018-05-26 12:45:00')),
+                $this->dropoff('156 rue de charonne 75012 paris', \DateTime::createFromFormat('Y-m-d H:i:s', '2018-05-26 12:30:00')),
+                $this->dropoff('8 rue sidi brahim 75012 paris', \DateTime::createFromFormat('Y-m-d H:i:s', '2018-05-26 14:30:00')),
+                $this->dropoff('5 passage du chantier 75012 paris', \DateTime::createFromFormat('Y-m-d H:i:s', '2018-05-26 12:30:00')),
+                $this->dropoff('Hôpital Saint-Louis, 75010 Paris', \DateTime::createFromFormat('Y-m-d H:i:s', '2018-05-26 13:20:00')),
+                $this->dropoff('1 Rue des Deux Gares, 75010 Paris', \DateTime::createFromFormat('Y-m-d H:i:s', '2018-05-26 12:30:00')),
+                $this->dropoff('137 Rue la Fayette, 75010 Paris', \DateTime::createFromFormat('Y-m-d H:i:s', '2018-05-26 12:30:00')),
+                $this->dropoff('34 Rue Pierre Semard, 75009 Paris', \DateTime::createFromFormat('Y-m-d H:i:s', '2018-05-26 12:00:00')),
+                $this->dropoff('46 Rue Lecourbe, 75015 Paris', \DateTime::createFromFormat('Y-m-d H:i:s', '2018-05-26 12:30:00')),
+                $this->dropoff('178 Rue Lecourbe, 75015 Paris', \DateTime::createFromFormat('Y-m-d H:i:s', '2018-05-26 13:00:00')),
+                $this->dropoff('43 Rue des Alouettes 75019 Paris', \DateTime::createFromFormat('Y-m-d H:i:s', '2018-05-26 12:30:00'))
             ]);
 
         // then
-
+        foreach ($result->jobs as $job) {
+            $job->setTransportType('car');
+            $res = $this->createJob($job);
+        }
     }
 
-    private function dropoff($address)
+    private function createJob($job)
+    {
+        $environment = \Stuart\Infrastructure\Environment::SANDBOX;
+        $api_client_id = '65176d7a1f4e734f6a4d737190825f166f8dadf69fb40af52fffdeac4593e4bc'; // can be found here: https://admin-sandbox.stuart.com/client/api
+        $api_client_secret = '681ae68635c7aadef5cd82cbeeef357a808cd9dc794811296446f19268d48fcd'; // can be found here: https://admin-sandbox.stuart.com/client/api
+        $authenticator = new \Stuart\Infrastructure\Authenticator($environment, $api_client_id, $api_client_secret);
+
+        $httpClient = new \Stuart\Infrastructure\HttpClient($authenticator);
+        $client = new \Stuart\Client($httpClient);
+
+        return $client->createJob($job);
+    }
+
+    private function dropoff($address, $dropoffAt)
     {
         $dropoff = new DropOff();
         $dropoff
-            ->setAddress($address);
+            ->setAddress($address)
+            ->setDropoffAt($dropoffAt);
+
         return $dropoff;
     }
 }
