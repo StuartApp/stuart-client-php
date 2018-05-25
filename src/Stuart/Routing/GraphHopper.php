@@ -43,8 +43,8 @@ class GraphHopper
         }
 
 
-        $orderedAddresses = $this->getOrderedAddresses(json_decode($solutionApiResponse->getBody()));
-        print_r($orderedAddresses);
+        $rounds = $this->getRounds(json_decode($solutionApiResponse->getBody()));
+        print_r($rounds);
 
         return (object)[$pickup, $computedDropoffs, $wastedDropoffs];
     }
@@ -62,7 +62,7 @@ class GraphHopper
         return $solutionApiResponse;
     }
 
-    private function getOrderedAddresses($solution)
+    private function getRounds($solution)
     {
         $rounds = array();
         foreach ($solution->solution->routes as $route) {
