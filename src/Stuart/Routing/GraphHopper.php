@@ -16,15 +16,17 @@ class GraphHopper
     private $client;
     private $pickup;
     private $dropoffs;
+    private $config;
 
     /**
      * GraphHopper constructor.
      */
-    public function __construct($pickup, $dropoffs)
+    public function __construct($pickup, $dropoffs, $config)
     {
         $this->client = new Client();
         $this->pickup = $pickup;
         $this->dropoffs = $dropoffs;
+        $this->config = $config;
     }
 
     public function findRounds()
@@ -128,18 +130,12 @@ class GraphHopper
 
     private function buildOptimizeRequestBody()
     {
-        $slotSizeInMinutes = 30;
-
         $result = array();
 
-        // vehicles
         $vehicles = $this->buildVehicles();
-
         $result['vehicles'] = $vehicles;
 
-        // services
         $services = array();
-
         $services[] = array(
             'id' => $this->pickup->getAddress(),
             'address' => $this->buildAddress($this->pickup)
@@ -149,7 +145,7 @@ class GraphHopper
             $timeWindows = array();
             $timeWindows[] = array(
                 'earliest' => $dropoff->getDropoffAt()->getTimestamp(),
-                'latest' => $dropoff->getDropoffAt()->add(new \DateInterval('PT' . $slotSizeInMinutes . 'M'))->getTimestamp()
+                'latest' => $dropoff->getDropoffAt()->add(new \DateInterval('PT' . $this->config['slot_size_in_minutes'] . 'M'))->getTimestamp()
             );
 
             $services[] = array(
@@ -167,17 +163,13 @@ class GraphHopper
     {
         $vehicles = array();
 
-        // TODO: configuration as parameter
-        $vehicleCount = 10;
-        $returnToDepot = false;
-        $maxActivities = 9;
-
+        $vehicleCount = $this->config['vehicle_count'];
         while ($vehicleCount > 0) {
             $vehicles[] = array(
                 'vehicle_id' => '000' . $vehicleCount,
                 'start_address' => $this->buildAddress($this->pickup),
-                'return_to_depot' => $returnToDepot,
-                'max_activities' => $maxActivities
+                'return_to_depot' => $this->config['return_trip'],
+                'max_activities' => $this->config['max_dropoffs']
             );
             $vehicleCount--;
         }

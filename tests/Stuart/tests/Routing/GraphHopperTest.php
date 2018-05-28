@@ -43,7 +43,7 @@ class GraphHopperTest extends \PHPUnit_Framework_TestCase
             'slot_size_in_minutes' => 30
         );
 
-        $graphHopper = new GraphHopper($pickup, $dropoffs);
+        $graphHopper = new GraphHopper($pickup, $dropoffs, $config);
 
         $result = $graphHopper->findRounds();
 
