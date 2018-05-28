@@ -14,18 +14,22 @@ class GraphHopper
      * @var Client
      */
     private $client;
+    private $pickup;
+    private $dropoffs;
 
     /**
      * GraphHopper constructor.
      */
-    public function __construct()
+    public function __construct($pickup, $dropoffs)
     {
         $this->client = new Client();
+        $this->pickup = $pickup;
+        $this->dropoffs = $dropoffs;
     }
 
-    public function findRounds($pickup, $dropoffs)
+    public function findRounds()
     {
-        $optimizedApiResponse = $this->httpPostOptimize($pickup, $dropoffs);
+        $optimizedApiResponse = $this->httpPostOptimize();
         if (!$optimizedApiResponse->success()) {
             // TODO: handle error
             return null;
@@ -40,8 +44,10 @@ class GraphHopper
         $jobs = array();
         $routes = json_decode($solutionApiResponse->getBody())->solution->routes;
         foreach ($routes as $route) {
-            $sortedDropoffs = $this->sortDropoffs($dropoffs, $this->parseForStops($route));
-            $jobs[] = $this->buildJob($pickup, $route->waiting_time, $sortedDropoffs);
+            $sortedDropoffs = $this->sortedDropoffs($this->parseForStops($route));
+            if (count($sortedDropoffs) > 0) {
+                $jobs[] = $this->buildJob($route->waiting_time, $sortedDropoffs);
+            }
         }
         return (object)array(
             'jobs' => $jobs,
@@ -49,7 +55,7 @@ class GraphHopper
         );
     }
 
-    private function buildJob($pickup, $waitingTime, $sortedDropoffs)
+    private function buildJob($waitingTime, $sortedDropoffs)
     {
         $job = new \Stuart\Job();
         $this->clearDropoffAt($sortedDropoffs);
@@ -58,7 +64,7 @@ class GraphHopper
             $job->pushDropoff($dropoff);
         }
 
-        $pickupClone = clone $pickup;
+        $pickupClone = clone $this->pickup;
         $pickupAt = new \DateTime();
         $pickupAt->setTimestamp($waitingTime);
         $pickupClone->setPickupAt($pickupAt);
@@ -68,12 +74,12 @@ class GraphHopper
     }
 
 
-    private function sortDropoffs($dropoffs, $stops)
+    private function sortedDropoffs($stops)
     {
         $result = array();
 
         foreach ($stops as $stop) {
-            $result[] = $this->matchDropoff($stop, $dropoffs);
+            $result[] = $this->matchDropoff($stop, $this->dropoffs);
         }
 
         return $result;
@@ -87,25 +93,22 @@ class GraphHopper
         foreach ($route->activities as $activity) {
             $addresses[] = $activity->address->location_id;
         }
-        if (count($addresses) > 0) {
-            return $addresses;
-        }
 
-        return array();
+        return $addresses;
     }
 
-    private function matchDropoff($address, $dropoffs)
+    private function matchDropoff($address)
     {
-        foreach ($dropoffs as $dropoff) {
+        foreach ($this->dropoffs as $dropoff) {
             if ($dropoff->getAddress() === $address) {
                 return $dropoff;
             }
         }
     }
 
-    private function clearDropoffAt($dropoffs)
+    private function clearDropoffAt()
     {
-        foreach ($dropoffs as $dropoff) {
+        foreach ($this->dropoffs as $dropoff) {
             $dropoff->setDropoffAt(null);
         }
     }
@@ -123,14 +126,14 @@ class GraphHopper
         return $solutionApiResponse;
     }
 
-    private function buildOptimizeRequestBody($pickup, $dropoffs)
+    private function buildOptimizeRequestBody()
     {
         $slotSizeInMinutes = 30;
 
         $result = array();
 
         // vehicles
-        $vehicles = $this->buildVehicles($pickup, 10);
+        $vehicles = $this->buildVehicles();
 
         $result['vehicles'] = $vehicles;
 
@@ -138,11 +141,11 @@ class GraphHopper
         $services = array();
 
         $services[] = array(
-            'id' => $pickup->getAddress(),
-            'address' => $this->buildAddress($pickup)
+            'id' => $this->pickup->getAddress(),
+            'address' => $this->buildAddress($this->pickup)
         );
 
-        foreach ($dropoffs as $dropoff) {
+        foreach ($this->dropoffs as $dropoff) {
             $timeWindows = array();
             $timeWindows[] = array(
                 'earliest' => $dropoff->getDropoffAt()->getTimestamp(),
@@ -160,7 +163,7 @@ class GraphHopper
         return $result;
     }
 
-    private function buildVehicles($pickup)
+    private function buildVehicles()
     {
         $vehicles = array();
 
@@ -171,9 +174,8 @@ class GraphHopper
 
         while ($vehicleCount > 0) {
             $vehicles[] = array(
-                'vehicle_id' => '000' . $vehicleCount
-                ,
-                'start_address' => $this->buildAddress($pickup),
+                'vehicle_id' => '000' . $vehicleCount,
+                'start_address' => $this->buildAddress($this->pickup),
                 'return_to_depot' => $returnToDepot,
                 'max_activities' => $maxActivities
             );
@@ -194,10 +196,10 @@ class GraphHopper
     }
 
     // HTTP calls
-    private function httpPostOptimize($pickup, $dropoffs)
+    private function httpPostOptimize()
     {
         $url = 'https://graphhopper.com/api/1/vrp/optimize?key=' . self::GRAPHHOPPER_API_KEY;
-        $body = json_encode($this->buildOptimizeRequestBody($pickup, $dropoffs));
+        $body = json_encode($this->buildOptimizeRequestBody($this->pickup, $this->dropoffs));
 
         try {
             $response = $this->client->request('POST', $url, [
@@ -261,7 +263,7 @@ class GraphHopper
     }
 
     // Validators
-    private function validateDropoffs($dropoffs)
+    private function validateDropoffs()
     {
         // TODO: cannot have pickup at on the pikcup
         // TODO: all dropoffs must have dropoff_at
