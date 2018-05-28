@@ -13,6 +13,8 @@ class Job
     private $pickups = array();
     private $dropOffs = array();
     private $deliveries = array();
+    private $distance;
+    private $duration;
 
     /**
      * @param $address
@@ -141,5 +143,41 @@ class Job
     public function setAssignmentCode($assignmentCode)
     {
         $this->assignmentCode = $assignmentCode;
+    }
+
+    /**
+     * Total Job distance, in kilometer.
+     *
+     * @return float
+     */
+    public function getDistance()
+    {
+        return $this->distance;
+    }
+
+    /**
+     * @param float $distance
+     */
+    public function setDistance($distance)
+    {
+        $this->distance = $distance;
+    }
+
+    /**
+     * Total Job duration estimation, in minute.
+     *
+     * @return int
+     */
+    public function getDuration()
+    {
+        return $this->duration;
+    }
+
+    /**
+     * @param int $duration
+     */
+    public function setDuration($duration)
+    {
+        $this->duration = $duration;
     }
 }
