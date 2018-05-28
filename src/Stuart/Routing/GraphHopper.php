@@ -32,14 +32,20 @@ class GraphHopper
     {
         $optimizedApiResponse = $this->httpPostOptimize();
         if (!$optimizedApiResponse->success()) {
-            // TODO: handle error
-            return null;
+            error_log('Unable to send request to GraphHopper.');
+            return (object)array(
+                'jobs' => [],
+                'waste' => []
+            );
         }
 
         $solutionApiResponse = $this->pollForFinishedSolution(json_decode($optimizedApiResponse->getBody())->job_id);
         if (!$solutionApiResponse->success()) {
-            // TODO: handle error
-            return null;
+            error_log('Unable to fetch response from GraphHopper.');
+            return (object)array(
+                'jobs' => [],
+                'waste' => []
+            );
         }
 
         $jobs = array();
