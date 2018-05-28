@@ -33,10 +33,15 @@ class GraphHopperTest extends \PHPUnit_Framework_TestCase
             $this->dropoff('34 Rue Pierre Semard, 75009 Paris', \DateTime::createFromFormat('Y-m-d H:i:s', '2018-05-29 12:00:00')),
             $this->dropoff('46 Rue Lecourbe, 75015 Paris', \DateTime::createFromFormat('Y-m-d H:i:s', '2018-05-29 12:30:00')),
             $this->dropoff('178 Rue Lecourbe, 75015 Paris', \DateTime::createFromFormat('Y-m-d H:i:s', '2018-05-29 13:00:00')),
-            $this->dropoff('43 Rue des Alouettes 75019 Paris', \DateTime::createFromFormat('Y-m-d H:i:s', '2018-05-29 12:30:00'))
+            $this->dropoff('43 Rue des Alouettes 75019 Paris', \DateTime::createFromFormat('Y-m-d H:i:s', '2018-05-29 12:30:00')),
+            $this->dropoff('50 Rue Durantin, 75018 Paris', \DateTime::createFromFormat('Y-m-d H:i:s', '2018-05-29 12:30:00')),
+            $this->dropoff('47-33 Rue des Abbesses, 75018 Paris', \DateTime::createFromFormat('Y-m-d H:i:s', '2018-05-29 13:30:00')),
+            $this->dropoff('2 Boulevard de la Villette, 75019 Paris', \DateTime::createFromFormat('Y-m-d H:i:s', '2018-05-29 14:30:00')),
+            $this->dropoff('172 Rue de Charonne, 75011 Paris', \DateTime::createFromFormat('Y-m-d H:i:s', '2018-05-29 15:30:00'))
         ];
 
         $config = array(
+            'graphhopper_api_key' => 'f8b0585b-1bed-4cda-aede-dfdd2c4899a9',
             'vehicle_count' => 1,
             'return_trip' => false,
             'max_dropoffs' => 8,
@@ -51,14 +56,15 @@ class GraphHopperTest extends \PHPUnit_Framework_TestCase
         foreach ($result->jobs as $job) {
             $job->setTransportType('car');
             $res = $this->createJob($job);
+            print_r($res);
         }
     }
 
     private function createJob($job)
     {
         $environment = \Stuart\Infrastructure\Environment::SANDBOX;
-        $api_client_id = '65176d7a1f4e734f6a4d737190825f166f8dadf69fb40af52fffdeac4593e4bc'; // can be found here: https://admin-sandbox.stuart.com/client/api
-        $api_client_secret = '681ae68635c7aadef5cd82cbeeef357a808cd9dc794811296446f19268d48fcd'; // can be found here: https://admin-sandbox.stuart.com/client/api
+        $api_client_id = 'c6058849d0a056fc743203acb8e6a850dad103485c3edc51b16a9260cc7a7688'; // can be found here: https://admin-sandbox.stuart.com/client/api
+        $api_client_secret = 'aa6a415fce31967501662c1960fcbfbf4745acff99acb19dbc1aae6f76c9c619'; // can be found here: https://admin-sandbox.stuart.com/client/api
         $authenticator = new \Stuart\Infrastructure\Authenticator($environment, $api_client_id, $api_client_secret);
 
         $httpClient = new \Stuart\Infrastructure\HttpClient($authenticator);

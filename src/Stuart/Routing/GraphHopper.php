@@ -8,8 +8,6 @@ use Stuart\Infrastructure\ApiResponseFactory;
 
 class GraphHopper
 {
-    const GRAPHHOPPER_API_KEY = 'f8b0585b-1bed-4cda-aede-dfdd2c4899a9';
-
     /**
      * @var Client
      */
@@ -27,6 +25,7 @@ class GraphHopper
         $this->pickup = $pickup;
         $this->dropoffs = $dropoffs;
         $this->config = $config;
+        $this->validate();
     }
 
     public function findRounds()
@@ -190,7 +189,7 @@ class GraphHopper
     // HTTP calls
     private function httpPostOptimize()
     {
-        $url = 'https://graphhopper.com/api/1/vrp/optimize?key=' . self::GRAPHHOPPER_API_KEY;
+        $url = 'https://graphhopper.com/api/1/vrp/optimize?key=' . $this->config['graphhopper_api_key'];
         $body = json_encode($this->buildOptimizeRequestBody($this->pickup, $this->dropoffs));
 
         try {
@@ -211,7 +210,7 @@ class GraphHopper
 
     private function httpGetSolution($jobId)
     {
-        $url = 'https://graphhopper.com/api/1/vrp/solution/' . $jobId . '?key=' . self::GRAPHHOPPER_API_KEY;
+        $url = 'https://graphhopper.com/api/1/vrp/solution/' . $jobId . '?key=' . $this->config['graphhopper_api_key'];
 
         try {
             $response = $this->client->request('GET', $url, [
@@ -230,7 +229,7 @@ class GraphHopper
 
     private function geocode($fullTextAddress)
     {
-        $url = 'https://graphhopper.com/api/1/geocode?q=' . $fullTextAddress . '&key=' . self::GRAPHHOPPER_API_KEY;
+        $url = 'https://graphhopper.com/api/1/geocode?q=' . $fullTextAddress . '&key=' . $this->config['graphhopper_api_key'];
 
         try {
             $response = $this->client->request('GET', $url, [
@@ -255,9 +254,20 @@ class GraphHopper
     }
 
     // Validators
-    private function validateDropoffs()
+    private function validate()
     {
-        // TODO: cannot have pickup at on the pikcup
-        // TODO: all dropoffs must have dropoff_at
+        $errors = array();
+
+        if ($this->pickup->getPickupAt() !== null) {
+            $errors[] = new Error('PICKUP_AT_MUST_BE_NULL');
+        }
+
+        foreach ($this->dropoffs as $dropoff) {
+            if ($dropoff->getDropoffAt() === null) {
+                $errors[] = new Error('DROPOFF_AT_MUST_BE_SPECIFIED_FOR_EACH_DROPOFF');
+            }
+        }
+
+        return $errors;
     }
 }
