@@ -8,12 +8,6 @@ use Stuart\Routing\GraphHopper;
 
 class GraphHopperTest extends \PHPUnit_Framework_TestCase
 {
-
-    public function setUp()
-    {
-        print_r('setup');
-    }
-
     public function test_bla_bla()
     {
         // given
@@ -45,18 +39,15 @@ class GraphHopperTest extends \PHPUnit_Framework_TestCase
             'vehicle_count' => 1,
             'return_trip' => false,
             'max_dropoffs' => 8,
-            'slot_size_in_minutes' => 30
+            'slot_size_in_minutes' => 30,
+            'max_distance' => 13000
         );
 
         $graphHopper = new GraphHopper($pickup, $dropoffs, $config);
-
         $result = $graphHopper->findRounds();
-
-        // then
         foreach ($result->jobs as $job) {
-            $job->setTransportType('car');
-            $res = $this->createJob($job);
-            print_r($res);
+            $job->setTransportType('bike');
+            $this->createJob($job);
         }
     }
 

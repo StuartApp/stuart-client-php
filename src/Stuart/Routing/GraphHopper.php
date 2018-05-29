@@ -5,6 +5,7 @@ namespace Stuart\Routing;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Stuart\Infrastructure\ApiResponseFactory;
+use Stuart\Validation\Error;
 
 class GraphHopper
 {
@@ -49,16 +50,22 @@ class GraphHopper
         }
 
         $jobs = array();
-        $routes = json_decode($solutionApiResponse->getBody())->solution->routes;
-        foreach ($routes as $route) {
+        $solution = json_decode($solutionApiResponse->getBody())->solution;
+        foreach ($solution->routes as $route) {
             $sortedDropoffs = $this->sortedDropoffs($this->parseForStops($route));
             if (count($sortedDropoffs) > 0) {
                 $jobs[] = $this->buildJob($route->waiting_time, $sortedDropoffs);
             }
         }
+
+        $waste = array();
+        foreach ($solution->unassigned->services as $address) {
+            $waste[] = $this->matchDropoff($address);
+        }
+
         return (object)array(
             'jobs' => $jobs,
-            'waste' => []
+            'waste' => $waste
         );
     }
 
@@ -80,13 +87,12 @@ class GraphHopper
         return $job;
     }
 
-
     private function sortedDropoffs($stops)
     {
         $result = array();
 
         foreach ($stops as $stop) {
-            $result[] = $this->matchDropoff($stop, $this->dropoffs);
+            $result[] = clone($this->matchDropoff($stop));
         }
 
         return $result;
@@ -113,9 +119,9 @@ class GraphHopper
         }
     }
 
-    private function clearDropoffAt()
+    private function clearDropoffAt($dropoffs)
     {
-        foreach ($this->dropoffs as $dropoff) {
+        foreach ($dropoffs as $dropoff) {
             $dropoff->setDropoffAt(null);
         }
     }
@@ -174,7 +180,8 @@ class GraphHopper
                 'vehicle_id' => '000' . $vehicleCount,
                 'start_address' => $this->buildAddress($this->pickup),
                 'return_to_depot' => $this->config['return_trip'],
-                'max_activities' => $this->config['max_dropoffs']
+                'max_activities' => $this->config['max_dropoffs'],
+                'max_distance' => $this->config['max_distance']
             );
             $vehicleCount--;
         }
