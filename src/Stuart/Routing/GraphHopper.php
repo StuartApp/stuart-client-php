@@ -179,7 +179,7 @@ class GraphHopper
             $vehicles[] = array(
                 'vehicle_id' => '000' . $vehicleCount,
                 'start_address' => $this->buildAddress($this->pickup),
-                'return_to_depot' => $this->config['return_trip'],
+                'return_to_depot' => false,
                 'max_activities' => $this->config['max_dropoffs'],
                 'max_distance' => $this->config['max_distance']
             );

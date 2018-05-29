@@ -36,22 +36,23 @@ class GraphHopperTest extends \PHPUnit_Framework_TestCase
 
         $config = array(
             'graphhopper_api_key' => 'f8b0585b-1bed-4cda-aede-dfdd2c4899a9',
-            'vehicle_count' => 1,
-            'return_trip' => false,
+            'vehicle_count' => 10,
             'max_dropoffs' => 8,
             'slot_size_in_minutes' => 30,
-            'max_distance' => 13000
+            'max_distance' => 10000
         );
 
         $graphHopper = new GraphHopper($pickup, $dropoffs, $config);
         $result = $graphHopper->findRounds();
         foreach ($result->jobs as $job) {
             $job->setTransportType('bike');
-            $this->createJob($job);
+            $res = $this->getPricing($job);
+            print_r($res);
         }
+        print_r('Waste count: ' . count($result->waste));
     }
 
-    private function createJob($job)
+    private function getPricing($job)
     {
         $environment = \Stuart\Infrastructure\Environment::SANDBOX;
         $api_client_id = 'c6058849d0a056fc743203acb8e6a850dad103485c3edc51b16a9260cc7a7688'; // can be found here: https://admin-sandbox.stuart.com/client/api
@@ -61,7 +62,7 @@ class GraphHopperTest extends \PHPUnit_Framework_TestCase
         $httpClient = new \Stuart\Infrastructure\HttpClient($authenticator);
         $client = new \Stuart\Client($httpClient);
 
-        return $client->createJob($job);
+        return $client->getPricing($job);
     }
 
     private function dropoff($address, $dropoffAt)
