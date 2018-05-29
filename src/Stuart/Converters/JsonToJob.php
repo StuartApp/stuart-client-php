@@ -23,6 +23,8 @@ class JsonToJob
         $job->setTransportType(isset($body->transport_type) ? $body->transport_type : null);
         $job->setAssignmentCode(isset($body->assignment_code) ? $body->assignment_code : null);
         $job->setStatus($body->status);
+        $job->setDistance($body->distance);
+        $job->setDuration($body->duration);
 
         foreach ($body->deliveries as $delivery) {
             $job
@@ -49,13 +51,17 @@ class JsonToJob
                 )
                 ->setId($delivery->id)
                 ->setStatus($delivery->status)
-                ->setStatus($delivery->status)
                 ->setTrackingUrl($delivery->tracking_url);
         }
 
         return $job;
     }
 
+    /**
+     * @param $address
+     *
+     * @return string
+     */
     private static function fullTextAddress($address)
     {
         return implode(', ', (array)$address);
