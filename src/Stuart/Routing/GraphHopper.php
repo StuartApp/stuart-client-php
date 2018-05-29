@@ -4,6 +4,7 @@ namespace Stuart\Routing;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
+use Stuart\ClientException;
 use Stuart\Infrastructure\ApiResponseFactory;
 use Stuart\Validation\Error;
 
@@ -20,13 +21,17 @@ class GraphHopper
     /**
      * GraphHopper constructor.
      */
-    public function __construct($pickup, $dropoffs, $config)
+    public function __construct($pickup, $dropoffs, $config, $client = null)
     {
-        $this->client = new Client();
+        $this->client = $client === null ? new Client() : $client;
         $this->pickup = $pickup;
         $this->dropoffs = $dropoffs;
         $this->config = $config;
-        $this->validate();
+
+        $errors = $this->validate();
+        if (count($errors) > 0) {
+            throw new ClientException($errors);
+        }
     }
 
     public function findRounds()
