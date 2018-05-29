@@ -2,6 +2,11 @@
 
 namespace Stuart\Tests;
 
+use GuzzleHttp\Client;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
+use GuzzleHttp\Psr7\Response;
 use Stuart\DropOff;
 use Stuart\Job;
 use Stuart\Pickup;
@@ -9,7 +14,15 @@ use Stuart\Routing\GraphHopper;
 
 class GraphHopperTest extends \PHPUnit_Framework_TestCase
 {
-    public function test_bla_bla()
+
+    private $container;
+
+    public function setUp()
+    {
+        $this->container = array();
+    }
+
+    public function test_blabla()
     {
         // given
         $pickup = new Pickup();
@@ -88,4 +101,73 @@ class GraphHopperTest extends \PHPUnit_Framework_TestCase
     }
 
 
+    public function ahtest_calls_graphhopper_api_with_correct_parameters()
+    {
+        // given
+        $pickup = new Pickup();
+        $pickup->setAddress('26 rue taine 75012 paris');
+
+        $dropoffs = [
+            $this->dropoff('23 rue de richelieu 75002 paris', \DateTime::createFromFormat('Y-m-d H:i:s', '2018-05-30 12:40:00')),
+            $this->dropoff('3 rue d\'edimbourg 75008 paris', \DateTime::createFromFormat('Y-m-d H:i:s', '2018-05-30 12:45:00')),
+        ];
+
+        $config = array(
+            'graphhopper_api_key' => 'f8b0585b-1bed-4cda-aede-dfdd2c4899a9',
+            'vehicle_count' => 1,
+            'max_dropoffs' => 8,
+            'slot_size_in_minutes' => 60,
+            'max_distance' => 15000
+        );
+
+        $graphHopper = new GraphHopper($pickup, $dropoffs, $config, $this->OKClient());
+
+        // when
+        $graphHopper->findRounds();
+
+        // then
+        foreach ($this->container as $transaction) {
+            print_r($transaction);
+        }
+    }
+
+
+    private function OKClient()
+    {
+        $history = Middleware::history($this->container);
+        $mock = new MockHandler([
+            new Response(200, [], $this->geocodeSampleResponse()),
+            new Response(200, [], $this->geocodeSampleResponse()),
+            new Response(200, [], $this->geocodeSampleResponse()),
+            new Response(200, [], $this->geocodeSampleResponse()),
+            new Response(200, []),
+            new Response(200, [], $this->solutionSampleResponse())
+        ]);
+        $handler = HandlerStack::create($mock);
+        $handler->push($history);
+
+        return new Client(['handler' => $handler]);
+    }
+
+    private function geocodeSampleResponse()
+    {
+        return '{
+            "hits": [
+                {
+                    "point": {
+                        "lng": 1234,
+                        "lat": 5478
+                    }
+                }
+            ],
+            "took": 8
+        }';
+    }
+
+    private function solutionSampleResponse()
+    {
+        return '{
+            "status": "finished"
+        }';
+    }
 }

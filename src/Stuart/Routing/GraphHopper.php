@@ -3,9 +3,7 @@
 namespace Stuart\Routing;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
 use Stuart\ClientException;
-use Stuart\Infrastructure\ApiResponseFactory;
 use Stuart\Validation\Error;
 
 class GraphHopper
@@ -17,6 +15,7 @@ class GraphHopper
     private $pickup;
     private $dropoffs;
     private $config;
+    private $client2;
 
     /**
      * GraphHopper constructor.
@@ -28,6 +27,8 @@ class GraphHopper
         $this->dropoffs = $dropoffs;
         $this->config = $config;
 
+        $this->client2 = new \Stuart\Routing\GraphHopper\Client($this->client, $this->config['graphhopper_api_key']);
+
         $errors = $this->validate();
         if (count($errors) > 0) {
             throw new ClientException($errors);
@@ -36,7 +37,7 @@ class GraphHopper
 
     public function findRounds()
     {
-        $optimizedApiResponse = $this->httpPostOptimize();
+        $optimizedApiResponse = $this->client2->optimize($this->pickup, $this->dropoffs, $this->config);
         if (!$optimizedApiResponse->success()) {
             error_log('Unable to send request to GraphHopper.');
             return (object)array(
@@ -56,16 +57,20 @@ class GraphHopper
 
         $jobs = array();
         $solution = json_decode($solutionApiResponse->getBody())->solution;
-        foreach ($solution->routes as $route) {
-            $sortedDropoffs = $this->sortedDropoffs($this->parseForStops($route));
-            if (count($sortedDropoffs) > 0) {
-                $jobs[] = $this->buildJob($route->waiting_time, $sortedDropoffs);
+        if (!empty($solution)) {
+            foreach ($solution->routes as $route) {
+                $sortedDropoffs = $this->sortedDropoffs($this->parseForStops($route));
+                if (count($sortedDropoffs) > 0) {
+                    $jobs[] = $this->buildJob($route->waiting_time, $sortedDropoffs);
+                }
             }
         }
 
         $waste = array();
-        foreach ($solution->unassigned->services as $address) {
-            $waste[] = $this->matchDropoff($address);
+        if (!empty($solution)) {
+            foreach ($solution->unassigned->services as $address) {
+                $waste[] = $this->matchDropoff($address);
+            }
         }
 
         return (object)array(
@@ -133,142 +138,15 @@ class GraphHopper
 
     private function pollForFinishedSolution($jobId)
     {
-        $solutionApiResponse = $this->httpGetSolution($jobId);
+        $solutionApiResponse = $this->client2->solution($jobId);
         $solutionStatus = json_decode($solutionApiResponse->getBody())->status;
 
         while ($solutionStatus !== 'finished') {
-            $solutionApiResponse = $this->httpGetSolution($jobId);
+            $solutionApiResponse = $this->client2->solution($jobId);
             $solutionStatus = json_decode($solutionApiResponse->getBody())->status;
         }
 
         return $solutionApiResponse;
-    }
-
-    private function buildOptimizeRequestBody()
-    {
-        $result = array();
-
-        $vehicles = $this->buildVehicles();
-        $result['vehicles'] = $vehicles;
-
-        $services = array();
-        $services[] = array(
-            'id' => $this->pickup->getAddress(),
-            'address' => $this->buildAddress($this->pickup)
-        );
-
-        foreach ($this->dropoffs as $dropoff) {
-            $timeWindows = array();
-            $timeWindows[] = array(
-                'earliest' => $dropoff->getDropoffAt()->getTimestamp(),
-                'latest' => $dropoff->getDropoffAt()->add(new \DateInterval('PT' . $this->config['slot_size_in_minutes'] . 'M'))->getTimestamp()
-            );
-
-            $services[] = array(
-                'id' => $dropoff->getAddress(),
-                'address' => $this->buildAddress($dropoff),
-                'time_windows' => $timeWindows
-            );
-        }
-        $result['services'] = $services;
-
-        return $result;
-    }
-
-    private function buildVehicles()
-    {
-        $vehicles = array();
-
-        $vehicleCount = $this->config['vehicle_count'];
-        while ($vehicleCount > 0) {
-            $vehicles[] = array(
-                'vehicle_id' => '000' . $vehicleCount,
-                'start_address' => $this->buildAddress($this->pickup),
-                'return_to_depot' => false,
-                'max_activities' => $this->config['max_dropoffs'],
-                'max_distance' => $this->config['max_distance']
-            );
-            $vehicleCount--;
-        }
-
-        return $vehicles;
-    }
-
-    private function buildAddress($location)
-    {
-        $geoloc = $this->geocode($location->getAddress());
-        return array(
-            'location_id' => $location->getAddress(),
-            'lat' => $geoloc->lat,
-            'lon' => $geoloc->lon
-        );
-    }
-
-    // HTTP calls
-    private function httpPostOptimize()
-    {
-        $url = 'https://graphhopper.com/api/1/vrp/optimize?key=' . $this->config['graphhopper_api_key'];
-        $body = json_encode($this->buildOptimizeRequestBody($this->pickup, $this->dropoffs));
-
-        try {
-            $response = $this->client->request('POST', $url, [
-                'body' => $body,
-                'headers' => ['Content-Type' => 'application/json']
-            ]);
-        } catch (RequestException $e) {
-            if ($e->hasResponse()) {
-                $response = $e->getResponse();
-            } else {
-                throw $e;
-            }
-        }
-
-        return ApiResponseFactory::fromGuzzleHttpResponse($response);
-    }
-
-    private function httpGetSolution($jobId)
-    {
-        $url = 'https://graphhopper.com/api/1/vrp/solution/' . $jobId . '?key=' . $this->config['graphhopper_api_key'];
-
-        try {
-            $response = $this->client->request('GET', $url, [
-                'headers' => ['Content-Type' => 'application/json']
-            ]);
-        } catch (RequestException $e) {
-            if ($e->hasResponse()) {
-                $response = $e->getResponse();
-            } else {
-                throw $e;
-            }
-        }
-
-        return ApiResponseFactory::fromGuzzleHttpResponse($response);
-    }
-
-    private function geocode($fullTextAddress)
-    {
-        $url = 'https://graphhopper.com/api/1/geocode?q=' . $fullTextAddress . '&key=' . $this->config['graphhopper_api_key'];
-
-        try {
-            $response = $this->client->request('GET', $url, [
-                'headers' => ['Content-Type' => 'application/json']
-            ]);
-        } catch (RequestException $e) {
-            if ($e->hasResponse()) {
-                $response = $e->getResponse();
-            } else {
-                throw $e;
-            }
-        }
-
-        $apiResponse = ApiResponseFactory::fromGuzzleHttpResponse($response);
-        if ($apiResponse->success()) {
-            $decodedBody = json_decode($apiResponse->getBody());
-            return (object)array('lat' => $decodedBody->hits[0]->point->lat, 'lon' => $decodedBody->hits[0]->point->lng);
-        }
-
-        // handle failure
-        return null;
     }
 
     // Validators
