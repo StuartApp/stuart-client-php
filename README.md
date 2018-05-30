@@ -26,7 +26,7 @@ $ composer require stuartapp/stuart-client-php
 7. [Get a pricing](#get-a-pricing)
 8. [Get a job eta to pickup](#get-a-job-eta-to-pickup)
 9. [Custom requests](#custom-requests)
-10. [Group orders to create Stacked Jobs](#group-orders-experimental)
+10. [Group orders to create Stacked Jobs](#experimental-group-orders)
 
 ### Initialize client
 
