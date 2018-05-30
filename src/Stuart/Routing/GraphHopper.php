@@ -35,6 +35,15 @@ class GraphHopper
         }
     }
 
+    /**
+     * Experimental feature allowing you to group your orders before sending multi-drop jobs
+     * to the Stuart API.
+     * You are going to need a GraphHoppper API key in order to start using their service.
+     * This method is the only one you need to use, it returns you the already routed Jobs,
+     * and also the waste (orders that hasn't been dispatched).
+     *
+     * @return object
+     */
     public function findRounds()
     {
         $optimizedApiResponse = $this->client2->optimize($this->pickup, $this->dropoffs, $this->config);
