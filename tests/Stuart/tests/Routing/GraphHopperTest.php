@@ -2,11 +2,6 @@
 
 namespace Stuart\Tests;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Handler\MockHandler;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Middleware;
-use GuzzleHttp\Psr7\Response;
 use Stuart\DropOff;
 use Stuart\Job;
 use Stuart\Pickup;
@@ -22,7 +17,7 @@ class GraphHopperTest extends \PHPUnit_Framework_TestCase
         $this->container = array();
     }
 
-    public function test_blabla()
+    public function test_example()
     {
         // given
         $pickup = new Pickup();
@@ -45,7 +40,18 @@ class GraphHopperTest extends \PHPUnit_Framework_TestCase
             $this->dropoff('50 Rue Durantin, 75018 Paris', \DateTime::createFromFormat('Y-m-d H:i:s', '2018-05-30 12:30:00')),
             $this->dropoff('47-33 Rue des Abbesses, 75018 Paris', \DateTime::createFromFormat('Y-m-d H:i:s', '2018-05-30 13:30:00')),
             $this->dropoff('2 Boulevard de la Villette, 75019 Paris', \DateTime::createFromFormat('Y-m-d H:i:s', '2018-05-30 14:30:00')),
-            $this->dropoff('172 Rue de Charonne, 75011 Paris', \DateTime::createFromFormat('Y-m-d H:i:s', '2018-05-30 15:30:00'))
+            $this->dropoff('172 Rue de Charonne, 75011 Paris', \DateTime::createFromFormat('Y-m-d H:i:s', '2018-05-30 15:30:00')),
+            $this->dropoff('2-10 Passage Courtois, 75011 Paris', \DateTime::createFromFormat('Y-m-d H:i:s', '2018-05-30 19:30:00')),
+            $this->dropoff('23 Rue Servan, 75011 Paris', \DateTime::createFromFormat('Y-m-d H:i:s', '2018-05-30 20:30:00')),
+            $this->dropoff('71 Rue de la Fontaine au Roi, 75011 Paris', \DateTime::createFromFormat('Y-m-d H:i:s', '2018-05-30 19:00:00')),
+            $this->dropoff('37 Rue Albert Thomas 75010 Paris', \DateTime::createFromFormat('Y-m-d H:i:s', '2018-05-30 20:45:00')),
+            $this->dropoff('32-42 Rue du Faubourg Saint-Denis, 75010 Paris', \DateTime::createFromFormat('Y-m-d H:i:s', '2018-05-30 19:30:00')),
+            $this->dropoff('12 Rue d\'Uzès, 75002 Paris', \DateTime::createFromFormat('Y-m-d H:i:s', '2018-05-30 20:39:00')),
+            $this->dropoff('37-23 Rue Danielle Casanova', \DateTime::createFromFormat('Y-m-d H:i:s', '2018-05-30 21:00:00')),
+            $this->dropoff('148 Rue de l\'Université, 75007 Paris', \DateTime::createFromFormat('Y-m-d H:i:s', '2018-05-30 15:30:00')),
+            $this->dropoff('64-66 Avenue d\'Iéna, 75116 Paris', \DateTime::createFromFormat('Y-m-d H:i:s', '2018-05-30 18:30:00')),
+            $this->dropoff('12 avenue claude vellefaux 75010 paris', \DateTime::createFromFormat('Y-m-d H:i:s', '2018-05-30 19:00:00')),
+            $this->dropoff('101 Avenue Victor Hugo, 75116 Paris', \DateTime::createFromFormat('Y-m-d H:i:s', '2018-05-30 19:30:00'))
         ];
 
         $config = array(
@@ -64,6 +70,7 @@ class GraphHopperTest extends \PHPUnit_Framework_TestCase
             $res = $this->getPricing($job);
             $pricingStacking += $res->amount;
         }
+
         print_r('Total pricing with stacking is: ' . $pricingStacking . ', Waste count is: ' . count($result->waste) . '. ');
 
         $pricingNoStacking = 0;
@@ -98,76 +105,5 @@ class GraphHopperTest extends \PHPUnit_Framework_TestCase
         $dropoff->setAddress($address)
             ->setDropoffAt($dropoffAt);
         return $dropoff;
-    }
-
-
-    public function ahtest_calls_graphhopper_api_with_correct_parameters()
-    {
-        // given
-        $pickup = new Pickup();
-        $pickup->setAddress('26 rue taine 75012 paris');
-
-        $dropoffs = [
-            $this->dropoff('23 rue de richelieu 75002 paris', \DateTime::createFromFormat('Y-m-d H:i:s', '2018-05-30 12:40:00')),
-            $this->dropoff('3 rue d\'edimbourg 75008 paris', \DateTime::createFromFormat('Y-m-d H:i:s', '2018-05-30 12:45:00')),
-        ];
-
-        $config = array(
-            'graphhopper_api_key' => 'f8b0585b-1bed-4cda-aede-dfdd2c4899a9',
-            'vehicle_count' => 1,
-            'max_dropoffs' => 8,
-            'slot_size_in_minutes' => 60,
-            'max_distance' => 15000
-        );
-
-        $graphHopper = new GraphHopper($pickup, $dropoffs, $config, $this->OKClient());
-
-        // when
-        $graphHopper->findRounds();
-
-        // then
-        foreach ($this->container as $transaction) {
-            print_r($transaction);
-        }
-    }
-
-
-    private function OKClient()
-    {
-        $history = Middleware::history($this->container);
-        $mock = new MockHandler([
-            new Response(200, [], $this->geocodeSampleResponse()),
-            new Response(200, [], $this->geocodeSampleResponse()),
-            new Response(200, [], $this->geocodeSampleResponse()),
-            new Response(200, [], $this->geocodeSampleResponse()),
-            new Response(200, []),
-            new Response(200, [], $this->solutionSampleResponse())
-        ]);
-        $handler = HandlerStack::create($mock);
-        $handler->push($history);
-
-        return new Client(['handler' => $handler]);
-    }
-
-    private function geocodeSampleResponse()
-    {
-        return '{
-            "hits": [
-                {
-                    "point": {
-                        "lng": 1234,
-                        "lat": 5478
-                    }
-                }
-            ],
-            "took": 8
-        }';
-    }
-
-    private function solutionSampleResponse()
-    {
-        return '{
-            "status": "finished"
-        }';
     }
 }
