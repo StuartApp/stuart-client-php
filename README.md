@@ -401,7 +401,7 @@ $dropoffs = [
     (new \Stuart\Dropoff())->setAddress('148 Rue de l\'Université, 75007 Paris')->setDropoffAt(\DateTime::createFromFormat('Y-m-d H:i:s', '2018-06-25 15:30:00'))->setPackageType('small'),
     (new \Stuart\Dropoff())->setAddress('64-66 Avenue d\'Iéna, 75116 Paris')->setDropoffAt(\DateTime::createFromFormat('Y-m-d H:i:s', '2018-06-25 18:30:00'))->setPackageType('small'),
     (new \Stuart\Dropoff())->setAddress('12 avenue claude vellefaux 75010 paris')->setDropoffAt(\DateTime::createFromFormat('Y-m-d H:i:s', '2018-06-25 19:00:00'))->setPackageType('small'),
-    (new \Stuart\Dropoff())->setAddress('101 Avenue Victor Hugo, 75116 Paris')->setDropoffAt(\DateTime::createFromFormat('Y-m-d H:i:s', '2018-06-25 19:30:00'))
+    (new \Stuart\Dropoff())->setAddress('101 Avenue Victor Hugo, 75116 Paris')->setDropoffAt(\DateTime::createFromFormat('Y-m-d H:i:s', '2018-06-25 19:30:00'))->setPackageType('small')
 ];
 
 $config = array(
