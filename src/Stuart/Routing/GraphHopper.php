@@ -15,7 +15,7 @@ class GraphHopper
     private $pickup;
     private $dropoffs;
     private $config;
-    private $client2;
+    private $graphHopperClient;
 
     /**
      * GraphHopper constructor.
@@ -27,7 +27,7 @@ class GraphHopper
         $this->dropoffs = $dropoffs;
         $this->config = $config;
 
-        $this->client2 = new \Stuart\Routing\GraphHopper\Client($this->client, $this->config['graphhopper_api_key']);
+        $this->graphHopperClient = new \Stuart\Routing\GraphHopper\Client($this->client, $this->config['graphhopper_api_key']);
 
         $errors = $this->validate();
         if (count($errors) > 0) {
@@ -46,7 +46,7 @@ class GraphHopper
      */
     public function findRounds()
     {
-        $optimizedApiResponse = $this->client2->optimize($this->pickup, $this->dropoffs, $this->config);
+        $optimizedApiResponse = $this->graphHopperClient->optimize($this->pickup, $this->dropoffs, $this->config);
         if (!$optimizedApiResponse->success()) {
             error_log('Unable to send request to GraphHopper.');
             return (object)array(
@@ -147,18 +147,17 @@ class GraphHopper
 
     private function pollForFinishedSolution($jobId)
     {
-        $solutionApiResponse = $this->client2->solution($jobId);
+        $solutionApiResponse = $this->graphHopperClient->solution($jobId);
         $solutionStatus = json_decode($solutionApiResponse->getBody())->status;
 
         while ($solutionStatus !== 'finished') {
-            $solutionApiResponse = $this->client2->solution($jobId);
+            $solutionApiResponse = $this->graphHopperClient->solution($jobId);
             $solutionStatus = json_decode($solutionApiResponse->getBody())->status;
         }
 
         return $solutionApiResponse;
     }
 
-    // Validators
     private function validate()
     {
         $errors = array();
