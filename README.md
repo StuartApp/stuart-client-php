@@ -26,7 +26,7 @@ $ composer require stuartapp/stuart-client-php
 7. [Get a pricing](#get-a-pricing)
 8. [Get a job eta to pickup](#get-a-job-eta-to-pickup)
 9. [Custom requests](#custom-requests)
-10. [Group orders to create Stacked Jobs](#group-orders)
+10. [Group orders to create Stacked Jobs](#group-orders-experimental)
 
 ### Initialize client
 
@@ -362,7 +362,7 @@ $apiResponse->success();
 $apiResponse->getBody();
 ```
 
-### Group orders
+### Experimental: group orders
 
 Currently, the multi-drop feature available within the Stuart API allows you to send up to 8 dropoffs, and the Stuart platform will find the best route between these points. But it won't allow you to group orders.
 
