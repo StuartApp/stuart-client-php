@@ -26,6 +26,7 @@ $ composer require stuartapp/stuart-client-php
 7. [Get a pricing](#get-a-pricing)
 8. [Get a job eta to pickup](#get-a-job-eta-to-pickup)
 9. [Custom requests](#custom-requests)
+10. [Group orders to create Stacked Jobs](#group-orders)
 
 ### Initialize client
 
@@ -360,3 +361,76 @@ $apiResponse = $httpClient->performGet('/v2/jobs?page=1');
 $apiResponse->success();
 $apiResponse->getBody();
 ```
+
+### Group orders
+
+Currently, the multi-drop feature available within the Stuart API allows you to send up to 8 dropoffs, and the Stuart platform will find the best route between these points. But it won't allow you to group orders.
+
+That's what this **experimental** feature is trying to solve. Before creating jobs, you are able to call the `findRounds` methods, which will give you back Jobs and waste (dropoffs that haven't been assigned to a route).
+
+Here you can find an example of how to use it:
+
+```php
+$pickup = (new \Stuart\Pickup())->setAddress('26 rue taine 75012 paris');
+
+// You need to create an array of Dropoff, by specifying the address and the beginning of the delivery slot you are offering your customers.
+$dropoffs = [
+    (new \Stuart\Dropoff())->setAddress('23 rue de richelieu 75002 paris')->setDropoffAt(\DateTime::createFromFormat('Y-m-d H:i:s', '2018-06-25 12:40:00'))->setPackageType('small'),
+    (new \Stuart\Dropoff())->setAddress('3 rue d\'edimbourg 75008 paris')->setDropoffAt(\DateTime::createFromFormat('Y-m-d H:i:s', '2018-06-25 12:45:00'))->setPackageType('small'),
+    (new \Stuart\Dropoff())->setAddress('156 rue de charonne 75012 paris')->setDropoffAt(\DateTime::createFromFormat('Y-m-d H:i:s', '2018-06-25 12:30:00'))->setPackageType('small'),
+    (new \Stuart\Dropoff())->setAddress('8 rue sidi brahim 75012 paris')->setDropoffAt(\DateTime::createFromFormat('Y-m-d H:i:s', '2018-06-25 14:30:00'))->setPackageType('small'),
+    (new \Stuart\Dropoff())->setAddress('5 passage du chantier 75012 paris')->setDropoffAt(\DateTime::createFromFormat('Y-m-d H:i:s', '2018-06-25 12:30:00'))->setPackageType('small'),
+    (new \Stuart\Dropoff())->setAddress('Hôpital Saint-Louis, 75010 Paris')->setDropoffAt(\DateTime::createFromFormat('Y-m-d H:i:s', '2018-06-25 13:20:00'))->setPackageType('small'),
+    (new \Stuart\Dropoff())->setAddress('1 Rue des Deux Gares, 75010 Paris')->setDropoffAt(\DateTime::createFromFormat('Y-m-d H:i:s', '2018-06-25 12:30:00'))->setPackageType('small'),
+    (new \Stuart\Dropoff())->setAddress('137 Rue la Fayette, 75010 Paris')->setDropoffAt(\DateTime::createFromFormat('Y-m-d H:i:s', '2018-06-25 12:30:00'))->setPackageType('small'),
+    (new \Stuart\Dropoff())->setAddress('34 Rue Pierre Semard, 75009 Paris')->setDropoffAt(\DateTime::createFromFormat('Y-m-d H:i:s', '2018-06-25 12:00:00'))->setPackageType('small'),
+    (new \Stuart\Dropoff())->setAddress('46 Rue Lecourbe, 75015 Paris')->setDropoffAt(\DateTime::createFromFormat('Y-m-d H:i:s', '2018-06-25 12:30:00'))->setPackageType('small'),
+    (new \Stuart\Dropoff())->setAddress('178 Rue Lecourbe, 75015 Paris')->setDropoffAt(\DateTime::createFromFormat('Y-m-d H:i:s', '2018-06-25 13:00:00'))->setPackageType('small'),
+    (new \Stuart\Dropoff())->setAddress('43 Rue des Alouettes 75019 Paris')->setDropoffAt(\DateTime::createFromFormat('Y-m-d H:i:s', '2018-06-25 12:30:00'))->setPackageType('small'),
+    (new \Stuart\Dropoff())->setAddress('50 Rue Durantin, 75018 Paris')->setDropoffAt(\DateTime::createFromFormat('Y-m-d H:i:s', '2018-06-25 12:30:00'))->setPackageType('small'),
+    (new \Stuart\Dropoff())->setAddress('47-33 Rue des Abbesses, 75018 Paris')->setDropoffAt(\DateTime::createFromFormat('Y-m-d H:i:s', '2018-06-25 13:30:00'))->setPackageType('small'),
+    (new \Stuart\Dropoff())->setAddress('2 Boulevard de la Villette, 75019 Paris')->setDropoffAt(\DateTime::createFromFormat('Y-m-d H:i:s', '2018-06-25 14:30:00'))->setPackageType('small'),
+    (new \Stuart\Dropoff())->setAddress('172 Rue de Charonne, 75011 Paris')->setDropoffAt(\DateTime::createFromFormat('Y-m-d H:i:s', '2018-06-25 15:30:00'))->setPackageType('small'),
+    (new \Stuart\Dropoff())->setAddress('2-10 Passage Courtois, 75011 Paris')->setDropoffAt(\DateTime::createFromFormat('Y-m-d H:i:s', '2018-06-25 19:30:00'))->setPackageType('small'),
+    (new \Stuart\Dropoff())->setAddress('23 Rue Servan, 75011 Paris')->setDropoffAt(\DateTime::createFromFormat('Y-m-d H:i:s', '2018-06-25 20:30:00'))->setPackageType('small'),
+    (new \Stuart\Dropoff())->setAddress('71 Rue de la Fontaine au Roi, 75011 Paris')->setDropoffAt(\DateTime::createFromFormat('Y-m-d H:i:s', '2018-06-25 19:00:00'))->setPackageType('small'),
+    (new \Stuart\Dropoff())->setAddress('37 Rue Albert Thomas 75010 Paris')->setDropoffAt(\DateTime::createFromFormat('Y-m-d H:i:s', '2018-06-25 20:45:00'))->setPackageType('small'),
+    (new \Stuart\Dropoff())->setAddress('32-42 Rue du Faubourg Saint-Denis, 75010 Paris')->setDropoffAt(\DateTime::createFromFormat('Y-m-d H:i:s', '2018-06-25 19:30:00'))->setPackageType('small'),
+    (new \Stuart\Dropoff())->setAddress('12 Rue d\'Uzès, 75002 Paris')->setDropoffAt(\DateTime::createFromFormat('Y-m-d H:i:s', '2018-06-25 20:39:00'))->setPackageType('small'),
+    (new \Stuart\Dropoff())->setAddress('37-23 Rue Danielle Casanova')->setDropoffAt(\DateTime::createFromFormat('Y-m-d H:i:s', '2018-06-25 21:00:00'))->setPackageType('small'),
+    (new \Stuart\Dropoff())->setAddress('148 Rue de l\'Université, 75007 Paris')->setDropoffAt(\DateTime::createFromFormat('Y-m-d H:i:s', '2018-06-25 15:30:00'))->setPackageType('small'),
+    (new \Stuart\Dropoff())->setAddress('64-66 Avenue d\'Iéna, 75116 Paris')->setDropoffAt(\DateTime::createFromFormat('Y-m-d H:i:s', '2018-06-25 18:30:00'))->setPackageType('small'),
+    (new \Stuart\Dropoff())->setAddress('12 avenue claude vellefaux 75010 paris')->setDropoffAt(\DateTime::createFromFormat('Y-m-d H:i:s', '2018-06-25 19:00:00'))->setPackageType('small'),
+    (new \Stuart\Dropoff())->setAddress('101 Avenue Victor Hugo, 75116 Paris')->setDropoffAt(\DateTime::createFromFormat('Y-m-d H:i:s', '2018-06-25 19:30:00'))
+];
+
+$config = array(
+    'graphhopper_api_key' => 'your-graphhopper-api-key', // https://graphhopper.com/dashboard/#/api-keys
+    'vehicle_count' => 10,
+    'max_dropoffs' => 8,
+    'slot_size_in_minutes' => 60,
+    'max_distance' => 15000
+);
+
+$graphHopper = new \Stuart\Routing\GraphHopper($pickup, $dropoffs, $config);
+$result = $graphHopper->findRounds();
+
+$pricing = 0;
+foreach ($result->jobs as $job) {
+    $res = $this->client->getPricing($job); // TODO: Replace with a real call to \Stuart\Client.
+    $pricing += $res->amount;
+}
+print_r('Total pricing with stacking is: ' . $pricing . ', Waste count is: ' . count($result->waste) . '. ');
+
+$pricingNoStacking = 0;
+foreach ($dropoffs as $dropoff) {
+    $job = new \Stuart\Job();
+    $job->pushPickup($pickup);
+    $job->pushDropoff($dropoff);
+    $res = $this->client->getPricing($job); // TODO: Replace with a real call to \Stuart\Client
+    $pricingNoStacking += $res->amount;
+}
+print_r('Would have cost you: ' . $pricingNoStacking . ' without stacking/grouping');     
+```
+
+After running this example, it will display: `Total pricing with stacking is: 133.35, Waste count is: 1. Would have cost you: 306.25 without stacking/grouping`.
