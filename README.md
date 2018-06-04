@@ -411,10 +411,10 @@ class GroupingTest
 
         $config = array(
             'graphhopper_api_key' => 'your-api-key', // https://graphhopper.com/dashboard/#/api-keys
-            'vehicle_count' => 10,
-            'max_dropoffs' => 8,
+            'vehicle_count' => 10, // standard plan https://www.graphhopper.com/pricing/
+            'max_dropoffs' => 50, // standard plan https://www.graphhopper.com/pricing/
             'slot_size_in_minutes' => 60,
-            'max_distance' => 15000
+            'max_distance' => 15000 // in km
         );
 
         $pricingStacking = 0;
