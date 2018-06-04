@@ -12,27 +12,22 @@ class GraphHopper
      * @var Client
      */
     private $client;
-    private $pickup;
-    private $dropoffs;
     private $config;
     private $graphHopperClient;
 
     /**
      * GraphHopper constructor.
+     *
+     * Configuration ($config) is important in order to make the integration with graphhopper working correctly.
+     * For more details on different plan, please refer to: https://www.graphhopper.com/pricing/
+     *
      */
-    public function __construct($pickup, $dropoffs, $config, $client = null)
+    public function __construct($config, $client = null)
     {
         $this->client = $client === null ? new Client() : $client;
-        $this->pickup = $pickup;
-        $this->dropoffs = $dropoffs;
         $this->config = $config;
 
         $this->graphHopperClient = new \Stuart\Routing\GraphHopper\Client($this->client, $this->config['graphhopper_api_key']);
-
-        $errors = $this->validate();
-        if (count($errors) > 0) {
-            throw new ClientException($errors);
-        }
     }
 
     /**
@@ -42,53 +37,62 @@ class GraphHopper
      * This method is the only one you need to use, it returns you the already routed Jobs,
      * and also the waste (orders that hasn't been dispatched).
      *
-     * @return object
+     * @param $pickup
+     * @param $dropoffs
+     * @return array
+     * @throws ClientException
      */
-    public function findRounds()
+
+    public function findRounds($pickup, $dropoffs)
     {
-        $optimizedApiResponse = $this->graphHopperClient->optimize($this->pickup, $this->dropoffs, $this->config);
+        $errors = $this->validate($pickup, $dropoffs);
+        if (count($errors) > 0) {
+            throw new ClientException(implode($errors));
+        }
+        return $this->findRoundsRec($pickup, $dropoffs, [], [], 0);
+    }
+
+    public function findRoundsRec($pickup, $dropoffs, $jobs, $waste, $wasteAtOneCount)
+    {
+        $optimizedApiResponse = $this->graphHopperClient->optimize($pickup, $dropoffs, $this->config);
         if (!$optimizedApiResponse->success()) {
-            error_log('Unable to send request to GraphHopper.');
-            return (object)array(
-                'jobs' => [],
-                'waste' => []
-            );
+            throw new ClientException('Unable to send request to GraphHopper. Details: ' . $optimizedApiResponse->getBody());
         }
 
         $solutionApiResponse = $this->pollForFinishedSolution(json_decode($optimizedApiResponse->getBody())->job_id);
         if (!$solutionApiResponse->success()) {
-            error_log('Unable to fetch response from GraphHopper.');
-            return (object)array(
-                'jobs' => [],
-                'waste' => []
-            );
+            throw new ClientException('Unable to send request to GraphHopper. Details: ' . $solutionApiResponse->getBody());
         }
 
-        $jobs = array();
         $solution = json_decode($solutionApiResponse->getBody())->solution;
         if (!empty($solution)) {
             foreach ($solution->routes as $route) {
-                $sortedDropoffs = $this->sortedDropoffs($this->parseForStops($route));
+                $sortedDropoffs = $this->sortedDropoffs($dropoffs, $this->parseForStops($route));
                 if (count($sortedDropoffs) > 0) {
-                    $jobs[] = $this->buildJob($route->waiting_time, $sortedDropoffs);
+                    $jobs[] = $this->buildJob($pickup, $route->waiting_time, $sortedDropoffs);
                 }
             }
         }
 
-        $waste = array();
         if (!empty($solution)) {
             foreach ($solution->unassigned->services as $address) {
-                $waste[] = $this->matchDropoff($address);
+                $waste[] = $this->matchDropoff($dropoffs, $address);
             }
         }
 
-        return (object)array(
-            'jobs' => $jobs,
-            'waste' => $waste
-        );
+        if (count($waste) === 0) {
+            return $jobs;
+        } else if ($wasteAtOneCount === 2) {
+            throw new ClientException('Not able to create Job with the given configuration, waste: ' . $waste[0]->getAddress());
+        } else {
+            if (count($waste) === 1) {
+                $wasteAtOneCount = $wasteAtOneCount + 1;
+            }
+            return $this->findRoundsRec($pickup, $waste, $jobs, [], $wasteAtOneCount);
+        }
     }
 
-    private function buildJob($waitingTime, $sortedDropoffs)
+    private function buildJob($pickup, $waitingTime, $sortedDropoffs)
     {
         $job = new \Stuart\Job();
         $this->clearDropoffAt($sortedDropoffs);
@@ -97,7 +101,7 @@ class GraphHopper
             $job->pushDropoff($dropoff);
         }
 
-        $pickupClone = clone $this->pickup;
+        $pickupClone = clone $pickup;
         $pickupAt = new \DateTime();
         $pickupAt->setTimestamp($waitingTime);
         $pickupClone->setPickupAt($pickupAt);
@@ -106,12 +110,12 @@ class GraphHopper
         return $job;
     }
 
-    private function sortedDropoffs($stops)
+    private function sortedDropoffs($dropoffs, $stops)
     {
         $result = array();
 
         foreach ($stops as $stop) {
-            $result[] = clone($this->matchDropoff($stop));
+            $result[] = clone($this->matchDropoff($dropoffs, $stop));
         }
 
         return $result;
@@ -129,9 +133,9 @@ class GraphHopper
         return $addresses;
     }
 
-    private function matchDropoff($address)
+    private function matchDropoff($dropoffs, $address)
     {
-        foreach ($this->dropoffs as $dropoff) {
+        foreach ($dropoffs as $dropoff) {
             if ($dropoff->getAddress() === $address) {
                 return $dropoff;
             }
@@ -153,23 +157,28 @@ class GraphHopper
         while ($solutionStatus !== 'finished') {
             $solutionApiResponse = $this->graphHopperClient->solution($jobId);
             $solutionStatus = json_decode($solutionApiResponse->getBody())->status;
+            sleep(1);
         }
 
         return $solutionApiResponse;
     }
 
-    private function validate()
+    private function validate($pickup, $dropoffs)
     {
         $errors = array();
 
-        if ($this->pickup->getPickupAt() !== null) {
+        if ($pickup->getPickupAt() !== null) {
             $errors[] = new Error('PICKUP_AT_MUST_BE_NULL');
         }
 
-        foreach ($this->dropoffs as $dropoff) {
+        foreach ($dropoffs as $dropoff) {
             if ($dropoff->getDropoffAt() === null) {
                 $errors[] = new Error('DROPOFF_AT_MUST_BE_SPECIFIED_FOR_EACH_DROPOFF');
             }
+        }
+
+        if (count($dropoffs) > $this->config['max_dropoffs']) {
+            $errors[] = new Error('TOO_MANY_DROPOFFS');
         }
 
         return $errors;

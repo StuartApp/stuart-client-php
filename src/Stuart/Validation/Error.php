@@ -15,4 +15,9 @@ class Error
     {
         return $this->key;
     }
+
+    public function __toString()
+    {
+        return $this->key;
+    }
 }
