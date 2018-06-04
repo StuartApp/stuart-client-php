@@ -403,7 +403,6 @@ class GroupingTest
             $this->dropoff('37 Rue Albert Thomas 75010 Paris', '2018-05-30 20:45:00'),
             $this->dropoff('32-42 Rue du Faubourg Saint-Denis, 75010 Paris', '2018-05-30 19:30:00'),
             $this->dropoff('12 Rue d\'Uzès, 75002 Paris', '2018-05-30 20:39:00'),
-            $this->dropoff('37-23 Rue Danielle Casanova', '2018-05-30 21:00:00'),
             $this->dropoff('148 Rue de l\'Université, 75007 Paris', '2018-05-30 15:30:00'),
             $this->dropoff('64-66 Avenue d\'Iéna, 75116 Paris', '2018-05-30 18:30:00'),
             $this->dropoff('12 avenue claude vellefaux 75010 paris', '2018-05-30 19:00:00'),
@@ -418,25 +417,26 @@ class GroupingTest
             'max_distance' => 15000
         );
 
-        $graphHopper = new \Stuart\Routing\GraphHopper($pickup, $dropoffs, $config);
-        $result = $graphHopper->findRounds();
-
-        $pricing = 0;
-        foreach ($result->jobs as $job) {
-            $res = $this->client->getPricing($job);
-            $pricing += $res->amount;
+        $pricingStacking = 0;
+        $graphHopper = new GraphHopper($config);
+        $jobs = $graphHopper->findRounds($pickup, $dropoffs);
+        foreach ($jobs as $job) {
+            $job->setTransportType('bike');
+            $res = $this->getPricing($job);
+            $pricingStacking += $res->amount;
         }
-        print_r('Total pricing with stacking is: ' . $pricing . ', Waste count is: ' . count($result->waste) . '. ');
+        print_r('Total pricing with stacking is: ' . $pricingStacking . '. ');
 
         $pricingNoStacking = 0;
         foreach ($dropoffs as $dropoff) {
-            $job = new \Stuart\Job();
+            $job = new Job();
+            $job->setTransportType('bike');
             $job->pushPickup($pickup);
             $job->pushDropoff($dropoff);
-            $res = $this->client->getPricing($job);
+            $res = $this->getPricing($job);
             $pricingNoStacking += $res->amount;
         }
-        print_r('Would have cost you: ' . $pricingNoStacking . ' without stacking/grouping');
+        print_r('Total pricing without stacking is: ' . $pricingNoStacking);
     }
     
     private function dropoff($address, $dropoffAtAsText)
@@ -450,4 +450,4 @@ class GroupingTest
 }
 ```
 
-After running this example, it will display: `Total pricing with stacking is: 133.35, Waste count is: 1. Would have cost you: 306.25 without stacking/grouping`.
+After running this example, it will display: `Total pricing with stacking is: 126.17. Total pricing without stacking is: 325.16`.

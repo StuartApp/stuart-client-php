@@ -83,7 +83,7 @@ class GraphHopper
         if (count($waste) === 0) {
             return $jobs;
         } else if ($wasteAtOneCount === 2) {
-            throw new ClientException('Not able to create Job with the given configuration, waste: ' . $waste[0]->getAddress());
+            throw new ClientException('Not able to find round with the given configuration, waste: ' . $waste[0]->getAddress());
         } else {
             if (count($waste) === 1) {
                 $wasteAtOneCount = $wasteAtOneCount + 1;
