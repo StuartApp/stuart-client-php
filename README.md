@@ -441,11 +441,23 @@ class GroupingTest
     
     private function dropoff($address, $dropoffAtAsText)
     {
-        $dropoff = new \Stuart\DropOff();
+        $dropoff = new DropOff();
         $dropoff->setAddress($address)
-            ->setDropoffAt(\DateTime::createFromFormat('Y-m-d H:i:s', $dropoffAtAsText))
-            ->setPackageType('small');
+            ->setDropoffAt(\DateTime::createFromFormat('Y-m-d H:i:s', $dropoffAtAsText));
         return $dropoff;
+    }
+    
+    private function getPricing($job)
+    {
+        $environment = \Stuart\Infrastructure\Environment::SANDBOX;
+        $api_client_id = 'c6058849d0a056fc743203acb8e6a850sad103485c3edc51b16a9260cc7a7688'; // can be found here: https://admin-sandbox.stuart.com/client/api
+        $api_client_secret = 'aa6a415fce319675014678c1960fcbfbf4745acff99acb19dbc1aae6f76c9c619'; // can be found here: https://admin-sandbox.stuart.com/client/api
+        $authenticator = new \Stuart\Infrastructure\Authenticator($environment, $api_client_id, $api_client_secret);
+
+        $httpClient = new \Stuart\Infrastructure\HttpClient($authenticator);
+        $client = new \Stuart\Client($httpClient);
+
+        return $client->getPricing($job);
     }
 }
 ```
