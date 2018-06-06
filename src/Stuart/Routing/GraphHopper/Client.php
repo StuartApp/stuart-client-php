@@ -7,9 +7,12 @@ use Stuart\Infrastructure\ApiResponseFactory;
 
 class Client
 {
-    public function __construct($client, $apiKey)
+    private $apiKey;
+    private $client;
+
+    public function __construct($apiKey, $client = null)
     {
-        $this->client = $client;
+        $this->client = $client === null ? new \GuzzleHttp\Client() : $client;
         $this->apiKey = $apiKey;
     }
 

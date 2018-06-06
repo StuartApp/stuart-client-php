@@ -366,7 +366,7 @@ $apiResponse->getBody();
 
 Currently, the multi-drop feature available within the Stuart API allows you to send up to 8 dropoffs, and the Stuart platform will find the best route between these points. But it won't allow you to group orders.
 
-That's what this **experimental** feature is trying to solve. Before creating jobs, you are able to call the `findRounds` methods, which will give you back Jobs and waste (dropoffs that haven't been assigned to a route).
+That's what this **experimental** feature is trying to solve. Before creating jobs, you are able to call the `findRounds` methods, which will give you back grouped and optimized Jobs.
 
 Here you can find an example of how to use it:
 

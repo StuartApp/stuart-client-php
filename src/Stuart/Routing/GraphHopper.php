@@ -27,7 +27,7 @@ class GraphHopper
         $this->client = $client === null ? new Client() : $client;
         $this->config = $config;
 
-        $this->graphHopperClient = new \Stuart\Routing\GraphHopper\Client($this->client, $this->config['graphhopper_api_key']);
+        $this->graphHopperClient = new \Stuart\Routing\GraphHopper\Client($this->config['graphhopper_api_key'],  $this->client);
     }
 
     /**

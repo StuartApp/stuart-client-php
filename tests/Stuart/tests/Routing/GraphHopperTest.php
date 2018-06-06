@@ -2,6 +2,11 @@
 
 namespace Stuart\Tests;
 
+use GuzzleHttp\Client;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
+use GuzzleHttp\Psr7\Response;
 use Stuart\DropOff;
 use Stuart\Job;
 use Stuart\Pickup;
@@ -9,7 +14,6 @@ use Stuart\Routing\GraphHopper;
 
 class GraphHopperTest extends \PHPUnit_Framework_TestCase
 {
-
     private $container;
 
     public function setUp()
@@ -102,5 +106,177 @@ class GraphHopperTest extends \PHPUnit_Framework_TestCase
         $dropoff->setAddress($address)
             ->setDropoffAt(\DateTime::createFromFormat('Y-m-d H:i:s', $dropoffAtAsText));
         return $dropoff;
+    }
+
+    public function test_returns_vehicles()
+    {
+        // given
+        $locationId = 'some-location-id';
+        $lat = 'some-lat';
+        $lon = 'some-lon';
+        $vehicleCount = 1;
+        $maxDropoffs = 5;
+        $maxDistance = 1;
+
+        // when
+        $result = GraphHopper\Formatter::convertToVehicles($locationId, $lat, $lon, $vehicleCount, $maxDropoffs, $maxDistance);
+
+        // then
+        self::assertEquals(
+            array(
+                0 => array(
+                    'vehicle_id' => '0001',
+                    'start_address' => array(
+                        'location_id' => $locationId,
+                        'lat' => $lat,
+                        'lon' => $lon
+                    ),
+                    'return_to_depot' => false,
+                    'max_activities' => $maxDropoffs,
+                    'max_distance' => $maxDistance
+                )
+            )
+            , $result);
+    }
+
+    public function test_returns_address()
+    {
+        // given
+        $locationId = 'some-location-id';
+        $lat = 'some-lat';
+        $lon = 'some-lon';
+
+        // when
+        $result = GraphHopper\Formatter::convertToAddress($locationId, $lat, $lon);
+
+        // then
+        self::assertEquals(
+            array(
+                'location_id' => $locationId,
+                'lat' => $lat,
+                'lon' => $lon
+            )
+            , $result);
+    }
+
+    public function test_build_optimize_query()
+    {
+        // given
+        $config = array(
+            'graphhopper_api_key' => 'api-key',
+            'vehicle_count' => 1,
+            'max_dropoffs' => 50,
+            'slot_size_in_minutes' => 60,
+            'max_distance' => 1
+        );
+        $clientMock = \Phake::mock(GraphHopper\Client::class);
+
+        $pickup = new Pickup();
+        $pickup->setAddress('some-pickup-address');
+
+        $dropoff = new DropOff();
+        $dropoff->setAddress('some-dropoff-address')
+            ->setDropoffAt(\DateTime::createFromFormat('Y-m-d H:i:s', '2018-05-30 20:45:00'));
+
+        \Phake::when($clientMock)->geocode->thenReturn(
+            (object)array('lat' => 'lat', 'lon' => 'lon')
+        );
+        \Phake::when($clientMock)->buildOptimizeQuery->thenCallParent();
+
+        // when
+        $query = $clientMock->buildOptimizeQuery($pickup, array($dropoff), $config);
+
+        // then
+        self::assertEquals(
+            array(
+                'vehicles' => array(
+                    0 => array(
+                        'vehicle_id' => '0001',
+                        'start_address' => array(
+                            'location_id' => 'some-pickup-address',
+                            'lat' => 'lat',
+                            'lon' => 'lon'
+                        ),
+                        'return_to_depot' => false,
+                        'max_activities' => 50,
+                        'max_distance' => 1
+                    )
+                ),
+                'services' => array(
+                    0 => array(
+                        'id' => 'some-pickup-address',
+                        'address' => array(
+                            'location_id' => 'some-pickup-address',
+                            'lat' => 'lat',
+                            'lon' => 'lon'
+                        )
+                    ),
+                    1 => array(
+                        'id' => 'some-dropoff-address',
+                        'address' => array(
+                            'location_id' => 'some-dropoff-address',
+                            'lat' => 'lat',
+                            'lon' => 'lon'
+                        ),
+                        'time_windows' => array(
+                            0 => array(
+                                'earliest' => 1527713100,
+                                'latest' => 1527716700
+                            )
+                        )
+                    )
+                )
+            )
+            , $query);
+    }
+
+    public function test_call_optimize_api_with_correct_parameters()
+    {
+        // given
+        $config = array(
+            'graphhopper_api_key' => 'd0198d64-e68e-4bbe-b3e8-88513f7301bb',
+            'vehicle_count' => 10,
+            'max_dropoffs' => 50,
+            'slot_size_in_minutes' => 60,
+            'max_distance' => 15000
+        );
+        $client = $this->guzzleMock();
+        $clientMock = \Phake::partialMock(GraphHopper\Client::class, $config['graphhopper_api_key'], $client);
+        \Phake::when($clientMock)->geocode->thenReturn(
+            (object)array('lat' => 'lat', 'lon' => 'lon')
+        );
+        \Phake::when($clientMock)->buildOptimizeQuery->thenReturn(
+            (object)array('some' => 'result')
+        );
+        \Phake::when($clientMock)->optimize->thenCallParent();
+        $pickup = new Pickup();
+        $pickup->setAddress('some-pickup-address');
+
+        $dropoff = new DropOff();
+        $dropoff->setAddress('some-dropoff-address')
+            ->setDropoffAt(\DateTime::createFromFormat('Y-m-d H:i:s', '2018-05-30 20:45:00'));
+
+        // when
+        $clientMock->optimize($pickup, $dropoff, $config);
+
+        // then
+        $transaction = $this->container[0];
+        self::assertEquals('POST', $transaction['request']->getMethod());
+        self::assertEquals('/api/1/vrp/optimize', $transaction['request']->getUri()->getPath());
+        self::assertEquals('graphhopper.com', $transaction['request']->getUri()->getHost());
+        self::assertEquals('{"some":"result"}', (string)$transaction['request']->getBody());
+        self::assertEquals('key=d0198d64-e68e-4bbe-b3e8-88513f7301bb', $transaction['request']->getUri()->getQuery());
+    }
+
+    private function guzzleMock()
+    {
+        $history = Middleware::history($this->container);
+        $mock = new MockHandler([
+            new Response(200, [], "")
+        ]);
+        $handler = HandlerStack::create($mock);
+        $handler->push($history);
+
+        return new Client(['handler' => $handler]);
     }
 }
