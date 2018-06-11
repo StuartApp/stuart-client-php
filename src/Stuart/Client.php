@@ -4,12 +4,14 @@ namespace Stuart;
 
 use Stuart\Converters\JobToJson;
 use Stuart\Converters\JsonToJob;
+use Stuart\Converters\JsonToSchedulingSlots;
+use Stuart\Infrastructure\HttpClient;
 
 class Client
 {
     private $httpClient;
 
-    public function __construct($httpClient)
+    public function __construct(HttpClient $httpClient)
     {
         $this->httpClient = $httpClient;
     }
@@ -31,6 +33,24 @@ class Client
         }
     }
 
+    /**
+     * @param $city
+     * @param $type pickup or dropoff
+     * @param \DateTime $dateTime
+     *
+     * @return SchedulingSlots|object
+     */
+    public function getSchedulingSlots($city, $type, \DateTime $dateTime)
+    {
+        $apiResponse = $this->httpClient->performGet('/v2/jobs/schedules/'.$city.'/'.$type.'/'.$dateTime->format('Y-m-d'));
+
+        if ($apiResponse->success()) {
+            return JsonToSchedulingSlots::convert($apiResponse->getBody());
+        } else {
+            return json_decode($apiResponse->getBody());
+        }
+    }
+
     public function createJob($job)
     {
         $body = JobToJson::convert($job);
@@ -45,7 +65,7 @@ class Client
 
     public function getJob($jobId)
     {
-        $apiResponse = $this->httpClient->performGet('/v2/jobs/' . $jobId);
+        $apiResponse = $this->httpClient->performGet('/v2/jobs/'.$jobId);
 
         if ($apiResponse->success()) {
             return JsonToJob::convert($apiResponse->getBody());
@@ -56,7 +76,7 @@ class Client
 
     public function cancelJob($jobId)
     {
-        $apiResponse = $this->httpClient->performPost('', '/v2/jobs/' . $jobId . '/cancel');
+        $apiResponse = $this->httpClient->performPost('', '/v2/jobs/'.$jobId.'/cancel');
 
         if ($apiResponse->success()) {
             return true;
@@ -67,7 +87,7 @@ class Client
 
     public function cancelDelivery($deliveryId)
     {
-        $apiResponse = $this->httpClient->performPost('', '/v2/deliveries/' . $deliveryId . '/cancel');
+        $apiResponse = $this->httpClient->performPost('', '/v2/deliveries/'.$deliveryId.'/cancel');
 
         if ($apiResponse->success()) {
             return true;
@@ -81,6 +101,7 @@ class Client
         $body = JobToJson::convert($job);
 
         $apiResponse = $this->httpClient->performPost($body, '/v2/jobs/pricing');
+
         return json_decode($apiResponse->getBody());
     }
 
@@ -89,6 +110,7 @@ class Client
         $body = JobToJson::convert($job);
 
         $apiResponse = $this->httpClient->performPost($body, '/v2/jobs/eta');
+
         return json_decode($apiResponse->getBody());
     }
 
@@ -96,10 +118,11 @@ class Client
     {
         $query = array(
             'address' => $address,
-            'type' => $type
+            'type' => $type,
         );
 
         $apiResponse = $this->httpClient->performGet('/v2/addresses/validate', $query);
+
         return json_decode($apiResponse->getBody());
     }
 

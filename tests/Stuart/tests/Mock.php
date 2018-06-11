@@ -238,4 +238,40 @@ class Mock
             )
         );
     }
+
+    public function scheduling_slots_response_json()
+    {
+        return <<<EOS
+{
+  "date": "2017-07-20T00:00:00.000+01:00",
+  "zone": {
+    "id": 2,
+    "region_id": 189,
+    "name": "London",
+    "code": "london",
+    "timezone": "Europe/London",
+    "latitude": 51.5286416,
+    "longitude": -0.1015987,
+    "routes_to_avoid": [
+      "highways",
+      "ferries"
+    ],
+    "short_code": "lnd",
+    "ops_mail": "shaheen@stuart.com",
+    "locale": "en"
+  },
+  "type": "pickup",
+  "slots": [
+    {
+      "start_time": "2017-07-20T08:45:00.000+01:00",
+      "end_time": "2017-07-20T09:00:00.000+01:00"
+    },
+    {
+      "start_time": "2017-07-20T09:00:00.000+01:00",
+      "end_time": "2017-07-20T09:15:00.000+01:00"
+    }
+  ]
+}
+EOS;
+    }
 }

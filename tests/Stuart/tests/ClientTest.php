@@ -3,10 +3,11 @@
 namespace Stuart\Tests;
 
 use Stuart\Client;
+use Stuart\Constant\StuartConstant;
 use Stuart\Converters\JobToJson;
 use Stuart\Infrastructure\ApiResponse;
 use Stuart\Infrastructure\Authenticator;
-
+use Stuart\SchedulingSlots;
 
 class ClientTest extends \PHPUnit_Framework_TestCase
 {
@@ -46,7 +47,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $sampleJobId = 123;
         $this->client->getJob($sampleJobId);
 
-        \Phake::verify($this->httpClient)->performGet('/v2/jobs/' . $sampleJobId);
+        \Phake::verify($this->httpClient)->performGet('/v2/jobs/'.$sampleJobId);
         self::assertNotNull($this->client->getJob(123));
     }
 
@@ -120,7 +121,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
         $query = array(
             'address' => $address,
-            'type' => 'picking'
+            'type' => 'picking',
         );
 
         self::assertEquals($validity->success, true);
@@ -138,10 +139,25 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
         $query = array(
             'address' => $address,
-            'type' => 'delivering'
+            'type' => 'delivering',
         );
 
         self::assertEquals($validity->success, true);
         \Phake::verify($this->httpClient)->performGet('/v2/addresses/validate', $query);
+    }
+
+    public function test_get_scheduling_slots()
+    {
+        \Phake::when($this->httpClient)->performGet(\Phake::anyParameters())->thenReturn(
+            new ApiResponse(200, $this->mock->scheduling_slots_response_json())
+        );
+
+        $city = 'London';
+        $type = StuartConstant::TYPE_PICKUP;
+        $date = new \DateTime();
+        $this->client->getSchedulingSlots($city, $type, $date);
+
+        \Phake::verify($this->httpClient)->performGet('/v2/jobs/schedules/London/pickup/'.$date->format('Y-m-d'));
+        self::assertInstanceOf(SchedulingSlots::class, $this->client->getSchedulingSlots($city, $type, $date));
     }
 }
