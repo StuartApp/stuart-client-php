@@ -7,6 +7,7 @@ use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
+use Stuart\ClientException;
 use Stuart\DropOff;
 use Stuart\Job;
 use Stuart\Pickup;
@@ -21,7 +22,7 @@ class GraphHopperTest extends \PHPUnit_Framework_TestCase
         $this->container = array();
     }
 
-    public function test_example()
+    public function example()
     {
         // given
         $pickup = new Pickup();
@@ -29,37 +30,37 @@ class GraphHopperTest extends \PHPUnit_Framework_TestCase
 
         // when
         $dropoffs = [
-            $this->dropoff('23 rue de richelieu 75002 paris', '2018-05-30 12:40:00'),
-            $this->dropoff('3 rue d\'edimbourg 75008 paris', '2018-05-30 12:45:00'),
-            $this->dropoff('156 rue de charonne 75012 paris', '2018-05-30 12:30:00'),
-            $this->dropoff('8 rue sidi brahim 75012 paris', '2018-05-30 14:30:00'),
-            $this->dropoff('5 passage du chantier 75012 paris', '2018-05-30 12:30:00'),
-            $this->dropoff('Hôpital Saint-Louis, 75010 Paris', '2018-05-30 13:20:00'),
-            $this->dropoff('1 Rue des Deux Gares, 75010 Paris', '2018-05-30 12:30:00'),
-            $this->dropoff('137 Rue la Fayette, 75010 Paris', '2018-05-30 12:30:00'),
-            $this->dropoff('34 Rue Pierre Semard, 75009 Paris', '2018-05-30 12:00:00'),
-            $this->dropoff('46 Rue Lecourbe, 75015 Paris', '2018-05-30 12:30:00'),
-            $this->dropoff('178 Rue Lecourbe, 75015 Paris', '2018-05-30 13:00:00'),
-            $this->dropoff('43 Rue des Alouettes 75019 Paris', '2018-05-30 12:30:00'),
-            $this->dropoff('50 Rue Durantin, 75018 Paris', '2018-05-30 12:30:00'),
-            $this->dropoff('47-33 Rue des Abbesses, 75018 Paris', '2018-05-30 13:30:00'),
-            $this->dropoff('2 Boulevard de la Villette, 75019 Paris', '2018-05-30 14:30:00'),
-            $this->dropoff('172 Rue de Charonne, 75011 Paris', '2018-05-30 15:30:00'),
-            $this->dropoff('2-10 Passage Courtois, 75011 Paris', '2018-05-30 19:30:00'),
-            $this->dropoff('23 Rue Servan, 75011 Paris', '2018-05-30 20:30:00'),
-            $this->dropoff('71 Rue de la Fontaine au Roi, 75011 Paris', '2018-05-30 19:00:00'),
-            $this->dropoff('37 Rue Albert Thomas 75010 Paris', '2018-05-30 20:45:00'),
-            $this->dropoff('32-42 Rue du Faubourg Saint-Denis, 75010 Paris', '2018-05-30 19:30:00'),
-            $this->dropoff('12 Rue d\'Uzès, 75002 Paris', '2018-05-30 20:39:00'),
-            $this->dropoff('148 Rue de l\'Université, 75007 Paris', '2018-05-30 15:30:00'),
-            $this->dropoff('64-66 Avenue d\'Iéna, 75116 Paris', '2018-05-30 18:30:00'),
-            $this->dropoff('12 avenue claude vellefaux 75010 paris', '2018-05-30 19:00:00'),
-            $this->dropoff('101 Avenue Victor Hugo, 75116 Paris', '2018-05-30 19:30:00')
+            $this->dropoff('23 rue de richelieu 75002 paris', '2018-06-14 12:40:00'),
+            $this->dropoff('3 rue d\'edimbourg 75008 paris', '2018-06-14 12:45:00'),
+            $this->dropoff('156 rue de charonne 75012 paris', '2018-06-14 12:30:00'),
+            $this->dropoff('8 rue sidi brahim 75012 paris', '2018-06-14 14:30:00'),
+            $this->dropoff('5 passage du chantier 75012 paris', '2018-06-14 12:30:00'),
+            $this->dropoff('Hôpital Saint-Louis, 75010 Paris', '2018-06-14 13:20:00'),
+            $this->dropoff('1 Rue des Deux Gares, 75010 Paris', '2018-06-14 12:30:00'),
+            $this->dropoff('137 Rue la Fayette, 75010 Paris', '2018-06-14 12:30:00'),
+            $this->dropoff('34 Rue Pierre Semard, 75009 Paris', '2018-06-14 12:00:00'),
+            $this->dropoff('46 Rue Lecourbe, 75015 Paris', '2018-06-14 12:30:00'),
+            $this->dropoff('178 Rue Lecourbe, 75015 Paris', '2018-06-14 13:00:00'),
+            $this->dropoff('43 Rue des Alouettes 75019 Paris', '2018-06-14 12:30:00'),
+            $this->dropoff('50 Rue Durantin, 75018 Paris', '2018-06-14 12:30:00'),
+            $this->dropoff('47-33 Rue des Abbesses, 75018 Paris', '2018-06-14 13:30:00'),
+            $this->dropoff('2 Boulevard de la Villette, 75019 Paris', '2018-06-14 14:30:00'),
+            $this->dropoff('172 Rue de Charonne, 75011 Paris', '2018-06-14 15:30:00'),
+            $this->dropoff('2-10 Passage Courtois, 75011 Paris', '2018-06-14 19:30:00'),
+            $this->dropoff('23 Rue Servan, 75011 Paris', '2018-06-14 20:30:00'),
+            $this->dropoff('71 Rue de la Fontaine au Roi, 75011 Paris', '2018-06-14 19:00:00'),
+            $this->dropoff('37 Rue Albert Thomas 75010 Paris', '2018-06-14 20:45:00'),
+            $this->dropoff('32-42 Rue du Faubourg Saint-Denis, 75010 Paris', '2018-06-14 19:30:00'),
+            $this->dropoff('12 Rue d\'Uzès, 75002 Paris', '2018-06-14 20:39:00'),
+            $this->dropoff('148 Rue de l\'Université, 75007 Paris', '2018-06-14 15:30:00'),
+            $this->dropoff('64-66 Avenue d\'Iéna, 75116 Paris', '2018-06-14 18:30:00'),
+            $this->dropoff('12 avenue claude vellefaux 75010 paris', '2018-06-14 19:00:00'),
+            $this->dropoff('101 Avenue Victor Hugo, 75116 Paris', '2018-06-14 19:30:00')
         ];
 
         $config = array(
             'graphhopper_api_key' => 'd0198d64-e68e-4bbe-b3e8-88513f7301bb',
-            'vehicle_count' => 10,
+            'vehicle_count' => 1,
             'max_dropoffs' => 50,
             'slot_size_in_minutes' => 60,
             'max_distance' => 15000
@@ -98,6 +99,19 @@ class GraphHopperTest extends \PHPUnit_Framework_TestCase
         $client = new \Stuart\Client($httpClient);
 
         return $client->getPricing($job);
+    }
+
+    private function createJob($job)
+    {
+        $environment = \Stuart\Infrastructure\Environment::SANDBOX;
+        $api_client_id = 'c6058849d0a056fc743203acb8e6a850dad103485c3edc51b16a9260cc7a7688'; // can be found here: https://admin-sandbox.stuart.com/client/api
+        $api_client_secret = 'aa6a415fce31967501662c1960fcbfbf4745acff99acb19dbc1aae6f76c9c619'; // can be found here: https://admin-sandbox.stuart.com/client/api
+        $authenticator = new \Stuart\Infrastructure\Authenticator($environment, $api_client_id, $api_client_secret);
+
+        $httpClient = new \Stuart\Infrastructure\HttpClient($authenticator);
+        $client = new \Stuart\Client($httpClient);
+
+        return $client->createJob($job);
     }
 
     private function dropoff($address, $dropoffAtAsText)
@@ -176,7 +190,7 @@ class GraphHopperTest extends \PHPUnit_Framework_TestCase
 
         $dropoff = new DropOff();
         $dropoff->setAddress('some-dropoff-address')
-            ->setDropoffAt(\DateTime::createFromFormat('Y-m-d H:i:s', '2018-05-30 20:45:00'));
+            ->setDropoffAt(\DateTime::createFromFormat('Y-m-d H:i:s', '2018-06-14 20:45:00'));
 
         \Phake::when($clientMock)->geocode->thenReturn(
             (object)array('lat' => 'lat', 'lon' => 'lon')
@@ -185,6 +199,8 @@ class GraphHopperTest extends \PHPUnit_Framework_TestCase
 
         // when
         $query = $clientMock->buildOptimizeQuery($pickup, array($dropoff), $config);
+
+        print_r($query);
 
         // then
         self::assertEquals(
@@ -220,8 +236,8 @@ class GraphHopperTest extends \PHPUnit_Framework_TestCase
                         ),
                         'time_windows' => array(
                             0 => array(
-                                'earliest' => 1527713100,
-                                'latest' => 1527716700
+                                'earliest' => 1529009100,
+                                'latest' => 1529012700
                             )
                         )
                     )
@@ -254,7 +270,7 @@ class GraphHopperTest extends \PHPUnit_Framework_TestCase
 
         $dropoff = new DropOff();
         $dropoff->setAddress('some-dropoff-address')
-            ->setDropoffAt(\DateTime::createFromFormat('Y-m-d H:i:s', '2018-05-30 20:45:00'));
+            ->setDropoffAt(\DateTime::createFromFormat('Y-m-d H:i:s', '2018-06-14 20:45:00'));
 
         // when
         $clientMock->optimize($pickup, $dropoff, $config);
@@ -266,6 +282,73 @@ class GraphHopperTest extends \PHPUnit_Framework_TestCase
         self::assertEquals('graphhopper.com', $transaction['request']->getUri()->getHost());
         self::assertEquals('{"some":"result"}', (string)$transaction['request']->getBody());
         self::assertEquals('key=d0198d64-e68e-4bbe-b3e8-88513f7301bb', $transaction['request']->getUri()->getQuery());
+    }
+
+    public function test_call_solutions_api_with_correct_parameters()
+    {
+        // given
+        $client = $this->guzzleMock();
+        $clientMock = \Phake::partialMock(GraphHopper\Client::class, $this->config()['graphhopper_api_key'], $client);
+
+        // when
+        $clientMock->solution('1234');
+
+        // then
+        $transaction = $this->container[0];
+        self::assertEquals('GET', $transaction['request']->getMethod());
+        self::assertEquals('/api/1/vrp/solution/1234', $transaction['request']->getUri()->getPath());
+        self::assertEquals('graphhopper.com', $transaction['request']->getUri()->getHost());
+        self::assertEquals('key=d0198d64-e68e-4bbe-b3e8-88513f7301bb', $transaction['request']->getUri()->getQuery());
+    }
+
+    public function test_error_when_dropoff_at_not_specified()
+    {
+        // given
+        $client = $this->guzzleMock();
+        $graphhopper = new GraphHopper($this->config(), $client);
+        $pickup = new Pickup();
+        $pickup->setAddress('some-pickup-address');
+        $dropoff = new DropOff();
+        $dropoff->setAddress('some-dropoff-address');
+
+        // then
+        self::expectException(ClientException::class);
+        self::expectExceptionMessage('DROPOFF_AT_MUST_BE_SPECIFIED_FOR_EACH_DROPOFF');
+
+        // when
+        $graphhopper->findRounds($pickup, [$dropoff]);
+
+    }
+
+    public function test_error_when_pickup_at_specified()
+    {
+        // given
+        $client = $this->guzzleMock();
+        $graphhopper = new GraphHopper($this->config(), $client);
+        $pickup = new Pickup();
+        $pickup->setAddress('some-pickup-address');
+        $pickup->setPickupAt(\DateTime::createFromFormat('Y-m-d H:i:s', '2018-06-14 20:45:00'));
+        $dropoff = new DropOff();
+        $dropoff->setAddress('some-dropoff-address');
+        $dropoff->setDropoffAt(\DateTime::createFromFormat('Y-m-d H:i:s', '2018-06-14 20:45:00'));
+
+        // then
+        self::expectException(ClientException::class);
+        self::expectExceptionMessage('PICKUP_AT_MUST_BE_NULL');
+
+        // when
+        $graphhopper->findRounds($pickup, [$dropoff]);
+    }
+
+    private function config()
+    {
+        return array(
+            'graphhopper_api_key' => 'd0198d64-e68e-4bbe-b3e8-88513f7301bb',
+            'vehicle_count' => 10,
+            'max_dropoffs' => 50,
+            'slot_size_in_minutes' => 60,
+            'max_distance' => 15000
+        );
     }
 
     private function guzzleMock()
