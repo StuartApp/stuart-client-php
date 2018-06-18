@@ -27,7 +27,7 @@ class GraphHopper
         $this->client = $client === null ? new Client() : $client;
         $this->config = $config;
 
-        $this->graphHopperClient = new \Stuart\Routing\GraphHopper\Client($this->config['graphhopper_api_key'],  $this->client);
+        $this->graphHopperClient = new \Stuart\Routing\GraphHopper\Client($this->config['graphhopper_api_key'], $this->client);
     }
 
     /**
@@ -52,7 +52,7 @@ class GraphHopper
         return $this->findRoundsRec($pickup, $dropoffs, [], [], 0);
     }
 
-    public function findRoundsRec($pickup, $dropoffs, $jobs, $waste, $wasteAtOneCount)
+    private function findRoundsRec($pickup, $dropoffs, $jobs, $waste)
     {
         $optimizedApiResponse = $this->graphHopperClient->optimize($pickup, $dropoffs, $this->config);
         if (!$optimizedApiResponse->success()) {
@@ -82,13 +82,10 @@ class GraphHopper
 
         if (count($waste) === 0) {
             return $jobs;
-        } else if ($wasteAtOneCount === 2) {
-            throw new ClientException('Not able to find round with the given configuration, waste: ' . $waste[0]->getAddress());
+        } else if (count($waste) === count($dropoffs)) {
+            throw new ClientException('Not able to find round with the given configuration, waste: ' . $waste);
         } else {
-            if (count($waste) === 1) {
-                $wasteAtOneCount = $wasteAtOneCount + 1;
-            }
-            return $this->findRoundsRec($pickup, $waste, $jobs, [], $wasteAtOneCount);
+            return $this->findRoundsRec($pickup, $waste, $jobs, []);
         }
     }
 
