@@ -13,7 +13,7 @@ use Stuart\Infrastructure\HttpClient;
 
 class HttpClientTest extends \PHPUnit_Framework_TestCase
 {
-    const PHP_CLIENT_USER_AGENT = 'stuart-php-client/3.2.0';
+    const PHP_CLIENT_USER_AGENT = 'stuart-php-client/3.3.0';
     private $authenticator;
     private $container;
 
