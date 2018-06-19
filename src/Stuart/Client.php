@@ -4,6 +4,7 @@ namespace Stuart;
 
 use Stuart\Converters\JobToJson;
 use Stuart\Converters\JsonToJob;
+use Stuart\Converters\JsonToSchedulingSlots;
 
 class Client
 {
@@ -26,6 +27,27 @@ class Client
 
         if ($apiResponse->success()) {
             return json_decode($apiResponse->getBody())->valid;
+        } else {
+            return json_decode($apiResponse->getBody());
+        }
+    }
+
+    public function getSchedulingSlotsAtPickup($city, \DateTime $dateTime)
+    {
+        return $this->getSchedulingSlots($city, 'pickup', $dateTime);
+    }
+
+    public function getSchedulingSlotsAtDropoff($city, \DateTime $dateTime)
+    {
+        return $this->getSchedulingSlots($city, 'dropoff', $dateTime);
+    }
+
+    private function getSchedulingSlots($city, $type, \DateTime $dateTime)
+    {
+        $apiResponse = $this->httpClient->performGet('/v2/jobs/schedules/' . $city . '/' . $type . '/' . $dateTime->format('Y-m-d'));
+
+        if ($apiResponse->success()) {
+            return JsonToSchedulingSlots::convert($apiResponse->getBody());
         } else {
             return json_decode($apiResponse->getBody());
         }
