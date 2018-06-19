@@ -145,23 +145,31 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         \Phake::verify($this->httpClient)->performGet('/v2/addresses/validate', $query);
     }
 
-    public function test_get_scheduling_slots()
+    public function test_get_scheduling_slots_pickup()
     {
         \Phake::when($this->httpClient)->performGet(\Phake::anyParameters())->thenReturn(
             new ApiResponse(200, $this->mock->scheduling_slots_response_json())
         );
 
-        $city = 'London';
+        $city = 'london';
         $date = new \DateTime();
         $this->client->getSchedulingSlotsAtPickup($city, $date);
 
-        \Phake::verify($this->httpClient)->performGet('/v2/jobs/schedules/London/pickup/'.$date->format('Y-m-d'));
+        \Phake::verify($this->httpClient)->performGet('/v2/jobs/schedules/london/pickup/'.$date->format('Y-m-d'));
         self::assertInstanceOf(SchedulingSlots::class, $this->client->getSchedulingSlotsAtPickup($city, $date));
+    }
 
-        $city = 'Paris';
+    public function test_get_scheduling_slots_dropoff()
+    {
+        \Phake::when($this->httpClient)->performGet(\Phake::anyParameters())->thenReturn(
+            new ApiResponse(200, $this->mock->scheduling_slots_response_json())
+        );
+
+        $date = new \DateTime();
+        $city = 'paris';
         $this->client->getSchedulingSlotsAtDropoff($city, $date);
 
-        \Phake::verify($this->httpClient)->performGet('/v2/jobs/schedules/Paris/dropoff/'.$date->format('Y-m-d'));
+        \Phake::verify($this->httpClient)->performGet('/v2/jobs/schedules/paris/dropoff/'.$date->format('Y-m-d'));
         self::assertInstanceOf(SchedulingSlots::class, $this->client->getSchedulingSlotsAtDropoff($city, $date));
     }
 }
