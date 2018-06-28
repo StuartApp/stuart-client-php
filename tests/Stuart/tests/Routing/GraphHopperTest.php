@@ -9,6 +9,7 @@ use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
 use Stuart\ClientException;
 use Stuart\DropOff;
+use Stuart\Infrastructure\ApiResponse;
 use Stuart\Job;
 use Stuart\Pickup;
 use Stuart\Routing\GraphHopper;
@@ -282,6 +283,7 @@ class GraphHopperTest extends \PHPUnit_Framework_TestCase
         self::assertEquals('key=d0198d64-e68e-4bbe-b3e8-88513f7301bb', $transaction['request']->getUri()->getQuery());
     }
 
+
     public function test_call_solutions_api_with_correct_parameters()
     {
         // given
@@ -297,6 +299,23 @@ class GraphHopperTest extends \PHPUnit_Framework_TestCase
         self::assertEquals('/api/1/vrp/solution/1234', $transaction['request']->getUri()->getPath());
         self::assertEquals('graphhopper.com', $transaction['request']->getUri()->getHost());
         self::assertEquals('key=d0198d64-e68e-4bbe-b3e8-88513f7301bb', $transaction['request']->getUri()->getQuery());
+    }
+
+    public function test_call_geocode_api_with_correct_parameters()
+    {
+        // given
+        $client = $this->guzzleMock('{"hits":[{"point": {"lat": 1, "lng": 1}}]}');
+        $clientMock = \Phake::partialMock(GraphHopper\Client::class, $this->config()['graphhopper_api_key'], $client);
+
+        // when
+        $res = $clientMock->geocode('some-address');
+
+        // then
+        $transaction = $this->container[0];
+        self::assertEquals('GET', $transaction['request']->getMethod());
+        self::assertEquals('/api/1/geocode', $transaction['request']->getUri()->getPath());
+        self::assertEquals('graphhopper.com', $transaction['request']->getUri()->getHost());
+        self::assertEquals('q=some-address&key=d0198d64-e68e-4bbe-b3e8-88513f7301bb', $transaction['request']->getUri()->getQuery());
     }
 
     public function test_error_when_dropoff_at_not_specified()
@@ -366,6 +385,31 @@ class GraphHopperTest extends \PHPUnit_Framework_TestCase
         // when
         $graphhopper->findRounds($pickup, [$dropoff1, $dropoff2]);
     }
+    
+    public function test_throw_client_exception_on_optimize_failure()
+    {
+        // given
+        $client = $this->guzzleMock();
+        $graphHopperClient = \Phake::mock(GraphHopper\Client::class);
+        $graphhopper = new GraphHopper($this->config(), $client, $graphHopperClient);
+
+        $pickup = new Pickup();
+        $pickup->setAddress('some-pickup-address');
+        $dropoff = new DropOff();
+        $dropoff->setAddress('some-dropoff-address');
+        $dropoff->setDropoffAt(\DateTime::createFromFormat('Y-m-d H:i:s', '2018-06-14 20:45:00'));
+
+        \Phake::when($graphHopperClient)->optimize(\Phake::anyParameters())->thenReturn(
+            new ApiResponse('400', 'some-body')
+        );
+
+        // then
+        self::expectException(ClientException::class);
+        self::expectExceptionMessage('Unable to send request to GraphHopper. Details: some-body');
+
+        // when
+        $graphhopper->findRounds($pickup, [$dropoff]);
+    }
 
     private function config()
     {
@@ -378,11 +422,11 @@ class GraphHopperTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    private function guzzleMock()
+    private function guzzleMock($body = "")
     {
         $history = Middleware::history($this->container);
         $mock = new MockHandler([
-            new Response(200, [], "")
+            new Response(200, [], $body)
         ]);
         $handler = HandlerStack::create($mock);
         $handler->push($history);
