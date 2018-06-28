@@ -200,8 +200,6 @@ class GraphHopperTest extends \PHPUnit_Framework_TestCase
         // when
         $query = $clientMock->buildOptimizeQuery($pickup, array($dropoff), $config);
 
-        print_r($query);
-
         // then
         self::assertEquals(
             array(
@@ -338,6 +336,35 @@ class GraphHopperTest extends \PHPUnit_Framework_TestCase
 
         // when
         $graphhopper->findRounds($pickup, [$dropoff]);
+    }
+
+    public function test_error_when_max_dropoff_reached()
+    {
+        // given
+        $config = array(
+            'graphhopper_api_key' => 'd0198d64-e68e-4bbe-b3e8-88513f7301bb',
+            'vehicle_count' => 10,
+            'max_dropoffs' => 1,
+            'slot_size_in_minutes' => 60,
+            'max_distance' => 15000
+        );
+        $client = $this->guzzleMock();
+        $graphhopper = new GraphHopper($config, $client);
+        $pickup = new Pickup();
+        $pickup->setAddress('some-pickup-address');
+        $dropoff1 = new DropOff();
+        $dropoff1->setAddress('some-dropoff-address');
+        $dropoff1->setDropoffAt(\DateTime::createFromFormat('Y-m-d H:i:s', '2018-06-14 20:45:00'));
+        $dropoff2 = new DropOff();
+        $dropoff2->setAddress('some-dropoff-address');
+        $dropoff2->setDropoffAt(\DateTime::createFromFormat('Y-m-d H:i:s', '2018-06-14 20:45:00'));
+
+        // then
+        self::expectException(ClientException::class);
+        self::expectExceptionMessage('TOO_MANY_DROPOFFS');
+
+        // when
+        $graphhopper->findRounds($pickup, [$dropoff1, $dropoff2]);
     }
 
     private function config()
