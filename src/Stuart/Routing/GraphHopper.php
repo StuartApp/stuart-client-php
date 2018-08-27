@@ -22,12 +22,13 @@ class GraphHopper
      * For more details on different plan, please refer to: https://www.graphhopper.com/pricing/
      *
      */
-    public function __construct($config, $client = null)
+    public function __construct($config, $client = null, $graphHopperClient = null)
     {
         $this->client = $client === null ? new Client() : $client;
         $this->config = $config;
 
-        $this->graphHopperClient = new \Stuart\Routing\GraphHopper\Client($this->config['graphhopper_api_key'], $this->client);
+        $this->graphHopperClient = $graphHopperClient === null ?
+            new \Stuart\Routing\GraphHopper\Client($this->config['graphhopper_api_key'], $this->client) : $graphHopperClient;
     }
 
     /**
@@ -49,20 +50,17 @@ class GraphHopper
         if (count($errors) > 0) {
             throw new ClientException(implode($errors));
         }
-        return $this->findRoundsRec($pickup, $dropoffs, [], [], 0);
+        return $this->findRoundsRec($pickup, $dropoffs, [], []);
     }
 
     private function findRoundsRec($pickup, $dropoffs, $jobs, $waste)
     {
         $optimizedApiResponse = $this->graphHopperClient->optimize($pickup, $dropoffs, $this->config);
         if (!$optimizedApiResponse->success()) {
-            throw new ClientException('Unable to send request to GraphHopper. Details: ' . $optimizedApiResponse->getBody());
+            throw new ClientException('Unable to send request to GraphHopper, optimize query failure. Details: ' . $optimizedApiResponse->getBody());
         }
 
         $solutionApiResponse = $this->pollForFinishedSolution(json_decode($optimizedApiResponse->getBody())->job_id);
-        if (!$solutionApiResponse->success()) {
-            throw new ClientException('Unable to send request to GraphHopper. Details: ' . $solutionApiResponse->getBody());
-        }
 
         $solution = json_decode($solutionApiResponse->getBody())->solution;
         if (!empty($solution)) {
@@ -149,6 +147,10 @@ class GraphHopper
     private function pollForFinishedSolution($jobId)
     {
         $solutionApiResponse = $this->graphHopperClient->solution($jobId);
+        if (!$solutionApiResponse->success()) {
+            throw new ClientException('Unable to send request to GraphHopper, solution query failure. Details: ' . $solutionApiResponse->getBody());
+        }
+
         $solutionStatus = json_decode($solutionApiResponse->getBody())->status;
 
         while ($solutionStatus !== 'finished') {

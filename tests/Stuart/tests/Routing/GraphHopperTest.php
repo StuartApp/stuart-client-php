@@ -23,7 +23,7 @@ class GraphHopperTest extends \PHPUnit_Framework_TestCase
         $this->container = array();
     }
 
-    public function example()
+    public function test_example()
     {
         // given
         $pickup = new Pickup();
@@ -62,7 +62,7 @@ class GraphHopperTest extends \PHPUnit_Framework_TestCase
         $config = array(
             'graphhopper_api_key' => 'd0198d64-e68e-4bbe-b3e8-88513f7301bb',
             'vehicle_count' => 1,
-            'max_dropoffs' => 50,
+            'max_dropoffs' => 5,
             'slot_size_in_minutes' => 60,
             'max_distance' => 15000
         );
@@ -385,7 +385,7 @@ class GraphHopperTest extends \PHPUnit_Framework_TestCase
         // when
         $graphhopper->findRounds($pickup, [$dropoff1, $dropoff2]);
     }
-    
+
     public function test_throw_client_exception_on_optimize_failure()
     {
         // given
@@ -400,15 +400,109 @@ class GraphHopperTest extends \PHPUnit_Framework_TestCase
         $dropoff->setDropoffAt(\DateTime::createFromFormat('Y-m-d H:i:s', '2018-06-14 20:45:00'));
 
         \Phake::when($graphHopperClient)->optimize(\Phake::anyParameters())->thenReturn(
-            new ApiResponse('400', 'some-body')
+            new ApiResponse(400, 'some-body')
         );
 
         // then
         self::expectException(ClientException::class);
-        self::expectExceptionMessage('Unable to send request to GraphHopper. Details: some-body');
+        self::expectExceptionMessage('Unable to send request to GraphHopper, optimize query failure. Details: some-body');
 
         // when
         $graphhopper->findRounds($pickup, [$dropoff]);
+    }
+
+    public function test_throw_client_exception_on_solution_failure()
+    {
+        // given
+        $client = $this->guzzleMock();
+        $graphHopperClient = \Phake::mock(GraphHopper\Client::class);
+        $graphhopper = new GraphHopper($this->config(), $client, $graphHopperClient);
+
+        $pickup = new Pickup();
+        $pickup->setAddress('some-pickup-address');
+        $dropoff = new DropOff();
+        $dropoff->setAddress('some-dropoff-address');
+        $dropoff->setDropoffAt(\DateTime::createFromFormat('Y-m-d H:i:s', '2018-06-14 20:45:00'));
+
+        \Phake::when($graphHopperClient)->optimize(\Phake::anyParameters())->thenReturn(
+            new ApiResponse(200, '{ "job_id": "1234" }')
+        );
+
+        \Phake::when($graphHopperClient)->solution(\Phake::anyParameters())->thenReturn(
+            new ApiResponse(400, 'some-error')
+        );
+
+         // then
+         self::expectException(ClientException::class);
+         self::expectExceptionMessage('Unable to send request to GraphHopper, solution query failure. Details: some-error');
+
+         // when
+         $graphhopper->findRounds($pickup, [$dropoff]);
+    }
+
+    public function test_return_1_round_with_two_drops()
+    {
+         // given
+         $client = $this->guzzleMock();
+         $graphHopperClient = \Phake::mock(GraphHopper\Client::class);
+         $graphhopper = new GraphHopper($this->config(), $client, $graphHopperClient);
+ 
+         $pickup = new Pickup();
+         $pickup->setAddress('some-pickup-address');
+         $dropoff1 = new DropOff();
+         $dropoff1->setAddress('some-dropoff-address-1');
+         $dropoff1->setDropoffAt(\DateTime::createFromFormat('Y-m-d H:i:s', '2018-06-14 20:45:00'));
+         $dropoff2 = new DropOff();
+         $dropoff2->setAddress('some-dropoff-address-2');
+         $dropoff2->setDropoffAt(\DateTime::createFromFormat('Y-m-d H:i:s', '2018-06-14 20:45:00'));
+
+         \Phake::when($graphHopperClient)->optimize(\Phake::anyParameters())->thenReturn(
+             new ApiResponse(200, '{ "job_id": "1234" }')
+         );
+ 
+         \Phake::when($graphHopperClient)->solution(\Phake::anyParameters())->thenReturn(
+             new ApiResponse(200, '
+                {
+                    "status": "finished",
+                    "solution": {
+                        "routes": [
+                            {
+                                "waiting_time": 0,
+                                "activities": [
+                                    {
+                                        "address": {
+                                            "location_id": "first"
+                                        }
+                                    },
+                                    {
+                                        "address": {
+                                            "location_id": "second"
+                                        }
+                                    },
+                                    {
+                                        "address": {
+                                            "location_id": "some-dropoff-address-1"
+                                        }
+                                    },
+                                    {
+                                        "address": {
+                                            "location_id": "some-dropoff-address-2"
+                                        }
+                                    }
+                                ]
+                            }
+                        ],
+                        "unassigned": {
+                            "services": []
+                        }
+                    }
+                }
+            ')
+         );
+
+         $res = $graphhopper->findRounds($pickup, [$dropoff1, $dropoff2]);
+
+         print_r($res);
     }
 
     private function config()
