@@ -3,7 +3,12 @@
 namespace Stuart\Converters;
 
 use Stuart\Job;
+use Stuart\Pricing;
 
+/**
+ * Class JsonToJob
+ * @package Stuart\Converters
+ */
 class JsonToJob
 {
     public static $STUART_DATE_FORMAT = "Y-m-d\TH:i:s.uO";
@@ -53,6 +58,18 @@ class JsonToJob
                 ->setStatus($delivery->status)
                 ->setTrackingUrl($delivery->tracking_url);
         }
+
+        $pricing = new Pricing();
+        if (isset($body->pricing)) {
+            if (isset($body->pricing->price_tax_included)) {
+                $pricing->setPriceTaxIncluded($body->pricing->price_tax_included);
+            }
+            if (isset($body->pricing->price_tax_excluded)) {
+                $pricing->setPriceTaxExcluded($body->pricing->price_tax_excluded);
+            }
+        }
+
+        $job->setPricing($pricing);
 
         return $job;
     }

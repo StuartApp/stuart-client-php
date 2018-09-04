@@ -4,6 +4,10 @@ namespace Stuart;
 
 use Stuart\converters\JsonToJob;
 
+/**
+ * Class Job
+ * @package Stuart
+ */
 class Job
 {
     private $id;
@@ -15,6 +19,11 @@ class Job
     private $deliveries = array();
     private $distance;
     private $duration;
+
+    /**
+     * @var Pricing
+     */
+    private $pricing;
 
     /**
      * @param $address
@@ -179,5 +188,21 @@ class Job
     public function setDuration($duration)
     {
         $this->duration = $duration;
+    }
+
+    /**
+     * @return Pricing
+     */
+    public function getPricing()
+    {
+        return $this->pricing;
+    }
+
+    /**
+     * @param Pricing $pricing
+     */
+    public function setPricing($pricing)
+    {
+        $this->pricing = $pricing;
     }
 }
