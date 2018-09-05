@@ -5,10 +5,6 @@ namespace Stuart\Converters;
 use Stuart\Job;
 use Stuart\Pricing;
 
-/**
- * Class JsonToJob
- * @package Stuart\Converters
- */
 class JsonToJob
 {
     public static $STUART_DATE_FORMAT = "Y-m-d\TH:i:s.uO";

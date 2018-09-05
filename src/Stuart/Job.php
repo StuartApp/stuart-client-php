@@ -4,10 +4,6 @@ namespace Stuart;
 
 use Stuart\converters\JsonToJob;
 
-/**
- * Class Job
- * @package Stuart
- */
 class Job
 {
     private $id;

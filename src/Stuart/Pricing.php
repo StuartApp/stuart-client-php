@@ -2,10 +2,6 @@
 
 namespace Stuart;
 
-/**
- * Class Pricing
- * @package Stuart
- */
 class Pricing
 {
     /**
