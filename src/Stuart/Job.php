@@ -17,6 +17,11 @@ class Job
     private $duration;
 
     /**
+     * @var Pricing
+     */
+    private $pricing;
+
+    /**
      * @param $address
      * @return \Stuart\Pickup
      */
@@ -179,5 +184,21 @@ class Job
     public function setDuration($duration)
     {
         $this->duration = $duration;
+    }
+
+    /**
+     * @return Pricing
+     */
+    public function getPricing()
+    {
+        return $this->pricing;
+    }
+
+    /**
+     * @param Pricing $pricing
+     */
+    public function setPricing($pricing)
+    {
+        $this->pricing = $pricing;
     }
 }

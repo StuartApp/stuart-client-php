@@ -4,6 +4,7 @@ namespace Stuart\Tests;
 
 use Stuart\Converters\JsonToJob;
 use Stuart\Job;
+use Stuart\Pricing;
 
 class Mock
 {
@@ -13,6 +14,8 @@ class Mock
     public $assignment_code = 'Order 123';
     public $distance = 3.966;
     public $duration = 18;
+    public $price_tax_included = 11.7;
+    public $price_tax_excluded = 9.75;
 
     public $pickup_address_street = '12 rue de rivoli';
     public $pickup_address_postcode = '75004';
@@ -75,6 +78,11 @@ class Mock
             ->setClientReference($this->drop_off_client_reference)
             ->setPackageDescription($this->drop_off_package_description)
             ->setPackageType($this->drop_off_package_type);
+
+        $pricing = new Pricing();
+        $pricing->setPriceTaxIncluded($this->price_tax_included);
+        $pricing->setPriceTaxExcluded($this->price_tax_excluded);
+        $job->setPricing($pricing);
 
         return $job;
     }
@@ -206,7 +214,11 @@ class Mock
                             )
                         )
                     )
-                )
+                ),
+                'pricing' => [
+                    'price_tax_included' => $this->price_tax_included,
+                    'price_tax_excluded' => $this->price_tax_excluded
+                ]
             )
         );
     }
