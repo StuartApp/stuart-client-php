@@ -27,6 +27,15 @@ $ composer require stuartapp/stuart-client-php
 8. [Get a job eta to pickup](#get-a-job-eta-to-pickup)
 9. [Custom requests](#custom-requests)
 
+### Autoloading
+In order to load all the classes from this library, just execute the autload at the beginning of the Stuart code
+```php
+<?php
+require __DIR__ . '/vendor/autoload.php';
+
+$environment = \Stuart\Infrastructure\Environment::SANDBOX;
+```
+
 ### Initialize client
 
 ```php
