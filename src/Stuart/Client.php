@@ -25,7 +25,7 @@ class Client
         $body = JobToJson::convert($job);
         $apiResponse = $this->httpClient->performPost($body, '/v2/jobs/validate');
 
-        if ($apiResponse->success()) {
+        if (self::isSuccess($apiResponse)) {
             return json_decode($apiResponse->getBody())->valid;
         } else {
             return json_decode($apiResponse->getBody());
@@ -46,7 +46,7 @@ class Client
     {
         $apiResponse = $this->httpClient->performGet('/v2/jobs/schedules/' . $city . '/' . $type . '/' . $dateTime->format('Y-m-d'));
 
-        if ($apiResponse->success()) {
+        if (self::isSuccess($apiResponse)) {
             return JsonToSchedulingSlots::convert($apiResponse->getBody());
         } else {
             return json_decode($apiResponse->getBody());
@@ -58,7 +58,7 @@ class Client
         $body = JobToJson::convert($job);
 
         $apiResponse = $this->httpClient->performPost($body, '/v2/jobs');
-        if ($apiResponse->success()) {
+        if (self::isSuccess($apiResponse)) {
             return JsonToJob::convert($apiResponse->getBody());
         } else {
             return json_decode($apiResponse->getBody());
@@ -69,7 +69,7 @@ class Client
     {
         $apiResponse = $this->httpClient->performGet('/v2/jobs/' . $jobId);
 
-        if ($apiResponse->success()) {
+        if (self::isSuccess($apiResponse)) {
             return JsonToJob::convert($apiResponse->getBody());
         } else {
             return json_decode($apiResponse->getBody());
@@ -80,7 +80,7 @@ class Client
     {
         $apiResponse = $this->httpClient->performPost('', '/v2/jobs/' . $jobId . '/cancel');
 
-        if ($apiResponse->success()) {
+        if (self::isSuccess($apiResponse)) {
             return true;
         } else {
             return json_decode($apiResponse->getBody());
@@ -91,7 +91,7 @@ class Client
     {
         $apiResponse = $this->httpClient->performPost('', '/v2/deliveries/' . $deliveryId . '/cancel');
 
-        if ($apiResponse->success()) {
+        if (self::isSuccess($apiResponse)) {
             return true;
         } else {
             return json_decode($apiResponse->getBody());
@@ -133,5 +133,10 @@ class Client
     public function validateDropoffAddress($address)
     {
         return $this->validateAddress($address, 'delivering');
+    }
+
+    private function isSuccess($response){
+        $statusCode =$response->getStatusCode();
+        return $statusCode >= 200 && $statusCode < 300;
     }
 }

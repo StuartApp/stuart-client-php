@@ -8,7 +8,7 @@ use Stuart\Infrastructure\ApiResponse;
 use Stuart\Infrastructure\Authenticator;
 use Stuart\SchedulingSlots;
 
-class ClientTest extends \PHPUnit_Framework_TestCase
+class ClientTest extends \PHPUnit\Framework\TestCase
 {
     private $authenticator;
     private $httpClient;

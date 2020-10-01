@@ -45,13 +45,19 @@ class JobToJson
             $dropOffs[] = array_merge(JobToJson::locationAsArray($dropOff), array(
                 'package_type' => $dropOff->getPackageType(),
                 'package_description' => $dropOff->getPackageDescription(),
-                'client_reference' => $dropOff->getClientReference()
+                'client_reference' => $dropOff->getClientReference(),
+                "end_customer_time_window_start" => is_null($dropOff->getEndCustomerTimeWindowStart()) ? null : $dropOff->getEndCustomerTimeWindowStart()->format(JsonToJob::$STUART_DATE_FORMAT),
+                "end_customer_time_window_end" => is_null($dropOff->getEndCustomerTimeWindowEnd()) ? null : $dropOff->getEndCustomerTimeWindowEnd()->format(JsonToJob::$STUART_DATE_FORMAT),
             ));
         }
 
         $result['job']['pickups'] = $pickups;
 
         $result['job']['dropoffs'] = $dropOffs;
+
+        if ($job->getFleets() !== null) {
+            $result['job']['fleets'] = $job->getFleets();
+        }
 
         return json_encode($result);
     }

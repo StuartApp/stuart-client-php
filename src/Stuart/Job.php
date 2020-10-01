@@ -13,6 +13,7 @@ class Job
     private $pickups = array();
     private $dropOffs = array();
     private $deliveries = array();
+    private $fleets = array();
     private $distance;
     private $duration;
 
@@ -84,6 +85,14 @@ class Job
     public function getDeliveries()
     {
         return $this->deliveries;
+    }
+
+    /**
+    * @return int[]
+    */
+    public function getFleets()
+    {
+        return $this->fleets;
     }
 
     /**
@@ -200,5 +209,13 @@ class Job
     public function setPricing($pricing)
     {
         $this->pricing = $pricing;
+    }
+
+    /**
+     * @param array $fleets
+     */
+    public function setFleets($fleets)
+    {
+        $this->fleets = $fleets;
     }
 }

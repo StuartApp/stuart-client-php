@@ -11,9 +11,9 @@ use Stuart\Infrastructure\Authenticator;
 use Stuart\Infrastructure\Environment;
 use Stuart\Infrastructure\HttpClient;
 
-class HttpClientTest extends \PHPUnit_Framework_TestCase
+class HttpClientTest extends \PHPUnit\Framework\TestCase
 {
-    const PHP_CLIENT_USER_AGENT = 'stuart-php-client/3.5.0';
+    const PHP_CLIENT_USER_AGENT = 'stuart-php-client/3.6.0';
     private $authenticator;
     private $container;
 

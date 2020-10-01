@@ -7,7 +7,7 @@ use Psr\SimpleCache\CacheInterface;
 use Stuart\Infrastructure\Authenticator;
 use Stuart\Infrastructure\Environment;
 
-class AuthenticatorTestTest extends \PHPUnit_Framework_TestCase
+class AuthenticatorTestTest extends \PHPUnit\Framework\TestCase
 {
     public function test_it_reuse_access_token_when_cache_given()
     {

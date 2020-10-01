@@ -5,7 +5,7 @@ namespace Stuart\Tests\Converters;
 use Stuart\Converters\JsonToSchedulingSlots;
 use Stuart\Tests\Mock;
 
-class JsonToSchedulingSlotsTest extends \PHPUnit_Framework_TestCase
+class JsonToSchedulingSlotsTest extends \PHPUnit\Framework\TestCase
 {
     private $mock;
 

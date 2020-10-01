@@ -1,6 +1,5 @@
 # Created by .ignore support plugin (hsz.mobi)
 ### Composer template
-composer.lock
 composer.phar
 php.iml
 /vendor/
@@ -10,3 +9,5 @@ php.iml
 # You may choose to ignore a library lock file http://getcomposer.org/doc/02-libraries.md#lock-file
 # composer.lock
 
+*.iml
+demo/vendor

@@ -5,7 +5,7 @@ namespace Stuart\Tests\Converters;
 use Stuart\Converters\JsonToJob;
 use Stuart\Tests\Mock;
 
-class JsonToJobTest extends \PHPUnit_Framework_TestCase
+class JsonToJobTest extends \PHPUnit\Framework\TestCase
 {
     private $mock;
 
