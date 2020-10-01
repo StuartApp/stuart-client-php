@@ -153,9 +153,12 @@ class Mock
                             ),
                             'package_type' => $this->drop_off_package_type,
                             'package_description' => $this->drop_off_package_description,
-                            'client_reference' => $this->drop_off_client_reference
+                            'client_reference' => $this->drop_off_client_reference,
+                            'end_customer_time_window_start' => null,
+                            'end_customer_time_window_end' => null
                         )
-                    )
+                    ),
+                    'fleets' => []
                 )
             )
         );

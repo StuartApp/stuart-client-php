@@ -1,0 +1,7 @@
+{
+  "repositories": [
+  ],
+  "require": {
+    "stuartapp/stuart-client-php": "*"
+  }
+}

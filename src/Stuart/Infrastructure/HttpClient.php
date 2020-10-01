@@ -36,9 +36,11 @@ class HttpClient
     /**
      * @param $body
      * @param $resource
+     * @param bool $isRetry Set to true if this method call is a retry for a previous auth failure
      * @return ApiResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function performPost($body, $resource)
+    public function performPost($body, $resource, $isRetry = false)
     {
         try {
             $response = $this->client->request('POST', $this->baseUrl . $resource, [
@@ -48,6 +50,17 @@ class HttpClient
         } catch (RequestException $e) {
             if ($e->hasResponse()) {
                 $response = $e->getResponse();
+                if (!$isRetry && $response->getStatusCode() == 401 && $this->authenticator->accessTokenIsCachable()) {
+                    print "Token cached is expired. Getting a token...\n";
+                    $this->authenticator->getNewAccessToken();
+                    // During peak hours Stuart's authentication replicas lag for 1-2 seconds.
+                    // There's a chance that the newly created token does not exist yet in the replicas.
+                    // This, even ugly, will only be happening when when token expires, which ATM is once per month.
+                    sleep(2);
+                    return $this->performPost($body, $resource, true);
+                } else {
+                    return $response;
+                }
             } else {
                 throw $e;
             }
@@ -63,7 +76,7 @@ class HttpClient
     {
         return [
             'Authorization' => 'Bearer ' . $this->authenticator->getAccessToken(),
-            'User-Agent' => 'stuart-php-client/3.5.0',
+            'User-Agent' => 'stuart-php-client/3.6.0',
             'Content-Type' => 'application/json'
         ];
     }
@@ -73,7 +86,7 @@ class HttpClient
      * @param $query
      * @return ApiResponse
      */
-    public function performGet($resource, $query = [])
+    public function performGet($resource, $query = [], $isRetry = false)
     {
         try {
             $response = $this->client->request('GET', $this->baseUrl . $resource, [
@@ -83,6 +96,17 @@ class HttpClient
         } catch (RequestException $e) {
             if ($e->hasResponse()) {
                 $response = $e->getResponse();
+                if (!$isRetry && $response->getStatusCode() == 401 && $this->authenticator->accessTokenIsCachable()) {
+                    print "Token cached is expired. Getting a token...\n";
+                    $this->authenticator->getNewAccessToken();
+                    // During peak hours Stuart's authentication replicas lag for 1-2 seconds.
+                    // There's a chance that the newly created token does not exist yet in the replicas.
+                    // This, even ugly, will only be happening when when token expires, which ATM is once per month.
+                    sleep(2);
+                    return $this->performGet($resource, $query, true);
+                } else {
+                    return $response;
+                }
             } else {
                 throw $e;
             }

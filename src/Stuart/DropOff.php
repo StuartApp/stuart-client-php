@@ -8,6 +8,8 @@ class DropOff extends Location
     private $packageDescription;
     private $clientReference;
     private $dropoffAt;
+    private $endCustomerTimeWindowStart;
+    private $endCustomerTimeWindowEnd;
 
     public function getPackageType()
     {
@@ -50,6 +52,40 @@ class DropOff extends Location
     public function setDropoffAt($dropoffAt)
     {
         $this->dropoffAt = $dropoffAt;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEndCustomerTimeWindowStart()
+    {
+        return $this->endCustomerTimeWindowStart;
+    }
+
+    /**
+     * @param mixed $endCustomerTimeWindowStart
+     */
+    public function setEndCustomerTimeWindowStart($endCustomerTimeWindowStart)
+    {
+        $this->endCustomerTimeWindowStart = $endCustomerTimeWindowStart;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEndCustomerTimeWindowEnd()
+    {
+        return $this->endCustomerTimeWindowEnd;
+    }
+
+    /**
+     * @param mixed $endCustomerTimeWindowEnd
+     */
+    public function setEndCustomerTimeWindowEnd($endCustomerTimeWindowEnd)
+    {
+        $this->endCustomerTimeWindowEnd = $endCustomerTimeWindowEnd;
         return $this;
     }
 }

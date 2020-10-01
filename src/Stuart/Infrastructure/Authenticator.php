@@ -16,8 +16,7 @@ class Authenticator
      * @param $environment
      * @param $api_client_id
      * @param $api_client_secret
-     * @param $cache is a https://github.com/desarrolla2/Cache allowing you to cache an access token
-     * for future re-use.
+     * @param $cache CacheInterface
      */
     public function __construct($environment, $api_client_id, $api_client_secret, $cache = null)
     {
@@ -51,7 +50,7 @@ class Authenticator
         return $this->getNewAccessToken();
     }
 
-    private function accessTokenIsCachable()
+    public function accessTokenIsCachable()
     {
         return $this->cache !== null;
     }
@@ -67,7 +66,7 @@ class Authenticator
         return 'STUART_' . $envAsString . '_CACHE_ACCESS_TOKEN_KEY';
     }
 
-    private function getNewAccessToken()
+    public function getNewAccessToken()
     {
         $accessToken = $this->provider->getAccessToken('client_credentials');
         if ($this->accessTokenIsCachable()) {

@@ -3,7 +3,7 @@
 namespace Stuart\Tests;
 
 
-class JobTest extends \PHPUnit_Framework_TestCase
+class JobTest extends \PHPUnit\Framework\TestCase
 {
 
     private $mock;

@@ -3,6 +3,15 @@
 # Stuart PHP Client
 For a complete documentation of all endpoints offered by the Stuart API, you can visit [Stuart API documentation](https://stuart.api-docs.io).
 
+### Changelog
+Visit [Changelog](CHANGELOG.md)
+
+### Running the demo
+```shell script
+cd demo
+docker build -t stuartphpdemo .
+docker run stuartphpdemo
+```
 ## Install
 Via Composer:
 
@@ -27,8 +36,19 @@ $ composer require stuartapp/stuart-client-php
 8. [Get a job eta to pickup](#get-a-job-eta-to-pickup)
 9. [Custom requests](#custom-requests)
 
+### Import the library
+If composer is not installed, install it:
+```shell script
+$ curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+```
+
+Add the library to your project:
+```shell script
+$ composer require stuartapp/stuart-client-php
+```
+
 ### Autoloading
-In order to load all the classes from this library, just execute the autload at the beginning of the Stuart code
+In order to load all the classes from this library, just execute the autoload at the beginning of the Stuart code
 ```php
 <?php
 require __DIR__ . '/vendor/autoload.php';
@@ -36,8 +56,14 @@ require __DIR__ . '/vendor/autoload.php';
 $environment = \Stuart\Infrastructure\Environment::SANDBOX;
 ```
 
-### Initialize client
+### Get credentials
+For Sandbox (testing environment, couriers are bots)
+https://dashboard.sandbox.stuart.com/settings/api
 
+For Production (real world, real couriers)
+https://dashboard.stuart.com/settings/api
+
+### Initialize client
 ```php
 $environment = \Stuart\Infrastructure\Environment::SANDBOX;
 $api_client_id = '65176d7a1f4e734f6723hd690825f166f8dadf69fb40af52fffdeac4593e4bc'; // can be found here: https://admin-sandbox.stuart.com/client/api
@@ -57,6 +83,17 @@ $httpClient = new \Stuart\Infrastructure\HttpClient($authenticator, $guzzleClien
 ```
 
 This can be useful if you need to attach middlewares to the Guzzle client.
+
+### Caching
+It's highly recommended adding a caching mechanism for the authentication process.
+To do so, simply extend the `Psr\SimpleCache\CacheInterface` class and implement your own version. 
+
+There's a cache based on disk available out of the box for you to use.
+To use it, simply modify the Authentication class initialization and pass the cache implementation in the constructor: 
+````php
+$diskCache = new \Stuart\Cache\DiskCache("stuart_cache.txt");
+$authenticator = new \Stuart\Infrastructure\Authenticator($environment, $api_client_id, $api_client_secret, $diskCache);
+````
 
 ### Create a Job
 
@@ -150,7 +187,7 @@ For more information about job scheduling you should [check our API documentatio
 ```php
 $job = new \Stuart\Job();
 
-$pickupAt = new \DateTime('now', new DateTimeZone('Europe/London'));
+$pickupAt = new \DateTime('now', new DateTimeZone('Europe/Paris'));
 $pickupAt->add(new \DateInterval('PT2H'));
 
 $job->addPickup('46 Boulevard Barbès, 75018 Paris')
@@ -171,7 +208,7 @@ Please note that this feature can only be used with only one dropoff.
 ```php
 $job = new \Stuart\Job();
 
-$dropoffAt = new \DateTime('now', new DateTimeZone('Europe/London'));
+$dropoffAt = new \DateTime('now', new DateTimeZone('Europe/Paris'));
 $dropoffAt->add(new \DateInterval('PT2H'));
 
 $job->addPickup('46 Boulevard Barbès, 75018 Paris');
@@ -182,6 +219,38 @@ $job->addDropOff('156 rue de Charonne, 75011 Paris')
     
 $client->createJob($job);
 ```
+
+#### With fleet targeting
+````php
+$job = new \Stuart\Job();
+
+$job->addPickup('46 Boulevard Barbès, 75018 Paris');
+
+$job->addDropOff('156 rue de Charonne, 75011 Paris')
+    ->setPackageType('small');
+
+$job->setFleets(array(1));
+    
+$client->createJob($job);
+````
+
+#### With end customer time window information (used for metrics purposes only)
+`````php
+$job = new \Stuart\Job();
+
+$job->addPickup('46 Boulevard Barbès, 75018 Paris');
+
+$now = new DateTime();
+$later = new DateTime();
+$later = $later->modify('+15 minutes');
+
+$job->addDropOff('156 rue de Charonne, 75011 Paris')
+    ->setPackageType('small')
+    ->setEndCustomerTimeWindowStart(new DateTime())
+    ->setEndCustomerTimeWindowEnd($later);
+
+$client->createJob($job);
+`````
 
 #### With stacking (multi-drop)
 
