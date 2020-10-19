@@ -1,3 +1,6 @@
+####3.6.1
+1. Does not expose fleets object if array is empty.
+
 ####3.6.0
 1. Adds Job#setFleets method
 2. Adds DropOff#setEndCustomerTimeWindowStart method
