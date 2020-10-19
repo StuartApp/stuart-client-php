@@ -55,7 +55,7 @@ class JobToJson
 
         $result['job']['dropoffs'] = $dropOffs;
 
-        if ($job->getFleets() !== null) {
+        if ($job->getFleets() !== null && !empty($job->getFleets())) {
             $result['job']['fleets'] = $job->getFleets();
         }
 

@@ -157,8 +157,7 @@ class Mock
                             'end_customer_time_window_start' => null,
                             'end_customer_time_window_end' => null
                         )
-                    ),
-                    'fleets' => []
+                    )
                 )
             )
         );
