@@ -1,3 +1,6 @@
+####3.6.2
+1. Updates sandbox API url
+
 ####3.6.1
 1. Does not expose fleets object if array is empty.
 
