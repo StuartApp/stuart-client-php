@@ -1,4 +1,4 @@
-#### 3.7.0
+#### 3.6.4
 1. Moved `private` methods to `protected` in `Authenticator` class to enabled better extending.
 
 ####3.6.3
