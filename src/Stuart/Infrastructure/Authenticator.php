@@ -55,12 +55,12 @@ class Authenticator
         return $this->cache !== null;
     }
 
-    private function getAccessTokenFromCache()
+    protected function getAccessTokenFromCache()
     {
         return $this->cache->get($this->accessTokenCacheKey());
     }
 
-    private function accessTokenCacheKey()
+    protected function accessTokenCacheKey()
     {
         $envAsString = $this->environment === Environment::SANDBOX ? 'SANDBOX' : 'PRODUCTION';
         return 'STUART_' . $envAsString . '_CACHE_ACCESS_TOKEN_KEY';
@@ -75,7 +75,7 @@ class Authenticator
         return $accessToken;
     }
 
-    private function addAccessTokenToCache($accessToken)
+    protected function addAccessTokenToCache($accessToken)
     {
         $this->cache->set($this->accessTokenCacheKey(), $accessToken);
     }
