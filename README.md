@@ -403,10 +403,11 @@ there was an error, it will contain an error object.
 
 ### Validate an address
 
-We encourage to validate an address to find out if we can pickup / deliver there.
+We encourage to validate an address to find out if we can pickup / deliver there. Phone number is optional only for those places that the address is specific enough.
 
 ```php
 $client->validatePickupAddress('Pau Claris, 08037 Barcelona', '+34677777777');
+$client->validatePickupAddress('Pau Claris 186, 08037 Barcelona');
 $client->validateDropoffAddress('Pau Claris, 08037 Barcelona', '+34677777777');
 ```
 
