@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "df551634c75b7b7bb5827f060afa2ecf",
+    "content-hash": "fbe44e9b8910729ee21e816de0b580ab",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -447,27 +447,27 @@
         },
         {
             "name": "stuartapp/stuart-client-php",
-            "version": "3.5.0",
+            "version": "3.6.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/StuartApp/stuart-client-php.git",
-                "reference": "34f345b57b38f58fe4b3bcf66af0d9f08875551e"
+                "reference": "d968ad4e36004a5976030701604b8b5c3e12634e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/StuartApp/stuart-client-php/zipball/34f345b57b38f58fe4b3bcf66af0d9f08875551e",
-                "reference": "34f345b57b38f58fe4b3bcf66af0d9f08875551e",
+                "url": "https://api.github.com/repos/StuartApp/stuart-client-php/zipball/d968ad4e36004a5976030701604b8b5c3e12634e",
+                "reference": "d968ad4e36004a5976030701604b8b5c3e12634e",
                 "shasum": ""
             },
             "require": {
                 "guzzlehttp/guzzle": "^6.2",
                 "league/oauth2-client": "^2.1",
-                "php": ">=5.6",
+                "php": ">=7.1",
                 "psr/simple-cache": "^1.0"
             },
             "require-dev": {
                 "phake/phake": "@stable",
-                "phpunit/phpunit": "^4.8 || ^5.0"
+                "phpunit/phpunit": "^7.3"
             },
             "type": "library",
             "autoload": {
@@ -482,7 +482,7 @@
             ],
             "description": "Stuart PHP client library",
             "homepage": "https://github.com/StuartApp/stuart-client-php/",
-            "time": "2018-09-07T07:32:25+00:00"
+            "time": "2020-12-02T18:44:11+00:00"
         },
         {
             "name": "symfony/polyfill-intl-idn",

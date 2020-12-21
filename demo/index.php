@@ -35,5 +35,3 @@ if ($createdJob instanceof \Stuart\Job) {
     print "\n" . "There was an error creating the job" . "\n";
     print_r($createdJob);
 }
-
-

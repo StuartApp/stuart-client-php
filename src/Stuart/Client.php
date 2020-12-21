@@ -114,25 +114,29 @@ class Client
         return json_decode($apiResponse->getBody());
     }
 
-    private function validateAddress($address, $type)
+    private function validateAddress($address, $type, $phone)
     {
         $query = array(
             'address' => $address,
             'type' => $type
         );
 
+        if ($phone != null) {
+            $query['phone'] = $phone;
+        }
+        
         $apiResponse = $this->httpClient->performGet('/v2/addresses/validate', $query);
         return json_decode($apiResponse->getBody());
     }
 
-    public function validatePickupAddress($address)
+    public function validatePickupAddress($address, $phone = null)
     {
-        return $this->validateAddress($address, 'picking');
+        return $this->validateAddress($address, 'picking', $phone);
     }
 
-    public function validateDropoffAddress($address)
+    public function validateDropoffAddress($address, $phone = null)
     {
-        return $this->validateAddress($address, 'delivering');
+        return $this->validateAddress($address, 'delivering', $phone);
     }
 
     private function isSuccess($response){

@@ -2,6 +2,6 @@
   "repositories": [
   ],
   "require": {
-    "stuartapp/stuart-client-php": "*"
+    "stuartapp/stuart-client-php": "^3.6"
   }
 }

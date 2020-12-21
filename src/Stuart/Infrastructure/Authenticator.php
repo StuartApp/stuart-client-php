@@ -32,6 +32,8 @@ class Authenticator
         ]);
         if ($cache instanceof CacheInterface) {
             $this->cache = $cache;
+        } else {
+            print "\n" . 'It looks like you have not added any caching implementation. You might experience random 401 issues' . "\n";
         }
     }
 
