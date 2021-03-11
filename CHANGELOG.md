@@ -1,11 +1,11 @@
 #### 3.6.6
 
 1. Support Guzzle v7
+2. Bug-fixes in PHPUnit tests
 
 #### 3.6.5
 
 1. Allows to pass a phone to validate addresses
-2. Bug-fixes in PHPUnit tests
 
 #### 3.6.4
 
