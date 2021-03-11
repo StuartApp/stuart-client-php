@@ -1,7 +1,8 @@
 <?php
 
-namespace Stuart\Tests;
+namespace Stuart\Tests\Validation;
 
+use Stuart\Tests\Mock;
 
 class JobTest extends \PHPUnit\Framework\TestCase
 {
