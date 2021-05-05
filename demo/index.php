@@ -1,15 +1,14 @@
 <?php
 require __DIR__ . '/vendor/autoload.php';
 
-use Stuart\AccessCodesTypes;
-
 print "Welcome to the Stuart PHP Library Demo\n";
 
 print "Setting up sandbox credentials...\n";
 
+// Visit https://stuart.api-docs.io/v2/general-topics/getting-started for more information
 $environment = \Stuart\Infrastructure\Environment::SANDBOX;
-$api_client_id = '85ff124a4536120d9f070f44956c2f8e37f4cf0f42204f36ed81a6e37e3cd802';
-$api_client_secret = 'd50f52c3f7045fdd6625bb5e7b2f1a538c2f260b7d2411a4319dea81d97204ff';
+$api_client_id = 'PUT_YOUR_CLIENT_ID_HERE';
+$api_client_secret = 'PUT_YOUR_CLIENT_SECRET_HERE';
 $authenticator = new \Stuart\Infrastructure\Authenticator($environment, $api_client_id, $api_client_secret, new \Stuart\Cache\DiskCache("stuart_cache.txt"));
 
 $httpClient = new \Stuart\Infrastructure\HttpClient($authenticator);
