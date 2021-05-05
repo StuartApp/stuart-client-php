@@ -5,9 +5,10 @@ print "Welcome to the Stuart PHP Library Demo\n";
 
 print "Setting up sandbox credentials...\n";
 
-$environment = \Stuart\Infrastructure\Environment::PRODUCTION;
-$api_client_id = 'af8dc9697cc09849df942f1ac0bb43737907a3e57be187e02f87edebe43bd602';
-$api_client_secret = 'efb1ef250b49c91a0582c24ce31ad4a9335de709daf10297e0d6e531a7e2a4a4';
+// Visit https://stuart.api-docs.io/v2/general-topics/getting-started for more information
+$environment = \Stuart\Infrastructure\Environment::SANDBOX;
+$api_client_id = 'PUT_YOUR_CLIENT_ID_HERE';
+$api_client_secret = 'PUT_YOUR_CLIENT_SECRET_HERE';
 $authenticator = new \Stuart\Infrastructure\Authenticator($environment, $api_client_id, $api_client_secret, new \Stuart\Cache\DiskCache("stuart_cache.txt"));
 
 $httpClient = new \Stuart\Infrastructure\HttpClient($authenticator);
@@ -27,6 +28,9 @@ $job->addDropOff('156 rue de Charonne, 75011 Paris')
     ->setPackageType('small')
     ->setEndCustomerTimeWindowStart(new DateTime())
     ->setEndCustomerTimeWindowEnd($later);
+
+// Adding an access code if needed.
+//->addAccessCode('ABC-abc-1234', AccessCodesTypes::SCAN_BARCODE, 'A title', 'Instructions');
 
 $createdJob = $client->createJob($job);
 if ($createdJob instanceof \Stuart\Job) {

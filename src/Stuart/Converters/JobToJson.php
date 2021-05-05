@@ -4,6 +4,7 @@ namespace Stuart\Converters;
 
 use Stuart\Job;
 use Stuart\Location;
+use Stuart\AccessCode;
 
 class JobToJson
 {
@@ -42,13 +43,17 @@ class JobToJson
 
         $dropOffs = array();
         foreach ($job->getDropOffs() as $dropOff) {
-            $dropOffs[] = array_merge(JobToJson::locationAsArray($dropOff), array(
+            $arr = array(
                 'package_type' => $dropOff->getPackageType(),
                 'package_description' => $dropOff->getPackageDescription(),
                 'client_reference' => $dropOff->getClientReference(),
                 "end_customer_time_window_start" => is_null($dropOff->getEndCustomerTimeWindowStart()) ? null : $dropOff->getEndCustomerTimeWindowStart()->format(JsonToJob::$STUART_DATE_FORMAT),
-                "end_customer_time_window_end" => is_null($dropOff->getEndCustomerTimeWindowEnd()) ? null : $dropOff->getEndCustomerTimeWindowEnd()->format(JsonToJob::$STUART_DATE_FORMAT),
-            ));
+                "end_customer_time_window_end" => is_null($dropOff->getEndCustomerTimeWindowEnd()) ? null : $dropOff->getEndCustomerTimeWindowEnd()->format(JsonToJob::$STUART_DATE_FORMAT)
+            );
+            if (sizeof($dropOff->getAccessCodes()) != 0) {
+                $arr['access_codes'] = self::accessCodesToArray($dropOff->getAccessCodes());
+            }
+            $dropOffs[] = array_merge(JobToJson::locationAsArray($dropOff), $arr);
         }
 
         $result['job']['pickups'] = $pickups;
@@ -62,6 +67,19 @@ class JobToJson
         return json_encode($result);
     }
 
+    private static function accessCodesToArray($accessCodes)
+    {
+        $array = array();
+        foreach($accessCodes as $accessCode) {
+            array_push($array, [
+                "code" => $accessCode->getCode(),
+                "type" => $accessCode->getType(),
+                "title" => $accessCode->getTitle(),
+                "instructions" => $accessCode->getInstructions()
+            ]);
+        }
+        return $array;
+    }
 
     /**
      * @param Location $location
