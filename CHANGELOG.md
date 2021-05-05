@@ -1,3 +1,7 @@
+#### 3.6.7
+
+1. Add access code method when adding drop offs
+
 #### 3.6.6
 
 1. Support Guzzle v7

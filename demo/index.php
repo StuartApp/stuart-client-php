@@ -28,8 +28,10 @@ $later = $later->modify('+15 minutes');
 $job->addDropOff('156 rue de Charonne, 75011 Paris')
     ->setPackageType('small')
     ->setEndCustomerTimeWindowStart(new DateTime())
-    ->setEndCustomerTimeWindowEnd($later)
-    ->addAccessCode('73764', AccessCodesTypes::SCAN_BARCODE, 'Some title', 'Some instructions');
+    ->setEndCustomerTimeWindowEnd($later);
+
+// Adding an access code if needed.
+//->addAccessCode('ABC-abc-1234', AccessCodesTypes::SCAN_BARCODE, 'A title', 'Instructions');
 
 $createdJob = $client->createJob($job);
 if ($createdJob instanceof \Stuart\Job) {
