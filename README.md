@@ -13,7 +13,8 @@ Visit [Changelog](CHANGELOG.md)
 ```shell script
 cd demo
 docker build -t stuartphpdemo .
-docker run stuartphpdemo
+export PATH_TO_PROJECT="/PUT/HERE/YOUR/PATH/TO/PROJECT/stuart-client-php"
+docker run -v $PATH_TO_PROJECT/src:/app/vendor/stuartapp/stuart-client-php/src stuartphpdemo
 ```
 
 ## Install
