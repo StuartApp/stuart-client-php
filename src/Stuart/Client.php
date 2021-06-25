@@ -32,17 +32,17 @@ class Client
         }
     }
 
-    public function getSchedulingSlotsAtPickup($city, \DateTime $dateTime)
+    public function getSchedulingSlotsAtPickup($city, \DateTimeInterface $dateTime)
     {
         return $this->getSchedulingSlots($city, 'pickup', $dateTime);
     }
 
-    public function getSchedulingSlotsAtDropoff($city, \DateTime $dateTime)
+    public function getSchedulingSlotsAtDropoff($city, \DateTimeInterface $dateTime)
     {
         return $this->getSchedulingSlots($city, 'dropoff', $dateTime);
     }
 
-    private function getSchedulingSlots($city, $type, \DateTime $dateTime)
+    private function getSchedulingSlots($city, $type, \DateTimeInterface $dateTime)
     {
         $apiResponse = $this->httpClient->performGet('/v2/jobs/schedules/' . $city . '/' . $type . '/' . $dateTime->format('Y-m-d'));
 
