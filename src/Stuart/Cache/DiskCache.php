@@ -61,7 +61,18 @@ class DiskCache implements CacheInterface
             $arrToWrite = array($key => $value);
         }
         $file = fopen(urlencode($this->fileName), "w");
-        fwrite($file, json_encode($arrToWrite));
+        $textToWrite = json_encode($arrToWrite); // minimize time spent in the critical section
+        do {
+            if(flock($file, LOCK_EX)) {
+                fwrite($file, $textToWrite);
+                fflush($file);
+                flock($file, LOCK_UN);
+                break;
+            } else {
+                usleep(50);
+            }
+        } while(true);
+        
         fclose($file);
     }
 
