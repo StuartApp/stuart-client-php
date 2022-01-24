@@ -1,3 +1,7 @@
+#### 3.6.8
+
+1. Fixes a race condition when writing the token in disk
+
 #### 3.6.7
 
 1. Add access code method when adding drop offs
