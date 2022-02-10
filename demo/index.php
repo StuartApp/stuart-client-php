@@ -25,6 +25,7 @@ $now = new DateTime();
 $later = new DateTime();
 $later = $later->modify('+15 minutes');
 
+// $job->addDropOff('156 rue de Charonne, 75011 Paris', 48.855636, 2.390556) // Check https://community.stuart.engineering/t/job-creation-with-lat-long-coordinates/1436
 $job->addDropOff('156 rue de Charonne, 75011 Paris')
     ->setPackageType('small')
     ->setEndCustomerTimeWindowStart(new DateTime())
