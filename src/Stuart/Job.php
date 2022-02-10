@@ -23,25 +23,35 @@ class Job
     private $pricing;
 
     /**
-     * @param $address
+     * @param string $address
+     * @param float $latitude
+     * @param float $longitude
      * @return \Stuart\Pickup
      */
-    public function addPickup($address)
+    public function addPickup($address, $latitude = null, $longitude = null)
     {
         $pickup = new Pickup();
         $pickup->setAddress($address);
+        if (is_float($latitude) && is_float($longitude)){
+            $pickup->setCoordinates($latitude, $longitude);
+        }
         $this->pickups[] = $pickup;
         return $pickup;
     }
 
     /**
-     * @param $address
+     * @param string $address
+     * @param float $latitude
+     * @param float $longitude
      * @return DropOff
      */
-    public function addDropOff($address)
+    public function addDropOff($address, $latitude = null, $longitude = null)
     {
         $dropOff = new DropOff();
         $dropOff->setAddress($address);
+        if (is_float($latitude) && is_float($longitude)){
+            $dropOff->setCoordinates($latitude, $longitude);
+        }
         $this->dropOffs[] = $dropOff;
         return $dropOff;
     }

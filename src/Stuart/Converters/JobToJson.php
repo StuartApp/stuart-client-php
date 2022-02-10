@@ -87,7 +87,7 @@ class JobToJson
      */
     private static function locationAsArray($location)
     {
-        return array(
+        $arr = array(
             'address' => $location->getAddress(),
             'comment' => $location->getComment(),
             'contact' => array(
@@ -98,5 +98,12 @@ class JobToJson
                 'company' => $location->getCompany()
             )
         );
+
+        if (is_float($location->getLatitude()) && is_float($location->getLongitude())){
+            $arr['coordinates']['lat'] = $location->getLatitude();
+            $arr['coordinates']['long'] = $location->getLongitude();
+        }
+
+        return $arr;
     }
 }

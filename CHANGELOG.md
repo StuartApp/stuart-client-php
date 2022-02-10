@@ -1,3 +1,7 @@
+#### 3.6.9
+
+1. Allows the creation of jobs using Latitude and Longitude. More information about this [here](https://community.stuart.engineering/t/job-creation-with-lat-long-coordinates/1436)
+
 #### 3.6.8
 
 1. Fixes a race condition when writing the token in disk
