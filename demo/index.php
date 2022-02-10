@@ -19,6 +19,7 @@ print "Creating a job...\n";
 $job = new \Stuart\Job();
 
 $job->addPickup('46 Boulevard Barbès, 75018 Paris');
+// $job->addPickup('46 Boulevard Barbès, 75018 Paris', 48.887279, 2.349656); // Check https://community.stuart.engineering/t/job-creation-with-lat-long-coordinates/1436
 
 $now = new DateTime();
 $later = new DateTime();

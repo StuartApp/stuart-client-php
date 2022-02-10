@@ -11,6 +11,8 @@ abstract class Location
     private $firstName;
     private $lastName;
     private $company;
+    private $latitude;
+    private $longitude;
 
     public function setContactPhone($phone)
     {
@@ -87,5 +89,22 @@ abstract class Location
     public function getCompany()
     {
         return $this->company;
+    }
+
+    public function setCoordinates($latitude, $longitude) 
+    {
+        $this->latitude = $latitude;
+        $this->longitude = $longitude;
+        return $this;
+    }
+
+    public function getLatitude()
+    {
+        return $this->latitude;
+    }
+
+    public function getLongitude()
+    {
+        return $this->longitude;
     }
 }
