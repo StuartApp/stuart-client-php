@@ -37,11 +37,9 @@ class DiskCache implements CacheInterface
             $asArray = json_decode(json_encode($objectWithTokens), true);
             $token = $asArray[$key];
             if ($token) {
-                print "Token cache HIT.\n";
                 return new StuartAccessToken($token);
             }
         }
-        print "Token cache miss.\n";
         return null;
     }
 
