@@ -1,3 +1,7 @@
+#### 3.6.10
+
+1. Removes prints unless explicitly asking for them
+
 #### 3.6.9
 
 1. Allows the creation of jobs using Latitude and Longitude. More information about this [here](https://community.stuart.engineering/t/job-creation-with-lat-long-coordinates/1436)
