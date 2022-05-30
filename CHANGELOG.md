@@ -1,3 +1,7 @@
+#### 3.6.11
+
+1. Allows to add access codes to pick up locations as well as dropoffs.
+
 #### 3.6.10
 
 1. Removes prints unless explicitly asking for them
