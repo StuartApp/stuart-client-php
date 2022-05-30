@@ -10,7 +10,6 @@ class DropOff extends Location
     private $dropoffAt;
     private $endCustomerTimeWindowStart;
     private $endCustomerTimeWindowEnd;
-    private $accessCodes = array();
 
     public function getPackageType()
     {
@@ -88,14 +87,5 @@ class DropOff extends Location
     {
         $this->endCustomerTimeWindowEnd = $endCustomerTimeWindowEnd;
         return $this;
-    }
-
-    public function addAccessCode($code, $type, $title, $instructions) {
-        $this->accessCodes[] = new AccessCode($code, $type, $title, $instructions);
-        return $this;
-    }
-
-    public function getAccessCodes() {
-        return $this->accessCodes;
     }
 }

@@ -19,6 +19,9 @@ print "Creating a job...\n";
 $job = new \Stuart\Job();
 
 $job->addPickup('46 Boulevard Barbès, 75018 Paris');
+    //->addAccessCode('pickup-ABC-abc-1234', AccessCodesTypes::BARCODE, 'A title', 'Instructions');
+
+// Alternatively, to create a job with latitude and longitude
 // $job->addPickup('46 Boulevard Barbès, 75018 Paris', 48.887279, 2.349656); // Check https://community.stuart.engineering/t/job-creation-with-lat-long-coordinates/1436
 
 $now = new DateTime();
@@ -32,7 +35,7 @@ $job->addDropOff('156 rue de Charonne, 75011 Paris')
     ->setEndCustomerTimeWindowEnd($later);
 
 // Adding an access code if needed.
-//->addAccessCode('ABC-abc-1234', AccessCodesTypes::SCAN_BARCODE, 'A title', 'Instructions');
+//->addAccessCode('ABC-abc-1234', AccessCodesTypes::BARCODE, 'A title', 'Instructions');
 
 $createdJob = $client->createJob($job);
 if ($createdJob instanceof \Stuart\Job) {

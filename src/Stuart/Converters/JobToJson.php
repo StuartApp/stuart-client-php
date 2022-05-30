@@ -38,7 +38,12 @@ class JobToJson
 
         $pickups = array();
         foreach ($job->getPickups() as $pickup) {
-            $pickups[] = JobToJson::locationAsArray($pickup);
+            $locAsArray = JobToJson::locationAsArray($pickup);
+            
+            if (sizeof($pickup->getAccessCodes()) != 0) {
+                $locAsArray['access_codes'] = self::accessCodesToArray($pickup->getAccessCodes());
+            }
+            array_push($pickups, $locAsArray);
         }
 
         $dropOffs = array();

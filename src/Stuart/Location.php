@@ -13,6 +13,7 @@ abstract class Location
     private $company;
     private $latitude;
     private $longitude;
+    private $accessCodes = array();
 
     public function setContactPhone($phone)
     {
@@ -106,5 +107,14 @@ abstract class Location
     public function getLongitude()
     {
         return $this->longitude;
+    }
+
+    public function addAccessCode($code, $type, $title, $instructions) {
+        $this->accessCodes[] = new AccessCode($code, $type, $title, $instructions);
+        return $this;
+    }
+
+    public function getAccessCodes() {
+        return $this->accessCodes;
     }
 }
