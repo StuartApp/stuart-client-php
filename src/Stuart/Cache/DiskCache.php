@@ -8,13 +8,15 @@ use Stuart\Infrastructure\StuartAccessToken;
 class DiskCache implements CacheInterface
 {
     private $fileName;
+    private $debugLogs;
 
     /**
      * DiskCache constructor.
      */
-    public function __construct($fileName)
+    public function __construct($fileName, $debugLogs = false)
     {
         $this->fileName = $fileName;
+        $this->debugLogs = $debugLogs;
     }
 
     private function getContent()
@@ -37,11 +39,11 @@ class DiskCache implements CacheInterface
             $asArray = json_decode(json_encode($objectWithTokens), true);
             $token = $asArray[$key];
             if ($token) {
-                print "Token cache HIT.\n";
+                if ($this->debugLogs) print "Token cache HIT.\n";
                 return new StuartAccessToken($token);
             }
         }
-        print "Token cache miss.\n";
+        if ($this->debugLogs) print "Token cache miss.\n";
         return null;
     }
 

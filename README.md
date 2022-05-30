@@ -110,6 +110,10 @@ $diskCache = new \Stuart\Cache\DiskCache("stuart_cache.txt");
 $authenticator = new \Stuart\Infrastructure\Authenticator($environment, $api_client_id, $api_client_secret, $diskCache);
 ```
 
+##### Debugging token cache issues
+
+You can initialize the DiskCache, Authenticator and HttpClient classes by passing a `true` value to the last constructor parameter of these classes.
+
 ### Create a Job
 
 **Important**: Even if you can create a Job with a minimal set of parameters, we **highly recommend** that you fill as many information as

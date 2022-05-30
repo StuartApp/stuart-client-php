@@ -10,6 +10,7 @@ class Authenticator
     private $provider;
     private $environment;
     private $cache;
+    private $debugLogs;
 
     /**
      * Authenticator constructor.
@@ -18,9 +19,10 @@ class Authenticator
      * @param $api_client_secret
      * @param $cache CacheInterface
      */
-    public function __construct($environment, $api_client_id, $api_client_secret, $cache = null)
+    public function __construct($environment, $api_client_id, $api_client_secret, $cache = null, $debugLogs = false)
     {
         $base_url = $environment['base_url'];
+        $this->debugLogs = $debugLogs;
         $this->environment = $environment;
         $this->provider = new GenericProvider([
             'clientId' => $api_client_id,
@@ -33,7 +35,7 @@ class Authenticator
         if ($cache instanceof CacheInterface) {
             $this->cache = $cache;
         } else {
-            print "\n" . 'It looks like you have not added any caching implementation. You might experience random 401 issues' . "\n";
+            if ($this->debugLogs) print "\n" . 'It looks like you have not added any caching implementation. You might experience random 401 issues' . "\n";
         }
     }
 
