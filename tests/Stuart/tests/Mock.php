@@ -142,8 +142,10 @@ class Mock
                                 'email' => $this->pickup_contact_email,
                                 'company' => $this->pickup_contact_company
                             ),
-                            'latitude' => $this->pickup_latitude,
-                            'longitude' => $this->pickup_longitude,
+                            'coordinates' => array(
+                                'lat' => $this->pickup_latitude,
+                                'long' => $this->pickup_longitude,
+                            )
                         )
                     ),
                     'dropoffs' => array(
@@ -157,8 +159,10 @@ class Mock
                                 'email' => $this->drop_off_contact_email,
                                 'company' => $this->drop_off_contact_company
                             ),
-                            'latitude' => $this->drop_off_latitude,
-                            'longitude' => $this->drop_off_longitude,
+                            'coordinates' => array(
+                                'lat' => $this->drop_off_latitude,
+                                'long' => $this->drop_off_longitude,
+                            ),
                             'package_type' => $this->drop_off_package_type,
                             'package_description' => $this->drop_off_package_description,
                             'client_reference' => $this->drop_off_client_reference,
