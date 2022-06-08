@@ -30,7 +30,7 @@ class JsonToJob
         foreach ($body->deliveries as $delivery) {
             $job
                 ->link(
-                    $job->addPickup(self::fullTextAddress($delivery->pickup->address))
+                    $job->addPickup(self::fullTextAddress($delivery->pickup->address), $delivery->pickup->latitude, $delivery->pickup->longitude)
                         ->setPickupAt(\DateTime::createFromFormat(self::$STUART_DATE_FORMAT, $body->pickup_at))
                         ->setComment($delivery->pickup->comment)
                         ->setContactCompany($delivery->pickup->contact->company_name)
@@ -38,7 +38,7 @@ class JsonToJob
                         ->setContactLastName($delivery->pickup->contact->lastname)
                         ->setContactPhone($delivery->pickup->contact->phone)
                         ->setContactEmail($delivery->pickup->contact->email),
-                    $job->addDropOff(self::fullTextAddress($delivery->dropoff->address))
+                    $job->addDropOff(self::fullTextAddress($delivery->dropoff->address), $delivery->dropoff->latitude, $delivery->dropoff->longitude)
                         ->setDropoffAt(\DateTime::createFromFormat(self::$STUART_DATE_FORMAT, $body->dropoff_at))
                         ->setPackageType($delivery->package_type)
                         ->setPackageDescription($delivery->package_description)

@@ -1,3 +1,7 @@
+#### 3.6.12
+
+1. Fill the Job response object with the lat/long returned by Stuart's API.
+
 #### 3.6.11
 
 1. Allows to add access codes to pick up locations as well as dropoffs.
