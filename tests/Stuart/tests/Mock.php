@@ -205,7 +205,9 @@ class Mock
                                 'phone' => $this->pickup_contact_phone,
                                 'email' => $this->pickup_contact_email,
                                 'company_name' => $this->pickup_contact_company
-                            )
+                            ),
+                            'latitude' => $this->pickup_latitude,
+                            'longitude' => $this->pickup_longitude,
                         ),
                         'dropoff' => array(
                             'comment' => $this->drop_off_comment,
@@ -221,7 +223,9 @@ class Mock
                                 'phone' => $this->drop_off_contact_phone,
                                 'email' => $this->drop_off_contact_email,
                                 'company_name' => $this->drop_off_contact_company
-                            )
+                            ),
+                            'latitude' => $this->drop_off_latitude,
+                            'longitude' => $this->drop_off_longitude,
                         )
                     )
                 ),
