@@ -21,6 +21,8 @@ class Mock
     public $pickup_address_postcode = '75004';
     public $pickup_address_country = 'france';
     public $pickup_address_city = 'paris';
+    public $pickup_latitude = 48.4532;
+    public $pickup_longitude = 2.4532;
     public $pickup_comment = 'comment';
     public $pickup_contact_company = 'company';
     public $pickup_contact_first_name = 'firstname';
@@ -31,6 +33,8 @@ class Mock
     public $drop_off_address_postcode = '75012';
     public $drop_off_address_country = 'france';
     public $drop_off_address_city = 'paris';
+    public $drop_off_latitude = 48.4532;
+    public $drop_off_longitude = 2.4532;
     public $drop_off_comment = 'comment';
     public $drop_off_contact_company = 'company';
     public $drop_off_contact_first_name = 'firstname';
@@ -58,7 +62,7 @@ class Mock
         $job->setDistance($this->distance);
         $job->setDuration($this->duration);
 
-        $job->addPickup($this->pickup_address())
+        $job->addPickup($this->pickup_address(), $this->pickup_latitude, $this->pickup_longitude)
             ->setPickupAt(\DateTime::createFromFormat(JsonToJob::$STUART_DATE_FORMAT, $this->pickup_at()))
             ->setComment($this->pickup_comment)
             ->setContactCompany($this->pickup_contact_company)
@@ -67,7 +71,7 @@ class Mock
             ->setContactPhone($this->pickup_contact_phone)
             ->setContactEmail($this->pickup_contact_email);
 
-        $job->addDropOff($this->drop_off_address())
+        $job->addDropOff($this->drop_off_address(), $this->drop_off_latitude, $this->drop_off_longitude)
             ->setDropoffAt(\DateTime::createFromFormat(JsonToJob::$STUART_DATE_FORMAT, $this->dropoff_at()))
             ->setComment($this->drop_off_comment)
             ->setContactCompany($this->drop_off_contact_company)
@@ -137,7 +141,9 @@ class Mock
                                 'phone' => $this->pickup_contact_phone,
                                 'email' => $this->pickup_contact_email,
                                 'company' => $this->pickup_contact_company
-                            )
+                            ),
+                            'latitude' => $this->pickup_latitude,
+                            'longitude' => $this->pickup_longitude,
                         )
                     ),
                     'dropoffs' => array(
@@ -151,6 +157,8 @@ class Mock
                                 'email' => $this->drop_off_contact_email,
                                 'company' => $this->drop_off_contact_company
                             ),
+                            'latitude' => $this->drop_off_latitude,
+                            'longitude' => $this->drop_off_longitude,
                             'package_type' => $this->drop_off_package_type,
                             'package_description' => $this->drop_off_package_description,
                             'client_reference' => $this->drop_off_client_reference,
