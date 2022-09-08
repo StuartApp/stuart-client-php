@@ -2,7 +2,7 @@
 
 # Stuart PHP Client
 
-For a complete documentation of all endpoints offered by the Stuart API, you can visit [Stuart API documentation](https://stuart.api-docs.io).
+For a complete documentation of all endpoints offered by the Stuart API, you can visit [Stuart API documentation](https://api-docs.stuart.com).
 
 ### Changelog
 
