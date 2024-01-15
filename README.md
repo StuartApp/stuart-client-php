@@ -161,32 +161,6 @@ $job->addDropOff('156 rue de Charonne, 75011 Paris')
 $client->createJob($job);
 ```
 
-##### Transport type based (France only)
-
-```php
-$job = new \Stuart\Job();
-
-$job->setTransportType('bike');
-
-$job->addPickup('46 Boulevard Barbès, 75018 Paris')
-    ->setComment('Wait outside for an employee to come.')
-    ->setContactCompany('KFC Paris Barbès')
-    ->setContactFirstName('Martin')
-    ->setContactLastName('Pont')
-    ->setContactPhone('+33698348756');
-
-$job->addDropOff('156 rue de Charonne, 75011 Paris')
-    ->setComment('code: 3492B. 3e étage droite. Sonner à Durand.')
-    ->setContactCompany('Durand associates.')
-    ->setContactFirstName('Alex')
-    ->setContactLastName('Durand')
-    ->setContactPhone('+33634981209')
-    ->setPackageDescription('Pizza box.')
-    ->setClientReference('12345678ABCDE'); // Must be unique
-
-$client->createJob($job);
-```
-
 #### With scheduling at pickup
 
 For more information about job scheduling you should [check our API documentation](https://stuart.api-docs.io/v2/jobs/scheduling-a-job).
