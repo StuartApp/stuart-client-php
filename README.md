@@ -134,20 +134,6 @@ $job->addDropOff('156 rue de Charonne, 75011 Paris')
 $client->createJob($job);
 ```
 
-##### Transport type based (France only)
-
-```php
-$job = new \Stuart\Job();
-
-$job->setTransportType('bike');
-
-$job->addPickup('46 Boulevard Barbès, 75018 Paris');
-
-$job->addDropOff('156 rue de Charonne, 75011 Paris');
-
-$client->createJob($job);
-```
-
 #### Complete
 
 ##### Package size based
