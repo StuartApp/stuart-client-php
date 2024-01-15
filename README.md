@@ -311,40 +311,6 @@ $job->addDropOff('12 avenue claude vellefaux, 75010 Paris')
 $client->createJob($job);
 ```
 
-##### Transport type based (France only)
-
-```php
-$job = new \Stuart\Job();
-
-$job->setTransportType('bike');
-
-$job->addPickup('46 Boulevard Barbès, 75018 Paris')
-    ->setComment('Wait outside for an employee to come.')
-    ->setContactCompany('KFC Paris Barbès')
-    ->setContactFirstName('Martin')
-    ->setContactLastName('Pont')
-    ->setContactPhone('+33698348756');
-
-$job->addDropOff('156 rue de Charonne, 75011 Paris')
-    ->setComment('code: 3492B. 3e étage droite. Sonner à Durand.')
-    ->setContactCompany('Durand associates.')
-    ->setContactFirstName('Alex')
-    ->setContactLastName('Durand')
-    ->setContactPhone('+33634981209')
-    ->setPackageDescription('Red packet.')
-    ->setClientReference('12345678ABCDE'); // Must be unique;
-
-$job->addDropOff('12 avenue claude vellefaux, 75010 Paris')
-    ->setComment('code: 92A42. 2e étage gauche')
-    ->setContactFirstName('Maximilien')
-    ->setContactLastName('Lebluc')
-    ->setContactPhone('+33632341209')
-    ->setPackageDescription('Blue packet.')
-    ->setClientReference('ABCDE213124'); // Must be unique
-
-$client->createJob($job);
-```
-
 ### Get a Job
 
 Once you successfully created a Job you can retrieve it this way:
